@@ -1,0 +1,91 @@
+{
+  "data": [
+    {
+      "title": "Fundraisers for",
+      "links": [
+        {
+          "label": "Medical",
+          "link": "#"
+        },
+        {
+          "label": "Emergency",
+          "link": "#"
+        },
+        {
+          "label": "Environment",
+          "link": "#"
+        },
+        {
+          "label": "Nonprofit",
+          "link": "#"
+        },
+        {
+          "label": "Crisis Relief",
+          "link": "#"
+        },
+        {
+          "label": "Film & Videos",
+          "link": "#"
+        }
+      ]
+    },
+    {
+      "title": "Learn more",
+      "links": [
+        {
+          "label": "How CrowdUp Works",
+          "link": "#"
+        },
+        {
+          "label": "Why CrowdUp",
+          "link": "#"
+        },
+        {
+          "label": "Frequently Asked Questions",
+          "link": "#"
+        },
+        {
+          "label": "Success Stories",
+          "link": "#"
+        },
+        {
+          "label": "Supported Countries",
+          "link": "#"
+        },
+        {
+          "label": "Charity Fundraising",
+          "link": "#"
+        }
+      ]
+    },
+    {
+      "title": "Resources",
+      "links": [
+        {
+          "label": "What is crowdfunding?",
+          "link": "#"
+        },
+        {
+          "label": "Help center",
+          "link": "#"
+        },
+        {
+          "label": "Blog",
+          "link": "#"
+        },
+        {
+          "label": "CrowdUp Stories",
+          "link": "#"
+        },
+        {
+          "label": "Careers",
+          "link": "#"
+        },
+        {
+          "label": "About",
+          "link": "#"
+        }
+      ]
+    }
+  ]
+}
