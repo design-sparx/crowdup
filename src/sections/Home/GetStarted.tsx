@@ -1,20 +1,27 @@
-import {Box, BoxProps, Button, Flex, Image, Stack, Text} from "@mantine/core";
+import {Box, BoxProps, Button, Flex, Image, Stack, TextProps, Title, TitleProps} from "@mantine/core";
 
 import HandFlowerImg from "../../assets/img/lotus-flower.png"
+import {Link} from "react-router-dom";
 
-type IProps = BoxProps
-const GetStartedSection = ({...boxProps}: IProps) => {
+interface IProps {
+    boxProps: BoxProps
+    titleProps?: TitleProps,
+    subtitleProps?: TextProps
+}
+
+const GetStartedSection = ({boxProps, titleProps}: IProps) => {
     return (
         <Box {...boxProps}>
-            <Flex>
+            <Flex align="center">
                 <Stack>
-                    <Text>Ready to get started? Join thousands of others today.</Text>
-                    <Flex>
-                        <Button>Start a Campaign</Button>
-                        <Button>How it Works</Button>
+                    <Title {...titleProps}>Ready to get started? Join thousands of others today.</Title>
+                    <Flex gap="sm">
+                        <Button size="lg" variant="filled" component={Link} to="/create-campaign">Start a
+                            Campaign</Button>
+                        <Button size="lg" variant="outline" component={Link} to="/how-it-works">How it Works</Button>
                     </Flex>
                 </Stack>
-                <Image src={HandFlowerImg}/>
+                <Image src={HandFlowerImg} height={240} width={240} fit="contain"/>
             </Flex>
         </Box>
     );

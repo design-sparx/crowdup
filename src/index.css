@@ -12,4 +12,8 @@
 
 body {
     margin: 0;
+    background-color: #e3fced;
+    background-image: radial-gradient(at 47% 33%, hsl(0.00, 0%, 100%) 0, transparent 59%),
+    radial-gradient(at 82% 65%, hsl(41.63, 62%, 85%) 0, transparent 55%);
+    background-repeat: no-repeat;
 }

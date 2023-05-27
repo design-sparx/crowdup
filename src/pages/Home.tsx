@@ -1,6 +1,6 @@
 import HeroSection from "../sections/Home/Hero.tsx";
-import {Button, Container, Text} from "@mantine/core";
-import {SectionTitle} from "../components";
+import {Box, BoxProps, Container, Text, TextProps, Title, TitleProps} from "@mantine/core";
+import {TitleBadge} from "../components";
 import FeaturesSection from "../sections/Home/Features.tsx";
 import StatsSection from "../sections/Home/Stats";
 import JoinUsSection from "../sections/Home/JoinUs";
@@ -12,6 +12,27 @@ import {PublicLayout} from "../layout";
 import {Helmet} from "react-helmet";
 
 const HomePage = (): JSX.Element => {
+    const boxProps: BoxProps = {
+        mt: 96,
+        mb: 136,
+        py: 48
+    }
+
+    const titleProps: TitleProps = {
+        size: 32,
+        weight: 700,
+        mb: "lg",
+        transform: 'capitalize',
+        sx: {lineHeight: '40px'}
+    }
+
+    const subTitleProps: TextProps = {
+        size: 20,
+        weight: 500,
+        mb: "md",
+        sx: {lineHeight: '28px'}
+    }
+
     return (
         <>
             <Helmet>
@@ -20,19 +41,22 @@ const HomePage = (): JSX.Element => {
             <PublicLayout compressedNav={true}>
                 <HeroSection/>
                 <Container>
-                    <SectionTitle title="about us" description="more people more impact"/>
-                    <Text>Because together, we can make a real difference. Our volunteers service in a
-                        variety of roles according to their skills and interests.</Text>
-                    <Button>Read more</Button>
+                    <Box {...boxProps}>
+                        <TitleBadge title="About us"/>
+                        <Title {...titleProps}>more people more impact</Title>
+                        <Text {...subTitleProps}>Because together, we can make a real difference. Our volunteers service
+                            in a
+                            variety of roles according to their skills and interests.</Text>
+                    </Box>
+                    <FeaturesSection boxProps={boxProps} subtitleProps={subTitleProps}/>
+                    <StatsSection boxProps={boxProps} titleProps={titleProps} subtitleProps={subTitleProps}/>
+                    <JoinUsSection boxProps={boxProps} titleProps={titleProps} subtitleProps={subTitleProps}/>
                 </Container>
+                <WaysToFundSection boxProps={boxProps} titleProps={titleProps} subtitleProps={subTitleProps}/>
                 <Container>
-                    <FeaturesSection/>
-                    <StatsSection/>
-                    <JoinUsSection/>
-                    <WaysToFundSection/>
-                    <CampaignsSection/>
-                    <TestimonialsSection/>
-                    <GetStartedSection/>
+                    <TestimonialsSection boxProps={boxProps} titleProps={titleProps}/>
+                    <CampaignsSection boxProps={boxProps} titleProps={titleProps} subtitleProps={subTitleProps}/>
+                    <GetStartedSection boxProps={boxProps} titleProps={titleProps}/>
                 </Container>
             </PublicLayout>
         </>

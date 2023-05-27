@@ -1,5 +1,5 @@
-import {Box, Paper, PaperProps, SimpleGrid, Text} from "@mantine/core";
-import {SectionTitle} from "../../components";
+import {Box, BoxProps, Paper, PaperProps, SimpleGrid, Text, TextProps, Title, TitleProps} from "@mantine/core";
+import {TitleBadge} from "../../components";
 
 const mockData = [
     {
@@ -23,23 +23,41 @@ interface IStatsProps extends PaperProps {
 
 function Stats({amount, description}: IStatsProps) {
     return (
-        <Paper withBorder>
-            <Text>{amount}+</Text>
-            <Text>{description}</Text>
+        <Paper
+            p="md"
+            shadow="md"
+            withBorder
+            radius="sm"
+            sx={{
+                backdropFilter: `blur(16px) saturate(180%)`,
+                backgroundColor: `rgba(255, 255, 255, 0.75)`,
+                border: `1px solid rgba(209, 213, 219, 0.3)`
+            }}>
+            <Title size={36} mb="md">{amount}+</Title>
+            <Text size="sm">{description}</Text>
         </Paper>
     )
 }
 
-const StatsSection = () => {
+interface IProps {
+    boxProps: BoxProps
+    titleProps?: TitleProps,
+    subtitleProps?: TextProps
+}
+
+const StatsSection = ({boxProps, subtitleProps, titleProps}: IProps) => {
     const items = mockData.map((item) => <Stats {...item} key={item.description}/>)
 
     return (
-        <Box>
-            <SectionTitle
-                title="make a difference"
-                description="large pool potential investor"
-                extra="With our crowdfunding platform, you can support the projects and causes you care about most"/>
-            <SimpleGrid cols={3}>
+        <Box {...boxProps}>
+            <Box mb="lg">
+                <TitleBadge title="make a difference"/>
+                <Title {...titleProps}>large pool potential investor</Title>
+                <Text {...subtitleProps}>With our crowdfunding platform, you can support the projects and causes you
+                    care
+                    about most</Text>
+            </Box>
+            <SimpleGrid cols={3} spacing="lg">
                 {items}
             </SimpleGrid>
         </Box>

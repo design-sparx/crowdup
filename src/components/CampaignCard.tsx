@@ -1,17 +1,30 @@
-import {Button, Card, createStyles, Flex, Image, PaperProps, Progress, rem, Text,} from '@mantine/core';
+import {
+    Button,
+    Card,
+    createStyles,
+    Flex,
+    getStylesRef,
+    Image,
+    PaperProps,
+    Progress,
+    rem,
+    Stack,
+    Text,
+} from '@mantine/core';
 import {ICampaign} from "../types";
+import {Link} from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
     card: {
         position: 'relative',
-        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-    },
+        padding: theme.spacing.lg,
+        backdropFilter: `blur(16px) saturate(180%)`,
+        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : `rgba(255, 255, 255, 0.75)`,
+        border: `1px solid rgba(209, 213, 219, 0.3)`,
 
-    rating: {
-        position: 'absolute',
-        top: theme.spacing.xs,
-        right: rem(12),
-        pointerEvents: 'none',
+        [`&:hover .${getStylesRef('image')}`]: {
+            transform: 'scale(1.03)',
+        },
     },
 
     title: {
@@ -19,16 +32,10 @@ const useStyles = createStyles((theme) => ({
         marginBottom: rem(5),
     },
 
-    action: {
-        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-        ...theme.fn.hover({
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
-        }),
-    },
-
-    footer: {
-        marginTop: theme.spacing.md,
-    },
+    image: {
+        ref: getStylesRef('image'),
+        transition: 'transform 150ms ease',
+    }
 }));
 
 interface IProps extends PaperProps {
@@ -36,7 +43,7 @@ interface IProps extends PaperProps {
     showActions?: boolean
 }
 
-const CampaignCard = ({data, showActions, ...others}: IProps) => {
+const CampaignCard = ({data, showActions}: IProps) => {
     const {classes} = useStyles();
     const {
         mainImage,
@@ -47,31 +54,31 @@ const CampaignCard = ({data, showActions, ...others}: IProps) => {
         contributors,
         description,
     } = data;
-    const linkProps = {href: `/campaigns/${id}`, rel: 'noopener noreferrer'};
+    const linkProps = {to: `/campaigns/${id}`, rel: 'noopener noreferrer'};
 
     return (
-        <Card radius="md" className={classes.card} {...others}>
+        <Card radius="sm" shadow="md" component={Link} {...linkProps} className={classes.card}>
             <Card.Section>
-                <a {...linkProps}>
-                    <Image src={mainImage} height={280} radius="md"/>
-                </a>
+                <Image src={mainImage} height={280} className={classes.image}/>
             </Card.Section>
 
-            <Card.Section>
-                <Text className={classes.title} lineClamp={1} fw={500} component="a" {...linkProps}>
-                    {title}
-                </Text>
+            <Card.Section pt={0} px="md" pb="md">
+                <Stack>
+                    <Text className={classes.title} lineClamp={1} fw={500}>
+                        {title}
+                    </Text>
 
-                {showActions && <Text lineClamp={3}>{description}</Text>}
+                    {showActions && <Text lineClamp={3}>{description}</Text>}
 
-                <Progress value={daysLeft}/>
+                    <Progress value={daysLeft}/>
 
-                <Flex justify="space-between">
-                    <Text>{amountRaised} raised</Text>
-                    <Text>{contributors} donations</Text>
-                </Flex>
+                    <Flex justify="space-between">
+                        <Text><b>{amountRaised}</b> raised</Text>
+                        <Text><b>{contributors}</b> donations</Text>
+                    </Flex>
 
-                {showActions && <Button>Donate Now</Button>}
+                    {showActions && <Button>Donate Now</Button>}
+                </Stack>
             </Card.Section>
         </Card>
     );

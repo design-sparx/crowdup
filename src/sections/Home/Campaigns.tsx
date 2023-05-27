@@ -1,17 +1,23 @@
-import {Box, Title} from '@mantine/core'
+import {Box, BoxProps, TextProps, Title, TitleProps} from '@mantine/core'
 import {CampaignCard, TitleBadge} from "../../components";
 import {Carousel} from "@mantine/carousel";
 
 import campaignsData from "../../data/Campaigns.json";
 
-const CampaignsSection = () => {
+interface IProps {
+    boxProps: BoxProps
+    titleProps?: TitleProps,
+    subtitleProps?: TextProps
+}
+
+const CampaignsSection = ({boxProps, titleProps}: IProps) => {
     const slides = campaignsData.data.map(c => (<Carousel.Slide key={c.id}><CampaignCard data={c}/></Carousel.Slide>))
 
     return (
-        <Box>
+        <Box {...boxProps}>
             <TitleBadge title="Happening near you"/>
-            <Title>Fundraisers in your community</Title>
-            <Carousel slideSize="29%" align="start" slideGap="lg">
+            <Title {...titleProps}>Fundraisers in your community</Title>
+            <Carousel slideSize="45%" align="start" slideGap="md">
                 {slides}
             </Carousel>
         </Box>

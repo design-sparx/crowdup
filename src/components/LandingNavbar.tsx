@@ -4,7 +4,8 @@ import {
     Burger,
     Button,
     Center,
-    Collapse, Container,
+    Collapse,
+    Container,
     createStyles,
     Divider,
     Drawer,
@@ -201,7 +202,7 @@ const LandingNavbar = ({compressed}: IProps) => {
             sx={{
                 transition: "all ease 150ms",
                 position: "fixed",
-                top: '3.5%',
+                top: '3%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
                 zIndex: 2,
@@ -209,7 +210,13 @@ const LandingNavbar = ({compressed}: IProps) => {
                 width: compressed ? (stickyClass ? "100%" : "85%") : "100%",
                 boxShadow: theme.shadows.sm,
             }}>
-            <Header height={60} px="md">
+            <Header
+                height={60}
+                px="md"
+                sx={{
+                    backgroundColor: stickyClass ? 'rgba( 255, 255, 255, .9 )' : theme.white,
+                    backdropFilter: 'blur(8px)',
+                }}>
                 <Container size="lg" fluid={compressed}>
                     <Flex justify="space-between" align="center" sx={{height: '100%'}}>
                         <BrandName/>

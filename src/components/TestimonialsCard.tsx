@@ -1,10 +1,12 @@
-import {Card, createStyles, Grid, Group, Image, PaperProps, rem, Text,} from '@mantine/core';
+import {createStyles, Divider, Grid, Group, Image, Paper, PaperProps, rem, Stack, Text,} from '@mantine/core';
 import {ITestimonial} from "../types";
 
 const useStyles = createStyles((theme) => ({
     card: {
         position: 'relative',
-        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+        backdropFilter: `blur(16px) saturate(180%)`,
+        backgroundColor: `rgba(255, 255, 255, 0.75)`,
+        border: `1px solid rgba(209, 213, 219, 0.3)`,
     },
 
     rating: {
@@ -42,21 +44,24 @@ const CampaignCard = ({data, ...others}: IProps) => {
     } = data;
 
     return (
-        <Card radius="md" className={classes.card} {...others}>
-            <Grid>
-                <Grid.Col lg={7}>
-                    <Text size="xl">{testimonial}</Text>
-                    <Group>
-                        <Text>{createdBy},</Text>
-                        <Text>{jobPosition} - </Text>
-                        <Text>{company}</Text>
-                    </Group>
+        <Paper radius="md" className={classes.card} mx={36} {...others}>
+            <Grid sx={{alignItems: 'center'}}>
+                <Grid.Col lg={7} pl="xl">
+                    <Stack spacing="sm">
+                        <Text size="xl">"{testimonial}"</Text>
+                        <Text fw={700}>{createdBy}</Text>
+                        <Group>
+                            <Text size="md" fs="italic">{jobPosition}</Text>
+                            <Divider orientation="vertical"/>
+                            <Text size="md" td="underline">{company}</Text>
+                        </Group>
+                    </Stack>
                 </Grid.Col>
                 <Grid.Col lg={5}>
-                    <Image src={createdByImage}/>
+                    <Image src={createdByImage} height={320} fit="cover"/>
                 </Grid.Col>
             </Grid>
-        </Card>
+        </Paper>
     );
 };
 
