@@ -134,6 +134,10 @@ const LandingFooter = ({data}: FooterLinksProps) => {
             <Container className={classes.inner} size="lg">
                 <div className={classes.logo}>
                     <BrandName/>
+                    <Text size="xs">CrowdUp is a crowdfunding website that lets you raise money for anything that matters to
+                        you. From personal causes and events to projects and more. We've helped people from all over the
+                        world raise millions online.
+                    </Text>
                 </div>
                 <div className={classes.groups}>{groups}</div>
             </Container>
