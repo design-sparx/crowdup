@@ -1,11 +1,24 @@
-import {ActionIcon, Container, Flex, Paper, Select, SimpleGrid, Stack, TextInput, Title, Tooltip} from "@mantine/core";
+import {Box, BoxProps, Container, Flex, Select, SimpleGrid, Stack, TextInput, Title, TitleProps} from "@mantine/core";
 import campaignsData from "../data/Campaigns.json";
 import {CampaignCard} from "../components";
-import {IconLayoutGrid, IconListDetails} from "@tabler/icons-react";
 import {PublicLayout} from "../layout";
 import {Helmet} from "react-helmet";
 
 const CampaignsPage = (): JSX.Element => {
+    const boxProps: BoxProps = {
+        mt: 96,
+        mb: 136,
+        py: 48
+    }
+
+    const titleProps: TitleProps = {
+        size: 32,
+        weight: 700,
+        mb: "lg",
+        transform: 'capitalize',
+        sx: {lineHeight: '40px'}
+    }
+
     const items = campaignsData.data.map(c => (<CampaignCard key={c.id} data={c} showActions={true}/>))
 
     return (
@@ -16,26 +29,16 @@ const CampaignsPage = (): JSX.Element => {
             <PublicLayout compressedNav={false}>
                 <Container size="lg">
                     <Stack>
-                        <Paper>
-                            <Title>Discover campaigns to fund</Title>
-                        </Paper>
+                        <Box {...boxProps}>
+                            <Title {...titleProps} align="center">Discover campaigns to fund</Title>
+                        </Box>
                         <Flex justify="space-between">
                             <TextInput placeholder="search campaigns..." sx={{width: 500}}/>
                             <Flex align="center" gap="sm">
-                                <Tooltip label="list">
-                                    <ActionIcon>
-                                        <IconListDetails/>
-                                    </ActionIcon>
-                                </Tooltip>
-                                <Tooltip label="grid">
-                                    <ActionIcon>
-                                        <IconLayoutGrid/>
-                                    </ActionIcon>
-                                </Tooltip>
                                 <Select
                                     label=""
-                                    placeholder=""
-                                    value="50"
+                                    placeholder="campaigns in"
+                                    defaultValue=""
                                     data={[
                                         {value: '10', label: 'show: 10'},
                                         {value: '25', label: 'show: 25'},
@@ -45,8 +48,8 @@ const CampaignsPage = (): JSX.Element => {
                                 />
                                 <Select
                                     label=""
-                                    placeholder="sort by"
-                                    value="featured"
+                                    placeholder="Explore"
+                                    defaultValue="featured"
                                     data={[
                                         {value: 'featured', label: 'sort by: featured'},
                                         {value: 'popular', label: 'sort by: popular'},

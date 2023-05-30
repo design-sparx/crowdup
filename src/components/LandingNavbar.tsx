@@ -263,7 +263,7 @@ const LandingNavbar = ({compressed}: IProps) => {
                                 Contact us
                             </a>
                             <Button leftIcon={<IconSearch size={18}/>}>Search</Button>
-                            <Button>Create a campaign</Button>
+                            <Button>Start a campaign</Button>
                         </Flex>
                         <Burger opened={drawerOpened} onClick={toggleDrawer} className={classes.hiddenDesktop}/>
                     </Flex>

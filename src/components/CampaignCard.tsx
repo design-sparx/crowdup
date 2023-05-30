@@ -1,13 +1,13 @@
 import {
-    Button,
+    Badge,
     Card,
     createStyles,
     Flex,
     getStylesRef,
+    Group,
     Image,
     PaperProps,
     Progress,
-    rem,
     Stack,
     Text,
 } from '@mantine/core';
@@ -25,11 +25,15 @@ const useStyles = createStyles((theme) => ({
         [`&:hover .${getStylesRef('image')}`]: {
             transform: 'scale(1.03)',
         },
+
+        '&:hover': {
+            boxShadow: theme.shadows.xl,
+            backgroundColor: theme.colors.gray[0]
+        }
     },
 
     title: {
         marginTop: theme.spacing.md,
-        marginBottom: rem(5),
     },
 
     image: {
@@ -53,6 +57,8 @@ const CampaignCard = ({data, showActions}: IProps) => {
         daysLeft,
         contributors,
         description,
+        category,
+        country
     } = data;
     const linkProps = {to: `/campaigns/${id}`, rel: 'noopener noreferrer'};
 
@@ -64,11 +70,16 @@ const CampaignCard = ({data, showActions}: IProps) => {
 
             <Card.Section pt={0} px="md" pb="md">
                 <Stack>
-                    <Text className={classes.title} lineClamp={1} fw={500}>
+                    <Text className={classes.title} lineClamp={1} fw={500} size="lg">
                         {title}
                     </Text>
 
-                    {showActions && <Text lineClamp={3}>{description}</Text>}
+                    <Group position="apart">
+                        <Text size="xs" transform="uppercase" color="dimmed" fw={700}>{country}</Text>
+                        <Badge variant="dot" color="secondary">{category}</Badge>
+                    </Group>
+
+                    {showActions && <Text lineClamp={3} size="sm">{description}</Text>}
 
                     <Progress value={daysLeft}/>
 
@@ -77,7 +88,7 @@ const CampaignCard = ({data, showActions}: IProps) => {
                         <Text><b>{contributors}</b> donations</Text>
                     </Flex>
 
-                    {showActions && <Button>Donate Now</Button>}
+                    {/*{showActions && <Button>Donate Now</Button>}*/}
                 </Stack>
             </Card.Section>
         </Card>

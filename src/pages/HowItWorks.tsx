@@ -57,7 +57,8 @@ const HowItWorksPage = (): JSX.Element => {
 
     const imageProps: ImageProps = {
         height: 160,
-        fit: "contain"
+        fit: "contain",
+        py: "xl"
     }
 
     return (
