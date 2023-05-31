@@ -4,7 +4,6 @@ import {
     ActionIcon,
     Alert,
     Anchor,
-    Avatar,
     Box,
     Button,
     Checkbox,
@@ -31,9 +30,6 @@ import TextAlign from '@tiptap/extension-text-align';
 import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
 import {forwardRef, useState} from "react";
-import countriesData from "../data/Countries.json";
-import currencyData from "../data/Currencies.json";
-import {ICountry, ICurrency} from "../types";
 import {DateInput} from "@mantine/dates";
 import {
     IconBrandFacebook,
@@ -48,39 +44,9 @@ import {
     IconPlus,
     IconTrash
 } from "@tabler/icons-react";
-import {FileDropzone} from "../components";
+import {CountrySelect, CurrencySelect, FileDropzone} from "../components";
 import {randomId} from "@mantine/hooks";
 import {useForm} from "@mantine/form";
-
-const CountrySelectItem = forwardRef<HTMLDivElement, ICountry>(
-    ({image, name, code, ...others}: ICountry, ref) => (
-        <div ref={ref} {...others}>
-            <Group noWrap>
-                <Avatar src={image}/>
-
-                <div>
-                    <Text size="sm">{name}</Text>
-                    <Text size="xs" opacity={0.65}>
-                        {code}
-                    </Text>
-                </div>
-            </Group>
-        </div>
-    )
-);
-
-const CurrencySelectItem = forwardRef<HTMLDivElement, ICurrency>(
-    ({name, cc, ...others}: ICurrency, ref) => (
-        <div ref={ref} {...others}>
-            <Group noWrap>
-                <Text size="sm">{name}</Text>
-                <Text size="sm" opacity={0.65}>
-                    {cc}
-                </Text>
-            </Group>
-        </div>
-    )
-);
 
 interface ISocialProps {
     icon: React.FC<any>;
@@ -172,32 +138,10 @@ const CreateCampaignPage = () => {
                             <Text>Please select the country that we&apos;ll be sending funds to (typically where
                                 you&apos;re
                                 resident). This helps match you to the correct payment processors.</Text>
-                            <Select
-                                label="Country"
-                                itemComponent={CountrySelectItem}
-                                data={countriesData.data.map(c => ({value: c.name, label: c.name, ...c}))}
-                                searchable
-                                maxDropdownHeight={300}
-                                nothingFound="Nobody here"
-                                filter={(value, item) =>
-                                    item?.name?.toLowerCase().includes(value?.toLowerCase().trim()) ||
-                                    item?.code?.toLowerCase().includes(value?.toLowerCase().trim())
-                                }
-                            />
+                            <CountrySelect/>
                             <TextInput label="City" placeholder="city"/>
                             <Title>Donation information</Title>
-                            <Select
-                                label="What currency do you want to raise money in?"
-                                itemComponent={CurrencySelectItem}
-                                data={currencyData.data.map(c => ({value: c.name, label: c.name, ...c}))}
-                                searchable
-                                maxDropdownHeight={300}
-                                nothingFound="Nobody here"
-                                filter={(value, item) =>
-                                    item?.name?.toLowerCase().includes(value?.toLowerCase().trim()) ||
-                                    item?.code?.toLowerCase().includes(value?.toLowerCase().trim())
-                                }
-                            />
+                            <CurrencySelect/>
                             <Radio.Group
                                 label="What kind of fundraiser would you like to create?"
                                 value={target}

@@ -3,47 +3,59 @@ import {useEffect, useState} from "react";
 import {ICampaign} from "../types";
 import campaignsData from "../data/Campaigns.json";
 import {
+    Accordion,
+    Anchor,
     Avatar,
-    Badge,
     Button,
-    ButtonProps,
+    Card,
     Container,
-    CopyButton,
     Flex,
     Grid,
+    Group,
     Image,
-    Modal,
-    NumberInput,
     Paper,
+    PaperProps,
     Progress,
     Stack,
     Text,
-    TextInput,
+    TextProps,
     Title,
-    Tooltip
+    TitleProps,
+    UnstyledButton
 } from "@mantine/core";
-import {
-    IconBrandFacebook,
-    IconBrandInstagram,
-    IconBrandLinkedin,
-    IconBrandTwitter,
-    IconCheck,
-    IconCode,
-    IconCopy,
-    IconMail
-} from "@tabler/icons-react";
-import {useDisclosure} from "@mantine/hooks";
-import {ContactCard, UserCard} from "../components";
+import {IconFlag, IconHeart, IconHeartFilled, IconSeparator, IconShare, IconTag} from "@tabler/icons-react";
+import {useDisclosure, useToggle} from "@mantine/hooks";
+import {DonationDrawer, ShareModal, UserCard} from "../components";
 import {PublicLayout} from "../layout";
 import {Helmet} from "react-helmet";
+import * as dayjs from "dayjs";
+import * as LocalizedFormat from "dayjs/plugin/localizedFormat"
+import {notifications} from "@mantine/notifications";
 
 const CampaignDetailsPage = (): JSX.Element => {
+    dayjs.extend(LocalizedFormat)
     const {id} = useParams();
     const [campaign, setCampaign] = useState<ICampaign>();
     const [opened, {open, close}] = useDisclosure(false);
+    const [donateOpened, {open: donateOpen, close: donateClose}] = useDisclosure(false);
+    const [following, setFollowing] = useToggle();
 
-    const buttonProps: ButtonProps = {
-        variant: "subtle"
+    const paperProps: PaperProps = {
+        p: "md",
+        shadow: "sm",
+    }
+
+    const titleProps: TitleProps = {
+        size: 32,
+        weight: 700,
+        transform: 'capitalize',
+        sx: {lineHeight: '40px'}
+    }
+
+    const subTitleProps: TextProps = {
+        size: 20,
+        weight: 500,
+        sx: {lineHeight: '28px'}
     }
 
     const iconSize = 18;
@@ -61,109 +73,122 @@ const CampaignDetailsPage = (): JSX.Element => {
                 <Container size="lg">
                     <Grid>
                         <Grid.Col lg={8}>
-                            <Title>{campaign?.title}</Title>
-                            <Image src={campaign?.mainImage} height={480} radius="sm"/>
-                            <Flex justify="space-between" align="center">
-                                <Flex gap="sm" align="center">
-                                    <Avatar src={campaign?.createdByImage}/>
-                                    <Text>{campaign?.createdBy}</Text>
-                                </Flex>
-                                <Badge size="md" radius="sm" variant="dot">{campaign?.category}</Badge>
-                                <Text>{campaign?.createdAt}</Text>
-                            </Flex>
-                            <Progress value={campaign?.daysLeft} size="xl"/>
-                            <Flex justify="space-between">
-                                <Paper>
-                                    <Text>{campaign?.amountRaised}</Text>
-                                    <Text>raised</Text>
+                            <Stack>
+                                <Card padding="md" shadow="sm">
+                                    <Card.Section>
+                                        <Image src={campaign?.mainImage} height={480}/>
+                                    </Card.Section>
+                                    <Stack mt="md">
+                                        <Title>{campaign?.title}</Title>
+                                        <Flex gap="xs" align="center">
+                                            <Text size="sm">Fundraise campaign created by</Text>
+                                            <UnstyledButton component={Anchor}>
+                                                <Flex gap="xs" align="center">
+                                                    <Avatar src={campaign?.createdByImage} radius="xl" size="sm"/>
+                                                    <Text size="sm">{campaign?.createdBy}</Text>
+                                                </Flex>
+                                            </UnstyledButton>
+                                            <IconSeparator size={18}/>
+                                            <Text component={Anchor} size="sm">{campaign?.country}</Text>
+                                            <IconSeparator size={18}/>
+                                            <Text component={Anchor} size="sm">{campaign?.category}</Text>
+                                        </Flex>
+                                        <Text {...subTitleProps}>Our story</Text>
+                                        <Text size="sm">{campaign?.description}</Text>
+                                    </Stack>
+                                </Card>
+                                <Paper {...paperProps}>
+                                    <Text {...subTitleProps} mb="sm">Organizer</Text>
+                                    <UserCard/>
                                 </Paper>
-                                <Paper>
-                                    <Text>{campaign?.goal}</Text>
-                                    <Text>goal</Text>
+                                <Paper {...paperProps}>
+                                    <Flex gap="sm" align="center">
+                                        <Text>Created on {dayjs(campaign?.createdAt).format('LL')}</Text>
+                                        <IconSeparator size={iconSize}/>
+                                        <Group spacing={2}>
+                                            <IconTag size={iconSize}/>
+                                            <Text component={Anchor}>{campaign?.category}</Text>
+                                        </Group>
+                                    </Flex>
                                 </Paper>
-                                <Paper>
-                                    <Text>{Number(campaign?.goal.split('$')[1]) - Number(campaign?.amountRaised.split('$')[1])}</Text>
-                                    <Text>to go</Text>
-                                </Paper>
-                            </Flex>
-                            <Paper>
-                                <Flex>
-                                    <Text>Select payment method</Text>
-                                    <Button.Group>
-                                        <Button variant="default">$10</Button>
-                                        <Button variant="default">$20</Button>
-                                        <Button variant="default">$50</Button>
-                                        <Button variant="default">$100</Button>
-                                    </Button.Group>
-                                </Flex>
-                                <Flex>
-                                    <NumberInput label="Enter amount" placeholder="$000"/>
-                                </Flex>
-                            </Paper>
-                            <Text>{campaign?.description}</Text>
-                            <Flex>
-                                <Button>Donate</Button>
-                                <Button onClick={open}>Share</Button>
-                            </Flex>
+                                <Button leftIcon={<IconFlag size={iconSize}/>} variant="subtle" color="secondary">Report
+                                    campaign</Button>
+                            </Stack>
                         </Grid.Col>
                         <Grid.Col lg={4}>
-                            <UserCard/>
-                            <ContactCard/>
-                            <Paper>
-                                <Title>Donation FAQ</Title>
-                                <Stack>
-                                    <Text>When will {campaign?.createdBy} get my payment?</Text>
-                                    <Text>Your payment is sent directly to Dora so it immediately helps their
-                                        campaign.</Text>
-                                </Stack>
-                                <Stack>
-                                    <Text>How secure is the payment process?</Text>
-                                    <Text>Payments are made in a highly-secure environment. We use industry leading
-                                        technology (such as SSL) to keep your information safe and encrypted</Text>
-                                </Stack>
-                            </Paper>
+                            <Stack>
+                                <Paper {...paperProps}>
+                                    <Stack spacing="sm">
+                                        <Title {...titleProps} align="center">{campaign?.amountRaised}</Title>
+                                        <Text fw={500} align="center" color="dimmed">raised of {campaign?.goal}</Text>
+                                        <Progress value={campaign?.daysLeft} size="md"/>
+                                        <Flex justify="space-between">
+                                            <Text fw={500}>{campaign?.daysLeft}% Funded</Text>
+                                            <Text fw={500}>{campaign?.contributors} Donors</Text>
+                                        </Flex>
+                                        <Button size="xl" onClick={donateOpen}>Donate</Button>
+                                        <Button leftIcon={<IconShare size={iconSize}/>} variant="outline"
+                                                onClick={open}>
+                                            Share with friends
+                                        </Button>
+                                        <Button
+                                            leftIcon={following ? <IconHeartFilled size={iconSize}/> :
+                                                <IconHeart size={iconSize}/>}
+                                            variant={following ? 'filled' : 'subtle'}
+                                            color="secondary"
+                                            onClick={() => {
+                                                setFollowing();
+                                                notifications.show({
+                                                    title: 'Notification',
+                                                    message: `${following ? 'Following' : 'Unfollowed'} this campaign`,
+                                                    withBorder: true,
+                                                    styles: (theme) => ({
+                                                        root: {
+                                                            backgroundColor: theme.colors.blue[6],
+                                                            borderColor: theme.colors.blue[6],
+
+                                                            '&::before': {backgroundColor: theme.white},
+                                                        },
+
+                                                        title: {color: theme.white},
+                                                        description: {color: theme.white},
+                                                        closeButton: {
+                                                            color: theme.white,
+                                                            '&:hover': {backgroundColor: theme.colors.blue[7]},
+                                                        },
+                                                    }),
+                                                })
+                                            }}
+                                        >
+                                            {following ? 'Unfollow' : 'Follow'} this campaign
+                                        </Button>
+                                    </Stack>
+                                </Paper>
+                                <Paper {...paperProps}>
+                                    <Text {...subTitleProps} mb="md">Donation FAQ</Text>
+                                    <Accordion defaultValue="customization" variant="filled">
+                                        <Accordion.Item value="customization">
+                                            <Accordion.Control>When will {campaign?.createdBy} get my
+                                                payment?</Accordion.Control>
+                                            <Accordion.Panel>Your payment is sent directly to Dora so it immediately
+                                                helps
+                                                their campaign.</Accordion.Panel>
+                                        </Accordion.Item>
+
+                                        <Accordion.Item value="flexibility">
+                                            <Accordion.Control>How secure is the payment process?</Accordion.Control>
+                                            <Accordion.Panel>Payments are made in a highly-secure environment. We use
+                                                industry leading technology (such as SSL) to keep your information safe
+                                                and encrypted</Accordion.Panel>
+                                        </Accordion.Item>
+                                    </Accordion>
+                                </Paper>
+                            </Stack>
                         </Grid.Col>
                     </Grid>
                 </Container>
-                <Modal opened={opened} onClose={close} title="Help by sharing" centered size="md">
-                    <Stack>
-                        <Text>Fundraisers shared on social networks raise up to 5x more.</Text>
-                        <Paper>
-                            <Flex wrap="wrap" gap="xs">
-                                <Button
-                                    leftIcon={<IconBrandFacebook size={iconSize}/>} {...buttonProps}>Facebook</Button>
-                                <Button leftIcon={<IconBrandTwitter size={iconSize}/>} {...buttonProps}>Twitter</Button>
-                                <Button
-                                    leftIcon={<IconBrandInstagram size={iconSize}/>} {...buttonProps}>Instagram</Button>
-                                <Button
-                                    leftIcon={<IconBrandLinkedin size={iconSize}/>} {...buttonProps}>LinkedIn</Button>
-                                <Button leftIcon={<IconMail size={iconSize}/>} {...buttonProps}>Email</Button>
-                                <Button leftIcon={<IconCode size={iconSize}/>} {...buttonProps}>Embed</Button>
-                            </Flex>
-                        </Paper>
-                        <Paper>
-                            <Flex align="flex-end" gap="sm">
-                                <TextInput
-                                    label="Copy Link"
-                                    value={`https://crowdup.com/${campaign?.id}`}
-                                    disabled
-                                    sx={{flex: '1 1 auto'}}/>
-                                <CopyButton value={`https://crowdup.com/${campaign?.id}`} timeout={2000}>
-                                    {({copied, copy}) => (
-                                        <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
-                                            <Button
-                                                color={copied ? 'green' : 'gray'}
-                                                leftIcon={copied ? <IconCheck size="1rem"/> : <IconCopy size="1rem"/>}
-                                                onClick={copy}>
-                                                {copied ? 'Copied' : 'Copy'}
-                                            </Button>
-                                        </Tooltip>
-                                    )}
-                                </CopyButton>
-                            </Flex>
-                        </Paper>
-                    </Stack>
-                </Modal>
+                <ShareModal opened={opened} onClose={close} campaign={campaign} iconSize={iconSize}/>
+                <DonationDrawer campaign={campaign} opened={donateOpened} onClose={donateClose} iconSize={iconSize}/>
             </PublicLayout>
         </>
     );

@@ -14,6 +14,10 @@ import DonatorsTable from "./DonatorsTable";
 import YearlyDonationChart from "./YearlyDonationChart";
 import CheckoutPaymentModal from "./CheckoutPaymentModal";
 import FileDropzone from "./FileDropzone";
+import CountrySelect from "./CountrySelect";
+import CurrencySelect from "./CurrencySelect";
+import DonationDrawer from "./DonationDrawer";
+import ShareModal from "./ShareModal";
 
 export {
     LandingNavbar,
@@ -31,5 +35,9 @@ export {
     DonatorsTable,
     YearlyDonationChart,
     CheckoutPaymentModal,
-    FileDropzone
-}
+    FileDropzone,
+    CountrySelect,
+    CurrencySelect,
+    DonationDrawer,
+    ShareModal
+};
