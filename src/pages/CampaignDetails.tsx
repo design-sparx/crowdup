@@ -41,7 +41,7 @@ const CampaignDetailsPage = (): JSX.Element => {
     const [opened, {open, close}] = useDisclosure(false);
     const [donateOpened, {open: donateOpen, close: donateClose}] = useDisclosure(false);
     const [following, setFollowing] = useToggle();
-    const matchesMobile = useMediaQuery('(max-width: 600px)');
+    const matchesMobile = useMediaQuery('(max-width: 768px)');
 
     const paperProps: PaperProps = {
         p: "md",
@@ -219,15 +219,19 @@ const CampaignDetailsPage = (): JSX.Element => {
                                                 <Text fw={500}>{campaign?.contributors} Donors</Text>
                                             </Flex>
                                             <Button size="xl" onClick={donateOpen}>Donate</Button>
-                                            <Button leftIcon={<IconShare size={iconSize}/>} variant="outline"
-                                                    onClick={open}>
+                                            <Button
+                                                leftIcon={<IconShare size={iconSize}/>}
+                                                variant="outline"
+                                                onClick={open}
+                                                color="blue"
+                                            >
                                                 Share with friends
                                             </Button>
                                             <Button
                                                 leftIcon={following ? <IconHeartFilled size={iconSize}/> :
                                                     <IconHeart size={iconSize}/>}
                                                 variant={following ? 'filled' : 'subtle'}
-                                                color="secondary"
+                                                color="red"
                                                 onClick={() => {
                                                     setFollowing();
                                                     notifications.show({

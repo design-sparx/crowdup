@@ -90,7 +90,7 @@ const HowItWorksPage = (): JSX.Element => {
                             cols={3}
                             spacing="lg"
                             breakpoints={[
-                                {maxWidth: 'md', cols: 2, spacing: 'md'},
+                                {maxWidth: 'md', cols: 3, spacing: 'md'},
                                 {maxWidth: 'sm', cols: 1, spacing: 0},
                             ]}
                         >

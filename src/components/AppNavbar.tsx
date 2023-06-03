@@ -120,13 +120,13 @@ const useStyles = createStyles((theme) => ({
     },
 
     hiddenMobile: {
-        [theme.fn.smallerThan('sm')]: {
+        [theme.fn.smallerThan('md')]: {
             display: 'none',
         },
     },
 
     hiddenDesktop: {
-        [theme.fn.largerThan('sm')]: {
+        [theme.fn.largerThan('md')]: {
             display: 'none',
         },
     },
@@ -183,7 +183,7 @@ const AppNavbar = ({...others}: IProps) => {
                         <Group>
                             <BrandName
                                 size={24}
-                                ml={matchesMobile ? 'sm' : 0}
+                                ml={matchesMobile ? 'md' : 'xs'}
                                 asLink
                                 variant="grayscale"
                             />

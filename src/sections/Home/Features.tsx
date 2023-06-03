@@ -95,7 +95,7 @@ const FeaturesSection = ({boxProps, subtitleProps}: IProps) => {
                 <Text {...subtitleProps}>CrowdUp exists to support social impact projects, enterprises and founders.
                     What good can we help you start?</Text>
             </Box>
-            <SimpleGrid cols={2} spacing="lg" breakpoints={[{maxWidth: 'sm', cols: 1, spacing: 'sm'}]} >
+            <SimpleGrid cols={2} spacing="lg" breakpoints={[{maxWidth: 'md', cols: 2, spacing: 'sm'}]} >
                 {items}
             </SimpleGrid>
         </Box>

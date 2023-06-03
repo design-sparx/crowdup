@@ -49,7 +49,7 @@ const useStyles = createStyles((theme) => ({
         fontWeight: 500,
         fontSize: theme.fontSizes.sm,
 
-        [theme.fn.smallerThan('sm')]: {
+        [theme.fn.smallerThan('md')]: {
             height: rem(42),
             display: 'flex',
             alignItems: 'center',
@@ -92,7 +92,7 @@ const useStyles = createStyles((theme) => ({
         color: theme.colorScheme === 'dark' ? theme.white : theme.black,
         marginBottom: theme.spacing.xs,
 
-        [theme.fn.smallerThan('xs')]: {
+        [theme.fn.smallerThan('sm')]: {
             fontSize: rem(28),
             textAlign: 'left',
         },
@@ -103,13 +103,13 @@ const useStyles = createStyles((theme) => ({
     },
 
     hiddenMobile: {
-        [theme.fn.smallerThan('sm')]: {
+        [theme.fn.smallerThan('md')]: {
             display: 'none',
         },
     },
 
     hiddenDesktop: {
-        [theme.fn.largerThan('sm')]: {
+        [theme.fn.largerThan('md')]: {
             display: 'none',
         },
     },
@@ -225,6 +225,9 @@ const LandingNavbar = ({compressed}: IProps) => {
                             <a href="/how-it-works" className={classes.link}>
                                 How it works
                             </a>
+                            <a href="/campaigns" className={classes.link}>
+                                Campaigns
+                            </a>
                             <HoverCard width={700} position="bottom" radius="sm" shadow="md" withinPortal>
                                 <HoverCard.Target>
                                     <a href="#" className={classes.link}>
@@ -254,9 +257,6 @@ const LandingNavbar = ({compressed}: IProps) => {
                                     </SimpleGrid>
                                 </HoverCard.Dropdown>
                             </HoverCard>
-                            <a href="/campaigns" className={classes.link}>
-                                Campaigns
-                            </a>
                             <Button
                                 leftIcon={<IconSearch size={18}/>}
                                 onClick={toggleSearchDrawer}
@@ -293,6 +293,12 @@ const LandingNavbar = ({compressed}: IProps) => {
                     <a href="/" className={classes.link}>
                         Home
                     </a>
+                    <a href="/how-it-works" className={classes.link}>
+                        How it works
+                    </a>
+                    <a href="/campaigns" className={classes.link}>
+                        Campaigns
+                    </a>
                     <UnstyledButton className={classes.link} onClick={toggleLinks}>
                         <Center inline>
                             <Box component="span" mr={5}>
@@ -302,8 +308,12 @@ const LandingNavbar = ({compressed}: IProps) => {
                         </Center>
                     </UnstyledButton>
                     <Collapse in={linksOpened}>{links}</Collapse>
-                    <a href="/campaigns" className={classes.link}>
-                        Campaigns
+
+                    <a href="/create-campaign" className={classes.link}>
+                        Start a campaign
+                    </a>
+                    <a href="/dashboard" className={classes.link}>
+                        My dashboard
                     </a>
                     <Button
                         leftIcon={<IconSearch size={18}/>}
@@ -317,12 +327,6 @@ const LandingNavbar = ({compressed}: IProps) => {
                     >
                         Search
                     </Button>
-                    <a href="/create-campaign" className={classes.link}>
-                        Start a campaign
-                    </a>
-                    <a href="/dashboard" className={classes.link}>
-                        My dashboard
-                    </a>
                 </ScrollArea>
             </Drawer>
 

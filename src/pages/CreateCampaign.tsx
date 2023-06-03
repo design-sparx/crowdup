@@ -202,8 +202,9 @@ const CreateCampaignPage = () => {
                                                     placeholder="Date input"
                                                     icon={<IconCalendar size={18}/>}
                                                 />
-                                                <NumberInput label="Target amount"
-                                                             icon={<IconCurrencyDollar size={18}/>}/>
+                                                <NumberInput
+                                                    label="Target amount"
+                                                    icon={<IconCurrencyDollar size={18}/>}/>
                                                 <Checkbox
                                                     label="Allow your fundraiser to be funded over the needed amount?"/>
                                             </Stack> :

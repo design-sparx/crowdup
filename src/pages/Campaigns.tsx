@@ -6,7 +6,7 @@ import {Helmet} from "react-helmet";
 import {useMediaQuery} from "@mantine/hooks";
 
 const CampaignsPage = (): JSX.Element => {
-    const matchesMobile = useMediaQuery('(max-width: 600px)');
+    const matchesMobile = useMediaQuery('(max-width: 768px)');
 
     const boxProps: BoxProps = {
         mt: matchesMobile ? 4 : 96,

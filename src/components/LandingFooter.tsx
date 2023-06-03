@@ -22,6 +22,10 @@ const useStyles = createStyles((theme) => ({
     logo: {
         maxWidth: rem(200),
 
+        [theme.fn.smallerThan('md')]: {
+            maxWidth: '40%'
+        },
+
         [theme.fn.smallerThan('sm')]: {
             maxWidth: '100%',
             display: 'flex',
@@ -53,6 +57,10 @@ const useStyles = createStyles((theme) => ({
         display: 'flex',
         flexWrap: 'wrap',
 
+        [theme.fn.smallerThan('md')]: {
+            marginLeft: 12
+        },
+
         [theme.fn.smallerThan('sm')]: {
             display: 'flex',
             width: '92vw',
@@ -63,11 +71,13 @@ const useStyles = createStyles((theme) => ({
     wrapper: {
         width: rem(200),
 
-        [theme.fn.smallerThan('sm')]: {
-            width: '100%',
-            margin: `${theme.spacing.sm} 0`
+        [theme.fn.smallerThan('md')]: {
+            margin: `${theme.spacing.sm} 0`,
         },
 
+        [theme.fn.smallerThan('sm')]: {
+            width: '100%',
+        },
     },
 
     link: {
@@ -147,7 +157,7 @@ const LandingFooter = ({data}: FooterLinksProps) => {
         <footer className={classes.footer}>
             <Container className={classes.inner} size="lg">
                 <div className={classes.logo}>
-                    <Stack>
+                    <Stack align="flex-start">
                         <BrandName size={40}/>
                         <Text size="sm">CrowdUp is a crowdfunding website that lets you raise money for anything that
                             matters to you. From personal causes and events to projects and more. We've helped people

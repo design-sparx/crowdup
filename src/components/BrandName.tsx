@@ -7,9 +7,12 @@ const useStyles = createStyles((theme) => ({
         letterSpacing: -1,
         color: theme.colorScheme === 'dark' ? theme.white : theme.black,
 
-        [theme.fn.smallerThan('xs')]: {
-            fontSize: rem(24),
+        [theme.fn.smallerThan('md')]: {
             fontWeight: 700,
+        },
+
+        [theme.fn.smallerThan('sm')]: {
+            fontSize: rem(24),
             textAlign: 'left',
         },
     },
@@ -24,9 +27,12 @@ const useStyles = createStyles((theme) => ({
         letterSpacing: -1,
         color: theme.colors.gray[0],
 
-        [theme.fn.smallerThan('xs')]: {
-            fontSize: rem(24),
+        [theme.fn.smallerThan('md')]: {
             fontWeight: 700,
+        },
+
+        [theme.fn.smallerThan('sm')]: {
+            fontSize: rem(24),
             textAlign: 'left',
         },
     }

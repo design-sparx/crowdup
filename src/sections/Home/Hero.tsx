@@ -12,7 +12,11 @@ const useStyles = createStyles((theme) => ({
         backgroundPosition: 'center',
         height: rem(640),
 
-        [theme.fn.smallerThan('xs')]: {
+        [theme.fn.smallerThan('md')]: {
+            height: rem(560),
+        },
+
+        [theme.fn.smallerThan('sm')]: {
             paddingTop: rem(80),
             paddingBottom: rem(50),
         },
@@ -25,7 +29,11 @@ const useStyles = createStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+
+        [theme.fn.smallerThan('md')]: {
+            height: rem(560),
+        }
     },
 
     title: {
@@ -36,6 +44,10 @@ const useStyles = createStyles((theme) => ({
         paddingRight: theme.spacing.md,
         color: theme.white,
         textAlign: 'center',
+
+        [theme.fn.smallerThan('md')]: {
+            fontSize: rem(48),
+        },
 
         [theme.fn.smallerThan('sm')]: {
             fontSize: rem(28),
@@ -54,7 +66,7 @@ const useStyles = createStyles((theme) => ({
         fontSize: rem(24),
         textAlign: 'center',
 
-        [theme.fn.smallerThan('xs')]: {
+        [theme.fn.smallerThan('sm')]: {
             fontSize: theme.fontSizes.md,
             textAlign: 'left',
         },

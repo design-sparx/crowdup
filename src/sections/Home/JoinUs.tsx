@@ -14,6 +14,7 @@ import {
 } from "@mantine/core";
 import {IconUsers, IconWorld} from "@tabler/icons-react"
 import {TitleBadge} from "../../components";
+import {useMediaQuery} from "@mantine/hooks";
 
 interface IProps {
     boxProps: BoxProps
@@ -22,9 +23,11 @@ interface IProps {
 }
 
 const JoinUsSection = ({boxProps, subtitleProps}: IProps) => {
+    const matchesMobile = useMediaQuery('(max-width: 768px)');
+
     return (
         <Box {...boxProps}>
-            <Flex gap={{base: 'sm', sm: 'lg'}} direction={{base: 'column-reverse', sm: 'row'}}>
+            <Flex gap={{base: 'sm', sm: 'lg'}} direction={{base: 'column-reverse', md: 'row'}}>
                 <Stack>
                     <TitleBadge title='Open partnership - Start your journey'/>
                     <Text {...subtitleProps}>Almost is never enough</Text>
@@ -64,10 +67,10 @@ const JoinUsSection = ({boxProps, subtitleProps}: IProps) => {
                     <Progress value={50}/>
                     <Button>Join Us</Button>
                 </Stack>
-                <Box mx="auto">
+                <Box mx={matchesMobile ? 0 : 'auto'}>
                     <Image
                         src="https://images.unsplash.com/photo-1524069290683-0457abfe42c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-                        width={500}
+                        width={matchesMobile ? '100%' : 500}
                         height={400}
                         radius="sm"
                     />

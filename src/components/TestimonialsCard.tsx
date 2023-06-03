@@ -43,7 +43,7 @@ const CampaignCard = ({data, ...others}: IProps) => {
     const {
         company, createdByImage, createdBy, testimonial, jobPosition
     } = data;
-    const matchesMobile = useMediaQuery('(max-width: 600px)');
+    const matchesMobile = useMediaQuery('(max-width: 768px)');
 
     return (
         <Paper radius="md" className={classes.card} mx={36} {...others}>

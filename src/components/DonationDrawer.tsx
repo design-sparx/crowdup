@@ -185,14 +185,14 @@ const DonationDrawer = ({campaign, iconSize, ...others}: IProps) => {
                             <Text size="sm">By continuing, you agree with <Anchor>CrowdUp terms</Anchor> and <Anchor>privacy
                                 notice.</Anchor></Text>
                             <Text size="sm">Learn more about <Anchor>pricing and fees.</Anchor></Text>
-                            <Group>
+                            <Flex gap="sm">
                                 <ThemeIcon size="lg" variant="light" color="blue">
                                     <IconShieldCheckFilled size={18}/>
                                 </ThemeIcon>
                                 <Text size="sm">We guarantee you a full refund for up to a year in the rare case that
                                     fraud occurs.&nbsp;<Anchor>See our CrowdUp Giving Guarantee.</Anchor>
                                 </Text>
-                            </Group>
+                            </Flex>
                         </Stack>
                     </Paper>
                 </Stack>
