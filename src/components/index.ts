@@ -18,6 +18,10 @@ import CountrySelect from "./CountrySelect";
 import CurrencySelect from "./CurrencySelect";
 import DonationDrawer from "./DonationDrawer";
 import ShareModal from "./ShareModal";
+import NotFound from "./NotFound";
+import BackButton from "./BackButton";
+import CategorySelect from "./CategorySelect";
+import SearchDrawer from "./SearchDrawer";
 
 export {
     LandingNavbar,
@@ -39,5 +43,9 @@ export {
     CountrySelect,
     CurrencySelect,
     DonationDrawer,
-    ShareModal
+    ShareModal,
+    NotFound,
+    BackButton,
+    CategorySelect,
+    SearchDrawer
 };

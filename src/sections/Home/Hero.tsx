@@ -73,7 +73,6 @@ const useStyles = createStyles((theme) => ({
   },
 
   control: {
-    height: rem(42),
     fontSize: theme.fontSizes.md,
 
     '&:not(:first-of-type)': {
@@ -141,10 +140,10 @@ const HeroSection = () => {
         </Container>
 
         <div className={classes.controls}>
-          <Button className={classes.control} variant="white" size="lg">
+          <Button className={classes.control} variant="white" size="lg" component="a" href="/create-campaign">
             Start a campaign
           </Button>
-          <Button className={classes.control} variant="white" size="lg">
+          <Button className={classes.control} variant="white" size="lg" component="a" href="/campaigns">
             Explore now
           </Button>
         </div>

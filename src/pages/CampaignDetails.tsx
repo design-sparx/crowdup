@@ -25,7 +25,7 @@ import {
 } from "@mantine/core";
 import {IconFlag, IconHeart, IconHeartFilled, IconSeparator, IconShare, IconTag} from "@tabler/icons-react";
 import {useDisclosure, useToggle} from "@mantine/hooks";
-import {DonationDrawer, ShareModal, UserCard} from "../components";
+import {BackButton, DonationDrawer, NotFound, ShareModal, UserCard} from "../components";
 import {PublicLayout} from "../layout";
 import {Helmet} from "react-helmet";
 import * as dayjs from "dayjs";
@@ -70,7 +70,8 @@ const CampaignDetailsPage = (): JSX.Element => {
                 <title>{campaign?.title}</title>
             </Helmet>
             <PublicLayout compressedNav={false}>
-                <Container size="lg">
+                {campaign ? <Container size="lg">
+                    <BackButton mb="md"/>
                     <Grid>
                         <Grid.Col lg={8}>
                             <Stack>
@@ -166,7 +167,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                                 </Paper>
                                 <Paper {...paperProps}>
                                     <Text {...subTitleProps} mb="md">Donation FAQ</Text>
-                                    <Accordion defaultValue="customization" variant="filled">
+                                    <Accordion defaultValue="customization" variant="separated">
                                         <Accordion.Item value="customization">
                                             <Accordion.Control>When will {campaign?.createdBy} get my
                                                 payment?</Accordion.Control>
@@ -186,7 +187,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                             </Stack>
                         </Grid.Col>
                     </Grid>
-                </Container>
+                </Container> : <NotFound/>}
                 <ShareModal opened={opened} onClose={close} campaign={campaign} iconSize={iconSize}/>
                 <DonationDrawer campaign={campaign} opened={donateOpened} onClose={donateClose} iconSize={iconSize}/>
             </PublicLayout>

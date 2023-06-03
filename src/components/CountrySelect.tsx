@@ -1,4 +1,4 @@
-import React, {forwardRef} from 'react';
+import {forwardRef} from 'react';
 import countriesData from "../data/Countries.json";
 import {Avatar, Group, Select, Text} from "@mantine/core";
 import {ICountry} from "../types";
@@ -27,8 +27,9 @@ const CountrySelect = () => {
             itemComponent={CountrySelectItem}
             data={countriesData.data.map(c => ({value: c.name, label: c.name, ...c}))}
             searchable
+            clearable
             maxDropdownHeight={300}
-            nothingFound="Nobody here"
+            nothingFound="Nothing found"
             filter={(value, item) =>
                 item?.name?.toLowerCase().includes(value?.toLowerCase().trim()) ||
                 item?.code?.toLowerCase().includes(value?.toLowerCase().trim())

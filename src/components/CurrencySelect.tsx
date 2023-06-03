@@ -1,4 +1,4 @@
-import React, {forwardRef} from 'react';
+import {forwardRef} from 'react';
 import {Group, Select, Text} from "@mantine/core";
 import {ICurrency} from "../types";
 import currencyData from "../data/Currencies.json";
@@ -23,6 +23,7 @@ const CurrencySelect = () => {
             itemComponent={CurrencySelectItem}
             data={currencyData.data.map(c => ({value: c.name, label: c.name, ...c}))}
             searchable
+            clearable
             maxDropdownHeight={300}
             nothingFound="Nobody here"
             filter={(value, item) =>

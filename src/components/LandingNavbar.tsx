@@ -35,7 +35,7 @@ import {
     IconSos,
 } from '@tabler/icons-react';
 import {useEffect, useState} from "react";
-import {BrandName} from "./index";
+import {BrandName, SearchDrawer} from "./index";
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -57,7 +57,7 @@ const useStyles = createStyles((theme) => ({
         },
 
         ...theme.fn.hover({
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.primary[0],
         }),
     },
 
@@ -67,7 +67,7 @@ const useStyles = createStyles((theme) => ({
         borderRadius: theme.radius.md,
 
         ...theme.fn.hover({
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
+            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.primary[0],
         }),
 
         '&:active': theme.activeStyles,
@@ -162,6 +162,7 @@ interface IProps extends BoxProps {
 const LandingNavbar = ({compressed}: IProps) => {
     const [drawerOpened, {toggle: toggleDrawer, close: closeDrawer}] = useDisclosure(false);
     const [linksOpened, {toggle: toggleLinks}] = useDisclosure(false);
+    const [searchOpened, {toggle: toggleSearchDrawer, close: closeSearchDrawer}] = useDisclosure(false);
     const {classes, theme} = useStyles();
     const [stickyClass, setStickyClass] = useState(false);
 
@@ -215,23 +216,24 @@ const LandingNavbar = ({compressed}: IProps) => {
                 px="md"
                 sx={{
                     backgroundColor: stickyClass ? 'rgba( 255, 255, 255, .9 )' : theme.white,
-                    backdropFilter: 'blur(8px)',
+                    backdropFilter: 'blur(4px)',
+                    borderRadius: stickyClass ? 0 : theme.radius.sm
                 }}>
-                <Container size="lg" fluid={compressed}>
+                <Container size="lg" fluid={compressed} sx={{height: '100%'}}>
                     <Flex justify="space-between" align="center" sx={{height: '100%'}}>
-                        <BrandName/>
+                        <BrandName size={28} asLink/>
                         <Flex align="center" gap="xs" sx={{height: '100%'}} className={classes.hiddenMobile}>
-                            <a href="#" className={classes.link}>
+                            <a href="/how-it-works" className={classes.link}>
                                 How it works
                             </a>
-                            <HoverCard width={700} position="bottom" radius="md" shadow="md" withinPortal>
+                            <HoverCard width={700} position="bottom" radius="sm" shadow="md" withinPortal>
                                 <HoverCard.Target>
                                     <a href="#" className={classes.link}>
                                         <Center inline>
                                             <Box component="span" mr={5}>
                                                 Invest
                                             </Box>
-                                            <IconChevronDown size={16} color={theme.fn.primaryColor()}/>
+                                            <IconChevronDown size={16} color={theme.colors.secondary[6]}/>
                                         </Center>
                                     </a>
                                 </HoverCard.Target>
@@ -253,17 +255,24 @@ const LandingNavbar = ({compressed}: IProps) => {
                                     </SimpleGrid>
                                 </HoverCard.Dropdown>
                             </HoverCard>
-                            <a href="#" className={classes.link}>
+                            <a href="/campaigns" className={classes.link}>
                                 Campaigns
                             </a>
-                            <a href="#" className={classes.link}>
-                                Volunteers
+                            <Button
+                                leftIcon={<IconSearch size={18}/>}
+                                onClick={toggleSearchDrawer}
+                                variant="subtle"
+                                className={classes.link}
+                                radius={0}
+                            >
+                                Search
+                            </Button>
+                            <a href="/create-campaign" className={classes.link}>
+                                Start a campaign
                             </a>
-                            <a href="#" className={classes.link}>
-                                Contact us
+                            <a href="/dashboard" className={classes.link}>
+                                My dashboard
                             </a>
-                            <Button leftIcon={<IconSearch size={18}/>}>Search</Button>
-                            <Button>Start a campaign</Button>
                         </Flex>
                         <Burger opened={drawerOpened} onClick={toggleDrawer} className={classes.hiddenDesktop}/>
                     </Flex>
@@ -309,6 +318,8 @@ const LandingNavbar = ({compressed}: IProps) => {
                     </Group>
                 </ScrollArea>
             </Drawer>
+
+            <SearchDrawer opened={searchOpened} onClose={closeSearchDrawer}/>
         </Box>
     );
 }

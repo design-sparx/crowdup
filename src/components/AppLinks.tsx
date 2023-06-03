@@ -26,7 +26,7 @@ const useStyles = createStyles((theme) => ({
         alignItems: 'center',
         textDecoration: 'none',
         fontSize: theme.fontSizes.sm,
-        color: theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[7],
+        color: theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[0],
         padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
         borderRadius: theme.radius.sm,
         fontWeight: 500,
@@ -43,14 +43,15 @@ const useStyles = createStyles((theme) => ({
 
     linkIcon: {
         ref: getStylesRef('icon'),
-        color: theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.gray[6],
+        color: theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.gray[0],
         marginRight: theme.spacing.sm,
     },
 
     linkActive: {
         '&, &:hover': {
-            backgroundColor: theme.fn.variant({variant: 'light', color: theme.primaryColor}).background,
-            color: theme.fn.variant({variant: 'light', color: theme.primaryColor}).color,
+            backgroundColor: theme.fn.variant({variant: 'light', color: theme.colors.primary[8]}).background,
+            color: theme.fn.variant({variant: 'light', color: theme.colors.primary[8]}).color,
+
             [`& .${getStylesRef('icon')}`]: {
                 color: theme.fn.variant({variant: 'light', color: theme.primaryColor}).color,
             },
@@ -59,8 +60,8 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const data = [
-    {link: '', label: 'Create New Campaign', icon: IconFolderPlus},
-    {link: '', label: 'My Dashboard', icon: IconHome},
+    {link: '/create-campaign', label: 'Create New Campaign', icon: IconFolderPlus},
+    {link: '/dashboard', label: 'My Dashboard', icon: IconHome},
     {link: '', label: 'Following Campaigns', icon: IconHeart},
     {link: '', label: 'Funded Campaigns', icon: IconFileDollar},
 ];
@@ -78,8 +79,7 @@ const AppLinks = ({...others}: IProps) => {
             className={cx(classes.link, {[classes.linkActive]: item.label === active})}
             href={item.link}
             key={item.label}
-            onClick={(event) => {
-                event.preventDefault();
+            onClick={() => {
                 setActive(item.label);
             }}
         >
@@ -89,7 +89,7 @@ const AppLinks = ({...others}: IProps) => {
     ));
 
     return (
-        <Group spacing={2} {...others}>
+        <Group spacing={4} {...others}>
             {links}
         </Group>
     );

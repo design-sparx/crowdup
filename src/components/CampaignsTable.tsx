@@ -23,7 +23,7 @@ const CampaignsTable = () => {
                     accessor: 'createdBy',
                     render: ({createdBy, createdByImage}: ICampaign) =>
                         <Group>
-                            <Avatar src={createdByImage} alt={`${createdBy} profile avatar`}/>
+                            <Avatar src={createdByImage} alt={`${createdBy} profile avatar`} size="sm" radius="xl"/>
                             <Text>{createdBy}</Text>
                         </Group>
                 },
@@ -39,6 +39,8 @@ const CampaignsTable = () => {
             recordsPerPage={PAGE_SIZE}
             page={page}
             onPageChange={(p) => setPage(p)}
+            highlightOnHover
+            verticalSpacing="sm"
         />
     );
 };

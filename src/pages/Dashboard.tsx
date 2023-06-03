@@ -7,11 +7,13 @@ import {
     Flex,
     Group,
     Paper,
+    PaperProps,
     rem,
     SimpleGrid,
     Stack,
     Text,
-    Title
+    Title,
+    TitleProps
 } from "@mantine/core";
 import {DashboardLayout} from "../layout";
 import {
@@ -22,7 +24,7 @@ import {
     IconReceipt2,
     IconTrophy
 } from "@tabler/icons-react";
-import {CampaignsTable, YearlyDonationChart, DonatorsTable} from "../components";
+import {CampaignsTable, DonatorsTable, YearlyDonationChart} from "../components";
 import {Helmet} from "react-helmet";
 
 const useStyles = createStyles((theme) => ({
@@ -43,7 +45,7 @@ const useStyles = createStyles((theme) => ({
     },
 
     icon: {
-        color: theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[4],
+        color: theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[5],
     },
 
     title: {
@@ -55,17 +57,27 @@ const useStyles = createStyles((theme) => ({
 const DashboardPage = () => {
     const {classes} = useStyles();
 
+    const paperProps: PaperProps = {
+        p: "md",
+        shadow: "sm"
+    }
+
+    const subTitleProps: TitleProps = {
+        size: 18,
+        mb: "sm"
+    }
+
     return (
         <>
             <Helmet>
                 <title>Dashboard</title>
             </Helmet>
             <DashboardLayout>
-                <Container fluid>
-                    <Stack>
-                        <Title>Good evening, Jane</Title>
+                <Container fluid my="xl">
+                    <Stack spacing="xl">
+                        <Title order={3}>Good evening, Jane</Title>
                         <SimpleGrid cols={4}>
-                            <Paper withBorder p="md" radius="md">
+                            <Paper {...paperProps}>
                                 <Group position="apart">
                                     <Text size="xs" color="dimmed" className={classes.title}>
                                         Total Donations
@@ -86,7 +98,7 @@ const DashboardPage = () => {
                                     Compared to previous month
                                 </Text>
                             </Paper>
-                            <Paper withBorder p="md" radius="md">
+                            <Paper {...paperProps}>
                                 <Group position="apart">
                                     <Text size="xs" color="dimmed" className={classes.title}>
                                         Today's Donations
@@ -107,7 +119,7 @@ const DashboardPage = () => {
                                     Compared to yesterday
                                 </Text>
                             </Paper>
-                            <Paper withBorder p="md" radius="md">
+                            <Paper {...paperProps}>
                                 <Group position="apart">
                                     <Text size="xs" color="dimmed" className={classes.title}>
                                         Average Donations per Campaign
@@ -128,7 +140,7 @@ const DashboardPage = () => {
                                     Compared to previous month
                                 </Text>
                             </Paper>
-                            <Paper withBorder p="md" radius="md">
+                            <Paper {...paperProps}>
                                 <Group position="apart">
                                     <Text size="xs" color="dimmed" className={classes.title}>
                                         Active Campaigns
@@ -150,29 +162,35 @@ const DashboardPage = () => {
                                 </Text>
                             </Paper>
                         </SimpleGrid>
-                        <Card>
-                            <Card.Section>
-                                <Flex>
+                        <Paper {...paperProps}>
+                            <Card.Section mb="lg">
+                                <Flex align="center" justify="space-between">
                                     <Box>
-                                        <Title>Campaigns</Title>
-                                        <Text>Let&apos;s manage your campaigns</Text>
+                                        <Title {...subTitleProps}>Campaigns</Title>
+                                        <Text size="sm">Let&apos;s manage your campaigns</Text>
                                     </Box>
-                                    <Button leftIcon={<IconPlus size={18}/>}>Create Campaing</Button>
+                                    <Button
+                                        leftIcon={<IconPlus size={18}/>}
+                                        component="a"
+                                        href="/create-campaign"
+                                    >
+                                        Create a Campaign
+                                    </Button>
                                 </Flex>
                             </Card.Section>
                             <Card.Section>
                                 <CampaignsTable/>
                             </Card.Section>
-                        </Card>
-                        <Card>
+                        </Paper>
+                        <Paper {...paperProps}>
                             <Card.Section>
-                                <Title>Top Contributors</Title>
+                                <Title {...subTitleProps}>Top Contributors</Title>
                                 <DonatorsTable/>
                             </Card.Section>
                             <Card.Section></Card.Section>
-                        </Card>
-                        <Paper>
-                            <Title>Donations per Category</Title>
+                        </Paper>
+                        <Paper {...paperProps}>
+                            <Title {...subTitleProps}>Donations per Category</Title>
                             <YearlyDonationChart/>
                         </Paper>
                     </Stack>
