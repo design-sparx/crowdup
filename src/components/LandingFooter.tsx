@@ -1,5 +1,11 @@
-import {ActionIcon, Container, createStyles, Group, rem, Text} from '@mantine/core';
-import {IconBrandInstagram, IconBrandTwitter, IconBrandYoutube} from '@tabler/icons-react';
+import {ActionIcon, Container, createStyles, Group, rem, Stack, Text} from '@mantine/core';
+import {
+    IconBrandFacebook,
+    IconBrandGithub,
+    IconBrandInstagram,
+    IconBrandLinkedin,
+    IconBrandTwitter
+} from '@tabler/icons-react';
 import {BrandName} from "./index";
 
 const useStyles = createStyles((theme) => ({
@@ -17,9 +23,10 @@ const useStyles = createStyles((theme) => ({
         maxWidth: rem(200),
 
         [theme.fn.smallerThan('sm')]: {
+            maxWidth: '100%',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
+            alignItems: 'flex-start',
         },
     },
 
@@ -47,12 +54,20 @@ const useStyles = createStyles((theme) => ({
         flexWrap: 'wrap',
 
         [theme.fn.smallerThan('sm')]: {
-            display: 'none',
+            display: 'flex',
+            width: '92vw',
+            marginTop: theme.spacing.sm
         },
     },
 
     wrapper: {
         width: rem(200),
+
+        [theme.fn.smallerThan('sm')]: {
+            width: '100%',
+            margin: `${theme.spacing.sm} 0`
+        },
+
     },
 
     link: {
@@ -70,7 +85,6 @@ const useStyles = createStyles((theme) => ({
     title: {
         fontSize: theme.fontSizes.lg,
         fontWeight: 700,
-        fontFamily: `Greycliff CF, ${theme.fontFamily}`,
         marginBottom: `calc(${theme.spacing.xs} / 2)`,
         color: theme.colorScheme === 'dark' ? theme.white : theme.black,
     },
@@ -133,28 +147,36 @@ const LandingFooter = ({data}: FooterLinksProps) => {
         <footer className={classes.footer}>
             <Container className={classes.inner} size="lg">
                 <div className={classes.logo}>
-                    <BrandName/>
-                    <Text size="xs">CrowdUp is a crowdfunding website that lets you raise money for anything that matters to
-                        you. From personal causes and events to projects and more. We've helped people from all over the
-                        world raise millions online.
-                    </Text>
+                    <Stack>
+                        <BrandName size={40}/>
+                        <Text size="sm">CrowdUp is a crowdfunding website that lets you raise money for anything that
+                            matters to you. From personal causes and events to projects and more. We've helped people
+                            from all over the world raise millions online.
+                        </Text>
+                    </Stack>
                 </div>
                 <div className={classes.groups}>{groups}</div>
             </Container>
             <Container className={classes.afterFooter} size="lg">
-                <Text color="dimmed" size="sm">
+                <Text size="sm">
                     © {new Date().getFullYear()} CrowdUp. All rights reserved.
                 </Text>
 
                 <Group spacing={0} className={classes.social} position="right" noWrap>
-                    <ActionIcon size="lg">
-                        <IconBrandTwitter size="1.05rem" stroke={1.5}/>
+                    <ActionIcon size="lg" component="a" href="https://github.com/kelvink96" target="_blank">
+                        <IconBrandGithub size="20" stroke={2}/>
                     </ActionIcon>
-                    <ActionIcon size="lg">
-                        <IconBrandYoutube size="1.05rem" stroke={1.5}/>
+                    <ActionIcon size="lg" component="a" href="https://twitter.com/kelvink_96" target="_blank">
+                        <IconBrandTwitter size="20" stroke={2}/>
                     </ActionIcon>
-                    <ActionIcon size="lg">
-                        <IconBrandInstagram size="1.05rem" stroke={1.5}/>
+                    <ActionIcon size="lg" component="a" href="https://www.facebook.com/kelvinkk96" target="_blank">
+                        <IconBrandFacebook size="20" stroke={2}/>
+                    </ActionIcon>
+                    <ActionIcon size="lg" component="a" href="https://www.instagram.com/kelvink_96/" target="_blank">
+                        <IconBrandInstagram size="20" stroke={2}/>
+                    </ActionIcon>
+                    <ActionIcon size="lg" component="a" href="https://www.linkedin.com/in/kelvink96/" target="_blank">
+                        <IconBrandLinkedin size="20" stroke={2}/>
                     </ActionIcon>
                 </Group>
             </Container>

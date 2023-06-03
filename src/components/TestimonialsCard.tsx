@@ -1,5 +1,6 @@
 import {createStyles, Divider, Grid, Group, Image, Paper, PaperProps, rem, Stack, Text,} from '@mantine/core';
 import {ITestimonial} from "../types";
+import {useMediaQuery} from "@mantine/hooks";
 
 const useStyles = createStyles((theme) => ({
     card: {
@@ -42,11 +43,15 @@ const CampaignCard = ({data, ...others}: IProps) => {
     const {
         company, createdByImage, createdBy, testimonial, jobPosition
     } = data;
+    const matchesMobile = useMediaQuery('(max-width: 600px)');
 
     return (
         <Paper radius="md" className={classes.card} mx={36} {...others}>
             <Grid sx={{alignItems: 'center'}}>
-                <Grid.Col lg={7} pl="xl">
+                {matchesMobile && <Grid.Col lg={5}>
+                    <Image src={createdByImage} height={360} fit="cover"/>
+                </Grid.Col>}
+                <Grid.Col lg={7} pl={matchesMobile ? 'xl' : 'xl'} pb="xl">
                     <Stack spacing="sm">
                         <Text size="xl">"{testimonial}"</Text>
                         <Text fw={700}>{createdBy}</Text>
@@ -57,9 +62,9 @@ const CampaignCard = ({data, ...others}: IProps) => {
                         </Group>
                     </Stack>
                 </Grid.Col>
-                <Grid.Col lg={5}>
+                {!matchesMobile && <Grid.Col lg={5}>
                     <Image src={createdByImage} height={320} fit="cover"/>
-                </Grid.Col>
+                </Grid.Col>}
             </Grid>
         </Paper>
     );

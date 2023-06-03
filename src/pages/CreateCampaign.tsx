@@ -160,20 +160,20 @@ const CreateCampaignPage = () => {
                         >
                             <Title {...titleProps}>Campaign information</Title>
                             <Paper {...paperProps}>
-                                <Group grow>
+                                <SimpleGrid cols={2} breakpoints={[{maxWidth: 'sm', cols: 1}]}>
                                     <TextInput label="Title"/>
                                     <CategorySelect/>
-                                </Group>
+                                </SimpleGrid>
                             </Paper>
                             <Paper {...paperProps}>
                                 <Title {...subTitleProps}>Campaign location</Title>
                                 <Text size="sm" mb="sm">Please select the country that we&apos;ll be sending funds to
                                     (typically where you&apos;re resident). This helps match you to the correct payment
                                     processors.</Text>
-                                <Group grow>
+                                <SimpleGrid cols={2} breakpoints={[{maxWidth: 'sm', cols: 1}]}>
                                     <CountrySelect/>
                                     <TextInput label="City" placeholder="city"/>
-                                </Group>
+                                </SimpleGrid>
                             </Paper>
                             <Paper {...paperProps}>
                                 <Stack spacing="sm">
@@ -252,10 +252,10 @@ const CreateCampaignPage = () => {
                                     <Text size="sm">*Name of the person receiving funds. For organizations, the legal
                                         representative
                                         name (this can be amended later).</Text>
-                                    <Group grow>
+                                    <SimpleGrid cols={2} breakpoints={[{maxWidth: 'sm', cols: 1}]}>
                                         <TextInput label="First name"/>
                                         <TextInput label="Last name"/>
-                                    </Group>
+                                    </SimpleGrid>
                                     <FileDropzone
                                         label="Upload your profile picture"
                                         description="This picture will be shown next to your name"
@@ -351,7 +351,7 @@ const CreateCampaignPage = () => {
                                         Please remember, team members can change all elements of the page.</Text>
                                     <Alert color="orange" variant="light" icon={<IconInfoCircleFilled size={18}/>}>You
                                         haven't invited anyone to help manage this fundraiser yet.</Alert>
-                                    <SimpleGrid cols={2}>
+                                    <SimpleGrid cols={2} breakpoints={[{maxWidth: 'sm', cols: 1}]}>
                                         <TextInput label="First name"/>
                                         <TextInput label="Last name"/>
                                         <TextInput label="Email" mb="xs"/>

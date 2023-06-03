@@ -8,7 +8,8 @@ const useStyles = createStyles((theme) => ({
         color: theme.colorScheme === 'dark' ? theme.white : theme.black,
 
         [theme.fn.smallerThan('xs')]: {
-            fontSize: rem(28),
+            fontSize: rem(24),
+            fontWeight: 700,
             textAlign: 'left',
         },
     },
@@ -24,7 +25,8 @@ const useStyles = createStyles((theme) => ({
         color: theme.colors.gray[0],
 
         [theme.fn.smallerThan('xs')]: {
-            fontSize: rem(28),
+            fontSize: rem(24),
+            fontWeight: 700,
             textAlign: 'left',
         },
     }

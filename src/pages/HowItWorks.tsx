@@ -86,7 +86,14 @@ const HowItWorksPage = (): JSX.Element => {
                     </Box>
                     <Box {...boxProps}>
                         <Title {...titleProps} align="center">Here's how it works</Title>
-                        <SimpleGrid cols={3} spacing="lg">
+                        <SimpleGrid
+                            cols={3}
+                            spacing="lg"
+                            breakpoints={[
+                                {maxWidth: 'md', cols: 2, spacing: 'md'},
+                                {maxWidth: 'sm', cols: 1, spacing: 0},
+                            ]}
+                        >
                             <Card {...cardProps}>
                                 <Card.Section>
                                     <Image src={AddImg} {...imageProps}/>
@@ -130,7 +137,12 @@ const HowItWorksPage = (): JSX.Element => {
                     </Box>
                     <TestimonialsSection boxProps={boxProps} titleProps={titleProps}/>
                     <Box {...boxProps}>
-                        <SimpleGrid cols={2}>
+                        <SimpleGrid
+                            cols={2}
+                            breakpoints={[
+                                {maxWidth: 'sm', cols: 1, spacing: 0},
+                            ]}
+                        >
                             <Card
                                 shadow="md"
                                 radius="sm"

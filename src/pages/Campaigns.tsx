@@ -3,12 +3,15 @@ import campaignsData from "../data/Campaigns.json";
 import {CampaignCard} from "../components";
 import {PublicLayout} from "../layout";
 import {Helmet} from "react-helmet";
+import {useMediaQuery} from "@mantine/hooks";
 
 const CampaignsPage = (): JSX.Element => {
+    const matchesMobile = useMediaQuery('(max-width: 600px)');
+
     const boxProps: BoxProps = {
-        mt: 96,
-        mb: 136,
-        py: 48
+        mt: matchesMobile ? 4 : 96,
+        mb: matchesMobile ? 4 : 136,
+        py: matchesMobile ? 16 : 48
     }
 
     const titleProps: TitleProps = {
@@ -32,9 +35,13 @@ const CampaignsPage = (): JSX.Element => {
                         <Box {...boxProps}>
                             <Title {...titleProps} align="center">Discover campaigns to fund</Title>
                         </Box>
-                        <Flex justify="space-between">
+                        <Flex
+                            justify="space-between"
+                            gap={{base: 'sm', sm: 'lg'}}
+                            direction={{base: 'column-reverse', sm: 'row'}}
+                        >
                             <TextInput placeholder="search campaigns..." sx={{width: 500}}/>
-                            <Flex align="center" gap="sm">
+                            <Flex align="center" gap="sm" justify={{base: 'space-between', sm: 'flex-start'}}>
                                 <Select
                                     label=""
                                     placeholder="campaigns in"
@@ -58,7 +65,14 @@ const CampaignsPage = (): JSX.Element => {
                                 />
                             </Flex>
                         </Flex>
-                        <SimpleGrid cols={3} spacing="lg">
+                        <SimpleGrid
+                            cols={3}
+                            spacing="lg"
+                            breakpoints={[
+                                {maxWidth: 'md', cols: 2, spacing: 'md'},
+                                {maxWidth: 'sm', cols: 1, spacing: 0},
+                            ]}
+                        >
                             {items}
                         </SimpleGrid>
                     </Stack>

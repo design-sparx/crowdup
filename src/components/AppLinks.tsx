@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {createStyles, getStylesRef, Group, GroupProps, rem} from '@mantine/core';
+import {createStyles, Flex, FlexProps, getStylesRef, rem} from '@mantine/core';
 import {IconFileDollar, IconFolderPlus, IconHeart, IconHome,} from '@tabler/icons-react';
 
 const useStyles = createStyles((theme) => ({
@@ -32,11 +32,11 @@ const useStyles = createStyles((theme) => ({
         fontWeight: 500,
 
         '&:hover': {
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-            color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.primary[7],
+            color: theme.colorScheme === 'dark' ? theme.white : theme.white,
 
             [`& .${getStylesRef('icon')}`]: {
-                color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+                color: theme.colorScheme === 'dark' ? theme.black : theme.white,
             },
         },
     },
@@ -68,7 +68,7 @@ const data = [
 
 const ICON_SIZE = 18
 
-type IProps = GroupProps
+type IProps = FlexProps
 
 const AppLinks = ({...others}: IProps) => {
     const {classes, cx} = useStyles();
@@ -89,9 +89,9 @@ const AppLinks = ({...others}: IProps) => {
     ));
 
     return (
-        <Group spacing={4} {...others}>
+        <Flex gap={4} {...others}>
             {links}
-        </Group>
+        </Flex>
     );
 }
 

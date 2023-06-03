@@ -76,7 +76,7 @@ const DashboardPage = () => {
                 <Container fluid my="xl">
                     <Stack spacing="xl">
                         <Title order={3}>Good evening, Jane</Title>
-                        <SimpleGrid cols={4}>
+                        <SimpleGrid cols={4} breakpoints={[{maxWidth: 'sm', cols: 1}]}>
                             <Paper {...paperProps}>
                                 <Group position="apart">
                                     <Text size="xs" color="dimmed" className={classes.title}>

@@ -102,7 +102,6 @@ const useStyles = createStyles((theme) => ({
         color: theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 4 : 6],
     },
 
-
     hiddenMobile: {
         [theme.fn.smallerThan('sm')]: {
             display: 'none',
@@ -184,7 +183,7 @@ const LandingNavbar = ({compressed}: IProps) => {
     const stickNavbar = () => {
         if (window !== undefined) {
             const windowHeight = window.scrollY;
-            windowHeight > 30 ? setStickyClass(true) : setStickyClass(false);
+            windowHeight > 240 ? setStickyClass(true) : setStickyClass(false);
         }
     };
 
@@ -288,34 +287,42 @@ const LandingNavbar = ({compressed}: IProps) => {
                 className={classes.hiddenDesktop}
                 zIndex={1000000}
             >
-                <ScrollArea h={`calc(100vh - ${rem(60)})`} mx="-md">
+                <ScrollArea h={`calc(100vh - ${rem(0)})`} mx="-md">
                     <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'}/>
 
-                    <a href="#" className={classes.link}>
+                    <a href="/" className={classes.link}>
                         Home
                     </a>
                     <UnstyledButton className={classes.link} onClick={toggleLinks}>
                         <Center inline>
                             <Box component="span" mr={5}>
-                                Features
+                                Invest
                             </Box>
                             <IconChevronDown size={16} color={theme.fn.primaryColor()}/>
                         </Center>
                     </UnstyledButton>
                     <Collapse in={linksOpened}>{links}</Collapse>
-                    <a href="#" className={classes.link}>
-                        Learn
+                    <a href="/campaigns" className={classes.link}>
+                        Campaigns
                     </a>
-                    <a href="#" className={classes.link}>
-                        Academy
+                    <Button
+                        leftIcon={<IconSearch size={18}/>}
+                        onClick={() => {
+                            closeDrawer()
+                            toggleSearchDrawer();
+                        }}
+                        variant="subtle"
+                        className={classes.link}
+                        radius={0}
+                    >
+                        Search
+                    </Button>
+                    <a href="/create-campaign" className={classes.link}>
+                        Start a campaign
                     </a>
-
-                    <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'}/>
-
-                    <Group position="center" grow pb="xl" px="md">
-                        <Button variant="default">Log in</Button>
-                        <Button>Sign up</Button>
-                    </Group>
+                    <a href="/dashboard" className={classes.link}>
+                        My dashboard
+                    </a>
                 </ScrollArea>
             </Drawer>
 

@@ -52,7 +52,7 @@ const WaysToFundSection = ({boxProps, subtitleProps}: IProps) => {
                         </Stack>
                     </Grid.Col>
                     <Grid.Col lg={8}>
-                        <SimpleGrid cols={3}>
+                        <SimpleGrid cols={3} breakpoints={[{maxWidth: 'sm', cols: 1}]} >
                             <Card
                                 className={cx(classes.feature, 'card')}
                                 shadow="md"

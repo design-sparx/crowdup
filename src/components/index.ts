@@ -22,6 +22,7 @@ import NotFound from "./NotFound";
 import BackButton from "./BackButton";
 import CategorySelect from "./CategorySelect";
 import SearchDrawer from "./SearchDrawer";
+import AppNavbar from "./AppNavbar";
 
 export {
     LandingNavbar,
@@ -47,5 +48,6 @@ export {
     NotFound,
     BackButton,
     CategorySelect,
-    SearchDrawer
+    SearchDrawer,
+    AppNavbar
 };

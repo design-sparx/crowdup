@@ -2,6 +2,7 @@ import {Box, BoxProps, Button, Flex, Image, Stack, TextProps, Title, TitleProps}
 
 import HandFlowerImg from "../../assets/img/lotus-flower.png"
 import {Link} from "react-router-dom";
+import {useMediaQuery} from "@mantine/hooks";
 
 interface IProps {
     boxProps: BoxProps
@@ -10,11 +11,13 @@ interface IProps {
 }
 
 const GetStartedSection = ({boxProps, titleProps}: IProps) => {
+    const matchesMobile = useMediaQuery('(max-width: 600px)');
+
     return (
         <Box {...boxProps}>
-            <Flex align="center">
-                <Stack>
-                    <Title {...titleProps}>Ready to get started? Join thousands of others today.</Title>
+            <Flex align="center" gap={{base: 'sm', sm: 'lg'}} direction={{base: 'column-reverse', sm: 'row'}}>
+                <Stack align={matchesMobile ? 'center' : 'stretch'}>
+                    <Title {...titleProps} align={matchesMobile ? 'center' : 'start'}>Ready to get started? Join thousands of others today.</Title>
                     <Flex gap="sm">
                         <Button size="lg" variant="filled" component={Link} to="/create-campaign">Start a
                             Campaign</Button>

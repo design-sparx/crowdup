@@ -26,7 +26,6 @@ function Stats({amount, description}: IStatsProps) {
         <Paper
             p="md"
             shadow="md"
-            withBorder
             radius="sm"
             sx={{
                 backdropFilter: `blur(16px) saturate(180%)`,
@@ -54,10 +53,16 @@ const StatsSection = ({boxProps, subtitleProps, titleProps}: IProps) => {
                 <TitleBadge title="make a difference"/>
                 <Title {...titleProps}>large pool potential investor</Title>
                 <Text {...subtitleProps}>With our crowdfunding platform, you can support the projects and causes you
-                    care
-                    about most</Text>
+                    care about most</Text>
             </Box>
-            <SimpleGrid cols={3} spacing="lg">
+            <SimpleGrid
+                cols={3}
+                spacing="lg"
+                breakpoints={[
+                    {maxWidth: 'md', cols: 3, spacing: 'md'},
+                    {maxWidth: 'sm', cols: 1, spacing: 'sm'},
+                ]}
+            >
                 {items}
             </SimpleGrid>
         </Box>

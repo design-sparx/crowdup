@@ -3,7 +3,6 @@ import {
     Box,
     BoxProps,
     Button,
-    Divider,
     Flex,
     Image,
     Progress,
@@ -25,13 +24,12 @@ interface IProps {
 const JoinUsSection = ({boxProps, subtitleProps}: IProps) => {
     return (
         <Box {...boxProps}>
-            <Flex gap="lg">
+            <Flex gap={{base: 'sm', sm: 'lg'}} direction={{base: 'column-reverse', sm: 'row'}}>
                 <Stack>
                     <TitleBadge title='Open partnership - Start your journey'/>
                     <Text {...subtitleProps}>Almost is never enough</Text>
-                    <Divider/>
                     <Flex gap="xs">
-                        <ThemeIcon size="xl" color="secondary" variant="light">
+                        <ThemeIcon size="xl" color="secondary" variant="filled">
                             <IconWorld/>
                         </ThemeIcon>
                         <Stack spacing={2}>
@@ -40,7 +38,7 @@ const JoinUsSection = ({boxProps, subtitleProps}: IProps) => {
                         </Stack>
                     </Flex>
                     <Flex gap="xs">
-                        <ThemeIcon size="xl" color="secondary" variant="light">
+                        <ThemeIcon size="xl" color="secondary" variant="filled">
                             <IconUsers/>
                         </ThemeIcon>
                         <Stack spacing={2}>
@@ -70,7 +68,9 @@ const JoinUsSection = ({boxProps, subtitleProps}: IProps) => {
                     <Image
                         src="https://images.unsplash.com/photo-1524069290683-0457abfe42c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
                         width={500}
-                        height={400}/>
+                        height={400}
+                        radius="sm"
+                    />
                 </Box>
             </Flex>
         </Box>
