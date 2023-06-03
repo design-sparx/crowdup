@@ -9,4 +9,5 @@ export const customTheme: MantineThemeOverride = {
     },
     primaryColor: 'primary',
     primaryShade: 6,
+    fontFamily: 'Montserrat, sans-serif'
 }

@@ -66,7 +66,7 @@ function Feature({image, title, description, action}: FeatureProps) {
     const {classes, cx} = useStyles();
 
     return (
-        <Card className={cx(classes.feature, 'card')} shadow="md" radius="sm" withBorder>
+        <Card className={cx(classes.feature, 'card')} shadow="md" radius="sm">
             <Card.Section>
                 <Image src={image} height={240} fit="cover"/>
             </Card.Section>

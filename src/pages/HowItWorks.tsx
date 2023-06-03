@@ -33,8 +33,8 @@ const HowItWorksPage = (): JSX.Element => {
 
     const titleProps: TitleProps = {
         size: 32,
-        weight: 700,
-        mb: "lg",
+        weight: 800,
+        mb: "xl",
         transform: 'capitalize',
         sx: {lineHeight: '40px'}
     }
@@ -69,10 +69,10 @@ const HowItWorksPage = (): JSX.Element => {
             <PublicLayout compressedNav={false}>
                 <Container>
                     <Box {...boxProps} sx={{textAlign: 'center'}}>
-                        <Title mb={48}>How to Fundraise Online</Title>
+                        <Title mb={48} fw={800}>How to Fundraise Online</Title>
                         <Text>GoGetFunding is the best place to fundraise, whether you are an individual, group,
                             or organization.</Text>
-                        <Text fw={500} mb={36}>Watch our explainer video.</Text>
+                        <Text fw={600} mb={36}>Watch our explainer video.</Text>
                         <AspectRatio ratio={1904 / 768} mx="auto">
                             <iframe
                                 width="600"
@@ -85,7 +85,7 @@ const HowItWorksPage = (): JSX.Element => {
                         </AspectRatio>
                     </Box>
                     <Box {...boxProps}>
-                        <Title {...titleProps} align="center">Here's how it works</Title>
+                        <Title {...titleProps} align="center" >Here's how it works</Title>
                         <SimpleGrid
                             cols={3}
                             spacing="lg"
@@ -98,7 +98,7 @@ const HowItWorksPage = (): JSX.Element => {
                                 <Card.Section>
                                     <Image src={AddImg} {...imageProps}/>
                                 </Card.Section>
-                                <Text my="sm" fw={500}>1. Start your fundraiser</Text>
+                                <Text my="sm" fw={600}>1. Start your fundraiser</Text>
                                 <List {...listProps}>
                                     <List.Item>Set your fundraiser goal</List.Item>
                                     <List.Item>Tell your story</List.Item>
@@ -112,7 +112,7 @@ const HowItWorksPage = (): JSX.Element => {
                                 <Card.Section>
                                     <Image src={MoneyImg} {...imageProps}/>
                                 </Card.Section>
-                                <Text my="sm" fw={500}>2. Share with friends</Text>
+                                <Text my="sm" fw={600}>2. Share with friends</Text>
                                 <List {...listProps}>
                                     <List.Item>Send emails</List.Item>
                                     <List.Item>Send text messages</List.Item>
@@ -126,7 +126,7 @@ const HowItWorksPage = (): JSX.Element => {
                                 <Card.Section>
                                     <Image src={ShareImg} {...imageProps}/>
                                 </Card.Section>
-                                <Text my="sm" fw={500}>3. Manage donations</Text>
+                                <Text my="sm" fw={600}>3. Manage donations</Text>
                                 <List {...listProps}>
                                     <List.Item>Accept donations</List.Item>
                                     <List.Item>Thank donors</List.Item>

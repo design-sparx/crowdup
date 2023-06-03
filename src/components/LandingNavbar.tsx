@@ -10,6 +10,7 @@ import {
     Divider,
     Drawer,
     Flex,
+    getStylesRef,
     Group,
     Header,
     HoverCard,
@@ -56,9 +57,15 @@ const useStyles = createStyles((theme) => ({
             width: '100%',
         },
 
-        ...theme.fn.hover({
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.primary[0],
-        }),
+        '&:hover': {
+            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.primary[6],
+            color: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+            fontWeight: 600,
+
+            [`& .${getStylesRef('icon')}`]: {
+                color: theme.colorScheme === 'dark' ? theme.black : theme.white,
+            },
+        },
     },
 
     subLink: {
@@ -100,6 +107,11 @@ const useStyles = createStyles((theme) => ({
 
     highlight: {
         color: theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 4 : 6],
+    },
+
+    linkIcon: {
+        ref: getStylesRef('icon'),
+        color: theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.secondary[6],
     },
 
     hiddenMobile: {
@@ -235,7 +247,7 @@ const LandingNavbar = ({compressed}: IProps) => {
                                             <Box component="span" mr={5}>
                                                 Invest
                                             </Box>
-                                            <IconChevronDown size={16} color={theme.colors.secondary[6]}/>
+                                            <IconChevronDown size={18} className={classes.linkIcon}/>
                                         </Center>
                                     </a>
                                 </HoverCard.Target>
@@ -258,7 +270,7 @@ const LandingNavbar = ({compressed}: IProps) => {
                                 </HoverCard.Dropdown>
                             </HoverCard>
                             <Button
-                                leftIcon={<IconSearch size={18}/>}
+                                leftIcon={<IconSearch size={18} className={classes.linkIcon}/>}
                                 onClick={toggleSearchDrawer}
                                 variant="subtle"
                                 className={classes.link}
@@ -304,7 +316,7 @@ const LandingNavbar = ({compressed}: IProps) => {
                             <Box component="span" mr={5}>
                                 Invest
                             </Box>
-                            <IconChevronDown size={16} color={theme.fn.primaryColor()}/>
+                            <IconChevronDown size={16} className={classes.linkIcon}/>
                         </Center>
                     </UnstyledButton>
                     <Collapse in={linksOpened}>{links}</Collapse>

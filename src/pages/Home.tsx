@@ -20,7 +20,7 @@ const HomePage = (): JSX.Element => {
 
     const titleProps: TitleProps = {
         size: 32,
-        weight: 700,
+        weight: 800,
         mb: "lg",
         transform: 'capitalize',
         sx: {lineHeight: '40px'}
@@ -28,7 +28,7 @@ const HomePage = (): JSX.Element => {
 
     const subTitleProps: TextProps = {
         size: 20,
-        weight: 500,
+        weight: 700,
         mb: "md",
         sx: {lineHeight: '28px'}
     }

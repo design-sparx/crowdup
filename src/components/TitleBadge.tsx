@@ -9,7 +9,7 @@ const useStyles = createStyles((theme) => ({
         color: theme.black,
         fontWeight: 400,
         textTransform: 'uppercase',
-        fontSize: 12,
+        fontSize: theme.fontSizes.sm,
         lineHeight: '14px'
     }
 }))
