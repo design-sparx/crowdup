@@ -1,6 +1,6 @@
 # Crowdfunding website project
 
-[Online Demo](https://crowdup-1.netlify.app/ "Online Demo")
+[Online Demo](https://crowd-up.netlify.app/ "Online Demo")
 
 ### About:
 
