@@ -1661,23 +1661,17 @@ electron-to-chromium@^1.4.284:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.372.tgz#7888ac92ccb9556627c3a37eba3b89ee5ac345f8"
   integrity sha512-MrlFq/j+TYHOjeWsWGYfzevc25HNeJdsF6qaLFrqBTRWZQtWkb1myq/Q2veLWezVaa5OcSZ99CFwTT4aF4Mung==
 
-embla-carousel-react@^8.0.0-rc01:
-  version "8.0.0-rc01"
-  resolved "https://registry.yarnpkg.com/embla-carousel-react/-/embla-carousel-react-8.0.0-rc01.tgz#5bcb1333c153b16b88e9a91ba4f2638f5c438ed5"
-  integrity sha512-X0v+qqCqoMFmU7U6EDQljl2CcBvLaBMi4DZjDqLI9eH5dlTkwmzFYhNIIFpwC/dvxEv8ly45UT10oKvTecCUfw==
+embla-carousel-react@7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/embla-carousel-react/-/embla-carousel-react-7.1.0.tgz#e716f4df7fd31f7ca3e59a3e011158167bc3c468"
+  integrity sha512-tbYRPRZSDNd2QLNqYDcArAakGIxtUbhS7tkP0dGXktXHGgcX+3ji3VrOUTOftBiujZrMV8kRxtrRUe/1soloIQ==
   dependencies:
-    embla-carousel "8.0.0-rc01"
-    embla-carousel-reactive-utils "8.0.0-rc01"
+    embla-carousel "7.1.0"
 
-embla-carousel-reactive-utils@8.0.0-rc01:
-  version "8.0.0-rc01"
-  resolved "https://registry.yarnpkg.com/embla-carousel-reactive-utils/-/embla-carousel-reactive-utils-8.0.0-rc01.tgz#601d374541c1fa77ff782dcd8edbf06ef655fd66"
-  integrity sha512-JUUtLapI5JSUR0vW+DGGJYhqEn+QuDmxpX01B0/5AXMM/UnNlBmFMaKFab8nXeRPtx0d6irkVEBZSWpjmK25DA==
-
-embla-carousel@8.0.0-rc01:
-  version "8.0.0-rc01"
-  resolved "https://registry.yarnpkg.com/embla-carousel/-/embla-carousel-8.0.0-rc01.tgz#11b8a52266f15f737469326c0807878ad36d9b46"
-  integrity sha512-kxP/W5TsDPw974RSAa8Ad39KtiCgOvpqNikuY0ASmC5D5XTVwzcwJpgtlnwq/kxtxLNq5G0s9PdjexTb/xdsqA==
+embla-carousel@7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/embla-carousel/-/embla-carousel-7.1.0.tgz#c770dd3ade9285a97f5e3b6bbf705bc35ec0f9b5"
+  integrity sha512-Bh8Pa8NWzgugLkf8sAGexQlBCNDFaej5BXiKgQdRJ1mUC9NWBrw9Z23YVPVGkguWoz5LMjZXXFVGCobl3UPt/Q==
 
 entities@~3.0.1:
   version "3.0.1"

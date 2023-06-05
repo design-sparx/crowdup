@@ -21,6 +21,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '',
+                index: true,
                 element: <HomePage/>
             }
         ]
@@ -42,12 +43,14 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '',
+                index: true,
                 element: <HowItWorksPage/>
             }
         ]
     },
     {
         path: "campaigns",
+        element: <PublicLayout/>,
         children: [
             {
                 path: "",
@@ -69,6 +72,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '',
+                index: true,
                 element: <DashboardPage/>
             }
         ]
@@ -80,6 +84,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '',
+                index: true,
                 element: <CreateCampaignPage/>
             }
         ]

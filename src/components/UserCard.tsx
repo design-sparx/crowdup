@@ -1,4 +1,5 @@
 import {Avatar, Button, Flex, Paper, PaperProps, Stack, Text} from '@mantine/core';
+import {IconSend} from "@tabler/icons-react";
 import userData from "../data/User.json"
 
 type IProps = PaperProps
@@ -6,9 +7,9 @@ type IProps = PaperProps
 const UserCard = ({...others}: IProps) => {
     return (
         <Paper{...others}>
-            <Flex gap="lg">
+            <Flex gap="lg" align="center">
                 <Avatar src={userData.avatar} size={120} radius={120}/>
-                <Stack spacing="sm" align="flex-start">
+                <Stack spacing="xs" align="flex-start">
                     <Text ta="center" fz="lg" weight={500}>
                         {userData.name}
                     </Text>
@@ -16,7 +17,7 @@ const UserCard = ({...others}: IProps) => {
                         {userData.email} • {userData.job}
                     </Text>
 
-                    <Button variant="default" fullWidth>
+                    <Button variant="light" leftIcon={<IconSend size={18}/>} fullWidth>
                         Send message
                     </Button>
                 </Stack>

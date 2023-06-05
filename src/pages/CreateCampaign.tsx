@@ -35,8 +35,11 @@ import SubScript from '@tiptap/extension-subscript';
 import React, {forwardRef, useState} from "react";
 import {DateInput} from "@mantine/dates";
 import {
+    IconBrandApple,
     IconBrandFacebook,
+    IconBrandGoogle,
     IconBrandLinkedin,
+    IconBrandPaypal,
     IconBrandTwitter,
     IconBrandWhatsapp,
     IconBrandYoutube,
@@ -139,7 +142,8 @@ const CreateCampaignPage = () => {
 
     const paperProps: PaperProps = {
         p: "md",
-        withBorder: true,
+        withBorder: false,
+        shadow: 'sm',
         mb: "md",
         sx: {backgroundColor: theme.white}
     }
@@ -150,7 +154,7 @@ const CreateCampaignPage = () => {
                 <title>Create campaign</title>
             </Helmet>
             <Box>
-                <Container my="xl">
+                <Container my={36}>
                     <Title mb="xl" align="center">Create your campaign</Title>
                     <Stepper active={active} onStepClick={setActive} breakpoint="sm">
                         <Stepper.Step
@@ -364,6 +368,7 @@ const CreateCampaignPage = () => {
                                     <Button
                                         leftIcon={<IconMail size={18}/>}
                                         mx="auto"
+                                        variant="light"
                                     >
                                         Send invite via email
                                     </Button>
@@ -407,6 +412,7 @@ const CreateCampaignPage = () => {
                                                     key: randomId()
                                                 })
                                             }
+                                            variant="light"
                                         >
                                             Add new social link
                                         </Button>
@@ -426,14 +432,17 @@ const CreateCampaignPage = () => {
                                 <Stack spacing="sm">
                                     <Title {...subTitleProps}>Enable payment processors for your fundraising
                                         page</Title>
-                                    <Alert icon={<IconCurrency size={18}/>}>You can enable GGF Card Payments (powered by
-                                        MangoPay) if you switch your currency from GBP to USD </Alert>
+                                    <Alert icon={<IconCurrency size={18}/>} color="blue">You can enable GGF Card
+                                        Payments (powered by MangoPay) if you switch your currency from GBP to
+                                        USD </Alert>
                                     <Text size="sm">Available payment methods</Text>
                                     <Group>
-                                        <Button>Connect with Paypal</Button>
-                                        <Button>Connect with Skrill</Button>
-                                        <Button>Connect with Google Pay</Button>
-                                        <Button>Connect with Apple Pay</Button>
+                                        <Button variant="light" leftIcon={<IconBrandPaypal size={18}/>}>Connect with
+                                            Paypal</Button>
+                                        <Button variant="light" leftIcon={<IconBrandGoogle size={18}/>}>Connect with
+                                            Google Pay</Button>
+                                        <Button variant="light" leftIcon={<IconBrandApple size={18}/>}>Connect with
+                                            Apple Pay</Button>
                                     </Group>
                                 </Stack>
                             </Paper>

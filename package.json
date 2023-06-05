@@ -33,7 +33,7 @@
     "@tiptap/starter-kit": "^2.0.3",
     "apexcharts": "^3.40.0",
     "dayjs": "^1.11.7",
-    "embla-carousel-react": "^8.0.0-rc01",
+    "embla-carousel-react": "7.1.0",
     "mantine-datatable": "^2.5.0",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.0",

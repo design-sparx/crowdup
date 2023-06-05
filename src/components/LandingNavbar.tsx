@@ -2,7 +2,7 @@ import {
     Box,
     BoxProps,
     Burger,
-    Button,
+    Button, ButtonProps,
     Center,
     Collapse,
     Container,
@@ -21,7 +21,7 @@ import {
     ThemeIcon,
     UnstyledButton,
 } from '@mantine/core';
-import {useDisclosure} from '@mantine/hooks';
+import {useDisclosure, useMediaQuery} from '@mantine/hooks';
 import {
     IconAugmentedReality,
     IconCat,
@@ -177,6 +177,7 @@ const LandingNavbar = ({compressed}: IProps) => {
     const [searchOpened, {toggle: toggleSearchDrawer, close: closeSearchDrawer}] = useDisclosure(false);
     const {classes, theme} = useStyles();
     const [stickyClass, setStickyClass] = useState(false);
+    const matchesMobile = useMediaQuery('(max-width: 768px)');
 
     const links = mockdata.map((item) => (
         <UnstyledButton className={classes.subLink} key={item.title}>
@@ -192,6 +193,11 @@ const LandingNavbar = ({compressed}: IProps) => {
             </Group>
         </UnstyledButton>
     ));
+
+    const buttonProps: ButtonProps = {
+        variant: "subtle",
+        radius: matchesMobile ? 'sm' : 0
+    }
 
     const stickNavbar = () => {
         if (window !== undefined) {
@@ -234,10 +240,10 @@ const LandingNavbar = ({compressed}: IProps) => {
                     <Flex justify="space-between" align="center" sx={{height: '100%'}}>
                         <BrandName size={28} asLink/>
                         <Flex align="center" gap="xs" sx={{height: '100%'}} className={classes.hiddenMobile}>
-                            <Button variant="subtle" component={Link} to="/how-it-works" className={classes.link}>
+                            <Button component={Link} to="/how-it-works" className={classes.link} {...buttonProps}>
                                 How it works
                             </Button>
-                            <Button variant="subtle" component={Link} to="/campaigns" className={classes.link}>
+                            <Button component={Link} to="/campaigns" className={classes.link} {...buttonProps}>
                                 Campaigns
                             </Button>
                             <HoverCard width={700} position="bottom" radius="sm" shadow="md" withinPortal>
@@ -272,16 +278,15 @@ const LandingNavbar = ({compressed}: IProps) => {
                             <Button
                                 leftIcon={<IconSearch size={18} className={classes.linkIcon}/>}
                                 onClick={toggleSearchDrawer}
-                                variant="subtle"
                                 className={classes.link}
-                                radius={0}
+                                {...buttonProps}
                             >
                                 Search
                             </Button>
-                            <Button variant="subtle" component={Link} to="/create-campaign" className={classes.link}>
+                            <Button component={Link} to="/create-campaign" className={classes.link} {...buttonProps}>
                                 Start a campaign
                             </Button>
-                            <Button variant="subtle" component={Link} to="/dashboard" className={classes.link}>
+                            <Button component={Link} to="/dashboard" className={classes.link} {...buttonProps}>
                                 My dashboard
                             </Button>
                         </Flex>
@@ -302,13 +307,13 @@ const LandingNavbar = ({compressed}: IProps) => {
                 <ScrollArea h={`calc(100vh - ${rem(0)})`} mx="-md">
                     <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'}/>
 
-                    <Button variant="subtle" component={Link} to="/" className={classes.link}>
+                    <Button component={Link} to="/" className={classes.link} {...buttonProps}>
                         Home
                     </Button>
-                    <Button variant="subtle" component={Link} to="/how-it-works" className={classes.link}>
+                    <Button component={Link} to="/how-it-works" className={classes.link} {...buttonProps}>
                         How it works
                     </Button>
-                    <Button variant="subtle" component={Link} to="/campaigns" className={classes.link}>
+                    <Button component={Link} to="/campaigns" className={classes.link} {...buttonProps}>
                         Campaigns
                     </Button>
                     <UnstyledButton className={classes.link} onClick={toggleLinks}>
@@ -321,10 +326,10 @@ const LandingNavbar = ({compressed}: IProps) => {
                     </UnstyledButton>
                     <Collapse in={linksOpened}>{links}</Collapse>
 
-                    <Button variant="subtle" component={Link} to="/create-campaign" className={classes.link}>
+                    <Button component={Link} to="/create-campaign" className={classes.link} {...buttonProps}>
                         Start a campaign
                     </Button>
-                    <Button variant="subtle" component={Link} to="/dashboard" className={classes.link}>
+                    <Button component={Link} to="/dashboard" className={classes.link} {...buttonProps}>
                         My dashboard
                     </Button>
                     <Button
@@ -333,9 +338,8 @@ const LandingNavbar = ({compressed}: IProps) => {
                             closeDrawer()
                             toggleSearchDrawer();
                         }}
-                        variant="subtle"
                         className={classes.link}
-                        radius={0}
+                        {...buttonProps}
                     >
                         Search
                     </Button>

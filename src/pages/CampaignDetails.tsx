@@ -26,7 +26,7 @@ import {
     TitleProps,
     UnstyledButton
 } from "@mantine/core";
-import {IconFlag, IconHeart, IconHeartFilled, IconSeparator, IconShare, IconTag} from "@tabler/icons-react";
+import {IconFlag, IconHeart, IconHeartFilled, IconSeparator, IconShare} from "@tabler/icons-react";
 import {useDisclosure, useMediaQuery, useToggle} from "@mantine/hooks";
 import {BackButton, DonationDrawer, NotFound, ShareModal, UserCard} from "../components";
 import {Helmet} from "react-helmet";
@@ -57,7 +57,7 @@ const CampaignDetailsPage = (): JSX.Element => {
 
     const subTitleProps: TextProps = {
         size: 20,
-        weight: 500,
+        weight: 600,
         sx: {lineHeight: '28px'}
     }
 
@@ -146,7 +146,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                                                     title={`${following ? 'Unfollow' : 'Follow'} this campaign`}
                                                     // variant={following ? 'filled' : 'subtle'}
                                                     size="lg"
-                                                    color={'red'}
+                                                    color={'secondary'}
                                                     onClick={() => {
                                                         setFollowing();
                                                         notifications.show({
@@ -185,14 +185,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                                     <UserCard/>
                                 </Paper>
                                 <Paper {...paperProps}>
-                                    <Flex gap="sm" align="center">
-                                        <Text>Created on {dayjs(campaign?.createdAt).format('LL')}</Text>
-                                        <IconSeparator size={iconSize}/>
-                                        <Group spacing={2}>
-                                            <IconTag size={iconSize}/>
-                                            <Text component={Anchor}>{campaign?.category}</Text>
-                                        </Group>
-                                    </Flex>
+                                    <Text>Created on {dayjs(campaign?.createdAt).format('LL')}</Text>
                                 </Paper>
                                 {!matchesMobile &&
                                     <Button
@@ -231,7 +224,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                                                 leftIcon={following ? <IconHeartFilled size={iconSize}/> :
                                                     <IconHeart size={iconSize}/>}
                                                 variant={following ? 'filled' : 'subtle'}
-                                                color="red"
+                                                color="secondary"
                                                 onClick={() => {
                                                     setFollowing();
                                                     notifications.show({

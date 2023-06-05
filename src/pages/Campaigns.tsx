@@ -8,9 +8,9 @@ const CampaignsPage = (): JSX.Element => {
     const matchesMobile = useMediaQuery('(max-width: 768px)');
 
     const boxProps: BoxProps = {
-        mt: matchesMobile ? 4 : 96,
-        mb: matchesMobile ? 4 : 136,
-        py: matchesMobile ? 16 : 48
+        mt: matchesMobile ? 4 : 24,
+        mb: matchesMobile ? 4 : 48,
+        py: matchesMobile ? 16 : 24
     }
 
     const titleProps: TitleProps = {
