@@ -1,4 +1,5 @@
 import {createStyles, rem, Text, Title, TitleProps, UnstyledButton} from "@mantine/core";
+import {Link} from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -48,7 +49,7 @@ const Brand = ({asLink, variant, ...others}: IProps) => {
 
     return (
         asLink ?
-            <UnstyledButton component="a" href="/">
+            <UnstyledButton component={Link} to="/">
                 <Title className={variant === 'grayscale' ? classes.white : classes.title} {...others}>
                     Crowd
                     <Text component="span" className={variant === 'grayscale' ? '' : classes.highlight} inherit>

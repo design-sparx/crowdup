@@ -25,6 +25,7 @@ import {
 } from "@tabler/icons-react";
 import {CampaignsTable, DonatorsTable, YearlyDonationChart} from "../components";
 import {Helmet} from "react-helmet";
+import {Link} from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
     root: {
@@ -177,8 +178,8 @@ const DashboardPage = () => {
                                     </Box>
                                     <Button
                                         leftIcon={<IconPlus size={18}/>}
-                                        component="a"
-                                        href="/create-campaign"
+                                        component={Link}
+                                        to="/create-campaign"
                                     >
                                         Create a Campaign
                                     </Button>
