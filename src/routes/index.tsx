@@ -1,19 +1,29 @@
 import {createBrowserRouter,} from "react-router-dom";
 import {
     CampaignDetailsPage,
-    CampaignsPage, CreateCampaignPage,
+    CampaignsPage,
+    CreateCampaignPage,
     DashboardPage,
     DetailError404Page,
     Error404Page,
     HomePage,
-    HowItWorksPage, LoginPage, SignupPage
+    HowItWorksPage,
+    LoginPage,
+    SignupPage
 } from "../pages";
+import {DashboardLayout, PublicLayout} from "../layout";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <HomePage/>,
+        element: <PublicLayout compressedNav/>,
         errorElement: <Error404Page/>,
+        children: [
+            {
+                path: '',
+                element: <HomePage/>
+            }
+        ]
     },
     {
         path: "login",
@@ -27,8 +37,14 @@ const router = createBrowserRouter([
     },
     {
         path: "how-it-works",
-        element: <HowItWorksPage/>,
+        element: <PublicLayout/>,
         errorElement: <Error404Page/>,
+        children: [
+            {
+                path: '',
+                element: <HowItWorksPage/>
+            }
+        ]
     },
     {
         path: "campaigns",
@@ -48,13 +64,25 @@ const router = createBrowserRouter([
     },
     {
         path: "dashboard",
-        element: <DashboardPage/>,
+        element: <DashboardLayout/>,
         errorElement: <Error404Page/>,
+        children: [
+            {
+                path: '',
+                element: <DashboardPage/>
+            }
+        ]
     },
     {
         path: "create-campaign",
-        element: <CreateCampaignPage/>,
+        element: <DashboardLayout/>,
         errorElement: <Error404Page/>,
+        children: [
+            {
+                path: '',
+                element: <CreateCampaignPage/>
+            }
+        ]
     },
 ]);
 

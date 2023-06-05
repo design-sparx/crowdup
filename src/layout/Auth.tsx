@@ -1,12 +1,10 @@
-import {ReactNode} from "react";
+import {Outlet} from "react-router-dom";
 
-interface IProps {
-    children: ReactNode
-}
-const AuthLayout = ({children}: IProps) => {
+
+const AuthLayout = () => {
     return (
         <div>
-            {children}
+            <Outlet/>
         </div>
     );
 };

@@ -66,7 +66,7 @@ const HowItWorksPage = (): JSX.Element => {
             <Helmet>
                 <title>How it works</title>
             </Helmet>
-            <PublicLayout compressedNav={false}>
+            <Box>
                 <Container>
                     <Box {...boxProps} sx={{textAlign: 'center'}}>
                         <Title mb={48} fw={800}>How to Fundraise Online</Title>
@@ -176,7 +176,7 @@ const HowItWorksPage = (): JSX.Element => {
                         </SimpleGrid>
                     </Box>
                 </Container>
-            </PublicLayout>
+            </Box>
         </>
     );
 };

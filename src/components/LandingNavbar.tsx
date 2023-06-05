@@ -37,6 +37,7 @@ import {
 } from '@tabler/icons-react';
 import {useEffect, useState} from "react";
 import {BrandName, SearchDrawer} from "./index";
+import {Link} from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -199,7 +200,6 @@ const LandingNavbar = ({compressed}: IProps) => {
         }
     };
 
-
     useEffect(() => {
         window.addEventListener('scroll', stickNavbar);
 
@@ -234,12 +234,12 @@ const LandingNavbar = ({compressed}: IProps) => {
                     <Flex justify="space-between" align="center" sx={{height: '100%'}}>
                         <BrandName size={28} asLink/>
                         <Flex align="center" gap="xs" sx={{height: '100%'}} className={classes.hiddenMobile}>
-                            <a href="/how-it-works" className={classes.link}>
+                            <Button variant="subtle" component={Link} to="/how-it-works" className={classes.link}>
                                 How it works
-                            </a>
-                            <a href="/campaigns" className={classes.link}>
+                            </Button>
+                            <Button variant="subtle" component={Link} to="/campaigns" className={classes.link}>
                                 Campaigns
-                            </a>
+                            </Button>
                             <HoverCard width={700} position="bottom" radius="sm" shadow="md" withinPortal>
                                 <HoverCard.Target>
                                     <a href="#" className={classes.link}>
@@ -278,12 +278,12 @@ const LandingNavbar = ({compressed}: IProps) => {
                             >
                                 Search
                             </Button>
-                            <a href="/create-campaign" className={classes.link}>
+                            <Button variant="subtle" component={Link} to="/create-campaign" className={classes.link}>
                                 Start a campaign
-                            </a>
-                            <a href="/dashboard" className={classes.link}>
+                            </Button>
+                            <Button variant="subtle" component={Link} to="/dashboard" className={classes.link}>
                                 My dashboard
-                            </a>
+                            </Button>
                         </Flex>
                         <Burger opened={drawerOpened} onClick={toggleDrawer} className={classes.hiddenDesktop}/>
                     </Flex>
@@ -302,15 +302,15 @@ const LandingNavbar = ({compressed}: IProps) => {
                 <ScrollArea h={`calc(100vh - ${rem(0)})`} mx="-md">
                     <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'}/>
 
-                    <a href="/" className={classes.link}>
+                    <Button variant="subtle" component={Link} to="/" className={classes.link}>
                         Home
-                    </a>
-                    <a href="/how-it-works" className={classes.link}>
+                    </Button>
+                    <Button variant="subtle" component={Link} to="/how-it-works" className={classes.link}>
                         How it works
-                    </a>
-                    <a href="/campaigns" className={classes.link}>
+                    </Button>
+                    <Button variant="subtle" component={Link} to="/campaigns" className={classes.link}>
                         Campaigns
-                    </a>
+                    </Button>
                     <UnstyledButton className={classes.link} onClick={toggleLinks}>
                         <Center inline>
                             <Box component="span" mr={5}>
@@ -321,12 +321,12 @@ const LandingNavbar = ({compressed}: IProps) => {
                     </UnstyledButton>
                     <Collapse in={linksOpened}>{links}</Collapse>
 
-                    <a href="/create-campaign" className={classes.link}>
+                    <Button variant="subtle" component={Link} to="/create-campaign" className={classes.link}>
                         Start a campaign
-                    </a>
-                    <a href="/dashboard" className={classes.link}>
+                    </Button>
+                    <Button variant="subtle" component={Link} to="/dashboard" className={classes.link}>
                         My dashboard
-                    </a>
+                    </Button>
                     <Button
                         leftIcon={<IconSearch size={18}/>}
                         onClick={() => {

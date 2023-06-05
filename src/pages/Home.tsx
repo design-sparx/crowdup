@@ -8,7 +8,6 @@ import WaysToFundSection from "../sections/Home/WaysToFund";
 import CampaignsSection from "../sections/Home/Campaigns";
 import GetStartedSection from "../sections/Home/GetStarted";
 import TestimonialsSection from "../sections/Home/Testimonials";
-import {PublicLayout} from "../layout";
 import {Helmet} from "react-helmet";
 
 const HomePage = (): JSX.Element => {
@@ -38,7 +37,7 @@ const HomePage = (): JSX.Element => {
             <Helmet>
                 <title>Home</title>
             </Helmet>
-            <PublicLayout compressedNav={true}>
+            <Box>
                 <HeroSection/>
                 <Container>
                     <Box {...boxProps}>
@@ -58,7 +57,7 @@ const HomePage = (): JSX.Element => {
                     <CampaignsSection boxProps={boxProps} titleProps={titleProps} subtitleProps={subTitleProps}/>
                     <GetStartedSection boxProps={boxProps} titleProps={titleProps}/>
                 </Container>
-            </PublicLayout>
+            </Box>
         </>
     );
 };

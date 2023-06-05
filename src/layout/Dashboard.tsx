@@ -1,12 +1,8 @@
-import {ReactNode} from 'react';
 import {AppShell, useMantineTheme} from '@mantine/core';
+import {Outlet} from 'react-router-dom'
 import {AppNavbar} from "../components";
 
-interface IProps {
-    children: ReactNode
-}
-
-const DashboardLayout = ({children}: IProps) => {
+const DashboardLayout = () => {
     const theme = useMantineTheme();
 
     return (
@@ -22,7 +18,7 @@ const DashboardLayout = ({children}: IProps) => {
                 navbar={<></>}
                 header={<AppNavbar/>}
             >
-                {children}
+                <Outlet/>
             </AppShell>
         </>
     );

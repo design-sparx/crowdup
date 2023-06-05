@@ -1,5 +1,4 @@
 import {Helmet} from "react-helmet";
-import {DashboardLayout} from "../layout";
 import {
     ActionIcon,
     Alert,
@@ -150,7 +149,7 @@ const CreateCampaignPage = () => {
             <Helmet>
                 <title>Create campaign</title>
             </Helmet>
-            <DashboardLayout>
+            <Box>
                 <Container my="xl">
                     <Title mb="xl" align="center">Create your campaign</Title>
                     <Stepper active={active} onStepClick={setActive} breakpoint="sm">
@@ -460,7 +459,7 @@ const CreateCampaignPage = () => {
                         }
                     </Group>
                 </Container>
-            </DashboardLayout>
+            </Box>
         </>
     );
 };
