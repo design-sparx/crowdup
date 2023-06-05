@@ -1,7 +1,6 @@
 import {Box, BoxProps, Container, Flex, Select, SimpleGrid, Stack, TextInput, Title, TitleProps} from "@mantine/core";
 import campaignsData from "../data/Campaigns.json";
 import {CampaignCard} from "../components";
-import {PublicLayout} from "../layout";
 import {Helmet} from "react-helmet";
 import {useMediaQuery} from "@mantine/hooks";
 
@@ -29,7 +28,7 @@ const CampaignsPage = (): JSX.Element => {
             <Helmet>
                 <title>Discover campaigns to fund</title>
             </Helmet>
-            <PublicLayout compressedNav={false}>
+            <Box>
                 <Container size="lg">
                     <Stack>
                         <Box {...boxProps}>
@@ -77,7 +76,7 @@ const CampaignsPage = (): JSX.Element => {
                         </SimpleGrid>
                     </Stack>
                 </Container>
-            </PublicLayout>
+            </Box>
         </>
     );
 };

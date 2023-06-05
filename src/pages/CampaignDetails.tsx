@@ -28,7 +28,6 @@ import {
 import {IconFlag, IconHeart, IconHeartFilled, IconSeparator, IconShare, IconTag} from "@tabler/icons-react";
 import {useDisclosure, useMediaQuery, useToggle} from "@mantine/hooks";
 import {BackButton, DonationDrawer, NotFound, ShareModal, UserCard} from "../components";
-import {PublicLayout} from "../layout";
 import {Helmet} from "react-helmet";
 import * as dayjs from "dayjs";
 import * as LocalizedFormat from "dayjs/plugin/localizedFormat"
@@ -72,7 +71,7 @@ const CampaignDetailsPage = (): JSX.Element => {
             <Helmet>
                 <title>{campaign?.title}</title>
             </Helmet>
-            <PublicLayout compressedNav={false}>
+            <Box>
                 {campaign ? <Container size="lg">
                     <BackButton mb="md"/>
                     <Grid>
@@ -295,7 +294,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                 </Container> : <NotFound/>}
                 <ShareModal opened={opened} onClose={close} campaign={campaign} iconSize={iconSize}/>
                 <DonationDrawer campaign={campaign} opened={donateOpened} onClose={donateClose} iconSize={iconSize}/>
-            </PublicLayout>
+            </Box>
         </>
     );
 };

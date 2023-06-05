@@ -15,7 +15,6 @@ import {
     Title,
     TitleProps
 } from "@mantine/core";
-import {DashboardLayout} from "../layout";
 import {
     IconArrowDownRight,
     IconArrowUpRight,
@@ -72,7 +71,7 @@ const DashboardPage = () => {
             <Helmet>
                 <title>Dashboard</title>
             </Helmet>
-            <DashboardLayout>
+            <Box>
                 <Container fluid my="xl">
                     <Stack spacing="xl">
                         <Title order={3}>Good evening, Jane</Title>
@@ -202,7 +201,7 @@ const DashboardPage = () => {
                         </Paper>
                     </Stack>
                 </Container>
-            </DashboardLayout>
+            </Box>
         </>
     );
 };

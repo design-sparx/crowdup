@@ -1,4 +1,3 @@
-import {PublicLayout} from "../layout";
 import {Helmet} from "react-helmet";
 import {
     AspectRatio,
@@ -85,7 +84,7 @@ const HowItWorksPage = (): JSX.Element => {
                         </AspectRatio>
                     </Box>
                     <Box {...boxProps}>
-                        <Title {...titleProps} align="center" >Here's how it works</Title>
+                        <Title {...titleProps} align="center">Here's how it works</Title>
                         <SimpleGrid
                             cols={3}
                             spacing="lg"
