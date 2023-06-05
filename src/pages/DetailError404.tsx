@@ -7,7 +7,7 @@ const DetailError404Page = () => {
         <div>
             campaign error 404
             <p>
-                <i>{error.statusText || error.message}</i>
+                <i>{error?.statusText || error?.message}</i>
             </p>
         </div>
     );
