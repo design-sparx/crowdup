@@ -1,6 +1,7 @@
 import {useState} from 'react';
-import {createStyles, Flex, FlexProps, getStylesRef, rem} from '@mantine/core';
+import {Button, createStyles, Flex, FlexProps, getStylesRef, rem} from '@mantine/core';
 import {IconFileDollar, IconFolderPlus, IconHeart, IconHome,} from '@tabler/icons-react';
+import {Link} from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
     header: {
@@ -75,9 +76,10 @@ const AppLinks = ({...others}: IProps) => {
     const [active, setActive] = useState('Billing');
 
     const links = data.map((item) => (
-        <a
+        <Button
+            component={Link}
             className={cx(classes.link, {[classes.linkActive]: item.label === active})}
-            href={item.link}
+            to={item.link}
             key={item.label}
             onClick={() => {
                 setActive(item.label);
@@ -85,7 +87,7 @@ const AppLinks = ({...others}: IProps) => {
         >
             <item.icon className={classes.linkIcon} stroke={1.5} size={ICON_SIZE}/>
             <span>{item.label}</span>
-        </a>
+        </Button>
     ));
 
     return (

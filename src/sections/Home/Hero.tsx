@@ -1,5 +1,6 @@
 import {Button, Center, Container, createStyles, Group, Overlay, rem, Stack, Text, Title} from '@mantine/core';
 import {IconRocket} from "@tabler/icons-react";
+import {Link} from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
     wrapper: {
@@ -155,10 +156,10 @@ const HeroSection = () => {
                 </Container>
 
                 <div className={classes.controls}>
-                    <Button className={classes.control} variant="white" size="lg" component="a" href="/create-campaign">
+                    <Button className={classes.control} variant="white" size="lg" component={Link} to="/create-campaign">
                         Start a campaign
                     </Button>
-                    <Button className={classes.control} variant="white" size="lg" component="a" href="/campaigns">
+                    <Button className={classes.control} variant="white" size="lg" component={Link} to="/campaigns">
                         Explore now
                     </Button>
                 </div>

@@ -146,7 +146,7 @@ const HowItWorksPage = (): JSX.Element => {
                                 shadow="md"
                                 radius="sm"
                                 component={Link}
-                                to="/create-campaign"
+                                to="/campaigns"
                             >
                                 <Card.Section>
                                     <Image
@@ -154,7 +154,7 @@ const HowItWorksPage = (): JSX.Element => {
                                 </Card.Section>
                                 <Stack spacing="sm" align="start" mt="md">
                                     <Text size="lg" fw={500}>Discover amazing fundraising campaigns</Text>
-                                    <Button size="md">Fund Someone</Button>
+                                    <Button size="md" component={Link} to="/campaigns">Fund Someone</Button>
                                 </Stack>
                             </Card>
                             <Card

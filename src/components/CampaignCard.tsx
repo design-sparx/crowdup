@@ -12,6 +12,7 @@ import {
     Text,
 } from '@mantine/core';
 import {ICampaign} from "../types";
+import {Link} from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
     card: {
@@ -61,10 +62,10 @@ const CampaignCard = ({data, showActions}: IProps) => {
         category,
         country
     } = data;
-    const linkProps = {href: `/campaigns/${id}`, rel: 'noopener noreferrer'};
+    const linkProps = {to: `/campaigns/${id}`, rel: 'noopener noreferrer'};
 
     return (
-        <Card radius="sm" shadow="md" ml="xs" component="a" {...linkProps} className={classes.card}>
+        <Card radius="sm" shadow="md" ml="xs" component={Link} {...linkProps} className={classes.card}>
             <Card.Section>
                 <Image src={mainImage} height={280} className={classes.image}/>
             </Card.Section>
