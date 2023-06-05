@@ -10,9 +10,8 @@ import './App.css'
 function App() {
     return (
         <>
-
+            <RouterProvider router={router}/>
             <MantineProvider theme={customTheme}>
-                <RouterProvider router={router}/>
                 <MontserratFont/>
                 <Notifications/>
             </MantineProvider>
