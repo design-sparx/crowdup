@@ -1,3 +1,5 @@
+![image](https://github.com/design-sparx/crowdup/assets/26582923/001cd476-c753-4087-96a6-ee8c99fc3612)
+
 # Crowdfunding website project
 
 [Online Demo](https://crowd-up.netlify.app/ "Online Demo")
@@ -26,9 +28,6 @@ CrowdUp is a crowdfunding platform that helps you get funding for your personal 
 
 - eslint v8 - https://eslint.org/docs/latest/user-guide/getting-started- 
 - vite v4 - https://vitejs.dev/
-
-### Screenshot
-![image](https://user-images.githubusercontent.com/26582923/232856644-981faea4-f76b-467a-9d07-3f2f720c7f6c.png)
 
 ### Software
 
