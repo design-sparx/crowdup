@@ -19,7 +19,7 @@ importers:
         version: 6.0.9(@emotion/react@11.10.6(@types/react@18.2.0)(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mantine/dates':
         specifier: ^6.0.9
-        version: 6.0.9(@mantine/core@6.0.9(@emotion/react@11.10.6(@types/react@18.2.0)(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(dayjs@1.11.7)(react@18.2.0)
+        version: 6.0.9(@mantine/core@6.0.9(@emotion/react@11.10.6(@types/react@18.2.0)(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(dayjs@1.11.23)(react@18.2.0)
       '@mantine/dropzone':
         specifier: ^6.0.9
         version: 6.0.11(@mantine/core@6.0.9(@emotion/react@11.10.6(@types/react@18.2.0)(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -40,10 +40,10 @@ importers:
         version: 6.0.9(@mantine/core@6.0.9(@emotion/react@11.10.6(@types/react@18.2.0)(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mantine/tiptap':
         specifier: ^6.0.9
-        version: 6.0.9(@mantine/core@6.0.9(@emotion/react@11.10.6(@types/react@18.2.0)(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@tabler/icons-react@2.17.0(react@18.2.0))(@tiptap/extension-link@2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3))(@tiptap/react@2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
+        version: 6.0.9(@mantine/core@6.0.9(@emotion/react@11.10.6(@types/react@18.2.0)(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@tabler/icons-react@3.49.0(react@18.2.0))(@tiptap/extension-link@2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3))(@tiptap/react@2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
       '@tabler/icons-react':
-        specifier: ^2.17.0
-        version: 2.17.0(react@18.2.0)
+        specifier: ^3.49.0
+        version: 3.49.0(react@18.2.0)
       '@tiptap/extension-highlight':
         specifier: ^2.0.3
         version: 2.0.3(@tiptap/core@2.0.3)
@@ -72,11 +72,11 @@ importers:
         specifier: ^2.0.3
         version: 2.0.3(@tiptap/pm@2.0.3)
       apexcharts:
-        specifier: ^3.40.0
-        version: 3.40.0
+        specifier: ^8.2.0
+        version: 8.2.0
       dayjs:
-        specifier: ^1.11.7
-        version: 1.11.7
+        specifier: ^1.11.23
+        version: 1.11.23
       embla-carousel-react:
         specifier: 7.1.0
         version: 7.1.0(react@18.2.0)
@@ -87,8 +87,8 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
       react-apexcharts:
-        specifier: ^1.4.0
-        version: 1.4.0(apexcharts@3.40.0)(react@18.2.0)
+        specifier: ^2.1.1
+        version: 2.1.1(apexcharts@8.2.0)(react@18.2.0)
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
@@ -659,13 +659,13 @@ packages:
   '@rolldown/pluginutils@1.0.1':
     resolution: {integrity: sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==}
 
-  '@tabler/icons-react@2.17.0':
-    resolution: {integrity: sha512-kuEW+qNwRqcK5iMl7qTapzX2NiMOwPg4Az01d+IZ1DIMwaZ7iKPJaIor2ihKFLPYrT9D5BZHXB8R5mSkw0FETg==}
+  '@tabler/icons-react@3.49.0':
+    resolution: {integrity: sha512-Um59pm5RVNUaQjFUtG0r4oYJbZuBS3tGugAA2tgBg0WufMk34Eio3nsO30RUkLuL2giYPQUNdY9HvqltLLYyNA==}
     peerDependencies:
-      react: ^16.5.1 || ^17.0.0 || ^18.0.0
+      react: '>= 16'
 
-  '@tabler/icons@2.17.0':
-    resolution: {integrity: sha512-UeJaylOGNRhQKyDlgZfrQ3UPSGlfVQuXcmCsTYeXioKKepibW6VZ3H36Lo1jvBTBkQD2e9m+k2NxwkztOTXwrA==}
+  '@tabler/icons@3.49.0':
+    resolution: {integrity: sha512-l+GnSkFETx0U26icxv1VUFnxxiTqXfCcVRiRAnyMwibupM2S2L/hSaZ9gmSgz01rkrsH/93NvLsxykqdanc6lw==}
 
   '@tiptap/core@2.0.3':
     resolution: {integrity: sha512-jLyVIWAdjjlNzrsRhSE2lVL/7N8228/1R1QtaVU85UlMIwHFAcdzhD8FeiKkqxpTnGpaDVaTy7VNEtEgaYdCyA==}
@@ -960,8 +960,12 @@ packages:
     resolution: {integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==}
     engines: {node: '>=8'}
 
-  apexcharts@3.40.0:
-    resolution: {integrity: sha512-dSi3BUfCJkFd67uFp+xffrJVd3lDT7AAUUyRp0qPYiglJ76CeZLddVhM3FAk1P9GCzf8VewqGYUPCYQvXm+b9A==}
+  apex-commons@0.8.2:
+    resolution: {integrity: sha512-XTaIc8S8YEJ6gjNMvnY2Eq5X8UM2IstpYaVSh7iERBUXIefJ8hjUR2nGhWr9guZuQpFvG9NFca9arhrDdYSgIQ==}
+
+  apexcharts@8.2.0:
+    resolution: {integrity: sha512-SoJgwGOQQ8PWqbhZWA5yQUQUjCnwcDZpVb5NC4d0xeChgRN9UVem5r196s8GtsjvDGrHgq7X5nUoiNu/ZpUMew==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
 
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
@@ -1063,8 +1067,8 @@ packages:
   dash-get@1.0.2:
     resolution: {integrity: sha512-4FbVrHDwfOASx7uQVxeiCTo7ggSdYZbqs8lH+WU6ViypPlDbe9y6IP5VVUDQBv9DcnyaiPT5XT0UWHgJ64zLeQ==}
 
-  dayjs@1.11.7:
-    resolution: {integrity: sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==}
+  dayjs@1.11.23:
+    resolution: {integrity: sha512-QDTCU0M0MxR3hQfnlDJfwekQiaanm1ubOD231u73WBckQ/fsamwRLiE2GBz6D3a/xF1NgfiDLJjXBa1hYOYTtQ==}
 
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
@@ -1615,11 +1619,11 @@ packages:
     resolution: {integrity: sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==}
     engines: {node: '>=6'}
 
-  react-apexcharts@1.4.0:
-    resolution: {integrity: sha512-DrcMV4aAMrUG+n6412yzyATWEyCDWlpPBBhVbpzBC4PDeuYU6iF84SmExbck+jx5MUm4U5PM3/T307Mc3kzc9Q==}
+  react-apexcharts@2.1.1:
+    resolution: {integrity: sha512-aV25n+1ZdAzRG0KhODVC48K8WbhMKBAr3yWSeaaBqM1ySn22kSSKblsNCUvlwegsT+cdMLuOrK9xGZb+IK+OkQ==}
     peerDependencies:
-      apexcharts: ^3.18.0
-      react: '>=0.13'
+      apexcharts: '>=5.10.1'
+      react: '>=16.8.0'
 
   react-dom@18.2.0:
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
@@ -1768,37 +1772,6 @@ packages:
   supports-preserve-symlinks-flag@1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
-
-  svg.draggable.js@2.2.2:
-    resolution: {integrity: sha512-JzNHBc2fLQMzYCZ90KZHN2ohXL0BQJGQimK1kGk6AvSeibuKcIdDX9Kr0dT9+UJ5O8nYA0RB839Lhvk4CY4MZw==}
-    engines: {node: '>= 0.8.0'}
-
-  svg.easing.js@2.0.0:
-    resolution: {integrity: sha512-//ctPdJMGy22YoYGV+3HEfHbm6/69LJUTAqI2/5qBvaNHZ9uUFVC82B0Pl299HzgH13rKrBgi4+XyXXyVWWthA==}
-    engines: {node: '>= 0.8.0'}
-
-  svg.filter.js@2.0.2:
-    resolution: {integrity: sha512-xkGBwU+dKBzqg5PtilaTb0EYPqPfJ9Q6saVldX+5vCRy31P6TlRCP3U9NxH3HEufkKkpNgdTLBJnmhDHeTqAkw==}
-    engines: {node: '>= 0.8.0'}
-
-  svg.js@2.7.1:
-    resolution: {integrity: sha512-ycbxpizEQktk3FYvn/8BH+6/EuWXg7ZpQREJvgacqn46gIddG24tNNe4Son6omdXCnSOaApnpZw6MPCBA1dODA==}
-
-  svg.pathmorphing.js@0.1.3:
-    resolution: {integrity: sha512-49HWI9X4XQR/JG1qXkSDV8xViuTLIWm/B/7YuQELV5KMOPtXjiwH4XPJvr/ghEDibmLQ9Oc22dpWpG0vUDDNww==}
-    engines: {node: '>= 0.8.0'}
-
-  svg.resize.js@1.4.3:
-    resolution: {integrity: sha512-9k5sXJuPKp+mVzXNvxz7U0uC9oVMQrrf7cFsETznzUDDm0x8+77dtZkWdMfRlmbkEEYvUn9btKuZ3n41oNA+uw==}
-    engines: {node: '>= 0.8.0'}
-
-  svg.select.js@2.1.2:
-    resolution: {integrity: sha512-tH6ABEyJsAOVAhwcCjF8mw4crjXSI1aa7j2VQR8ZuJ37H2MBUbyeqYr5nEO7sSN3cy9AR9DUwNg0t/962HlDbQ==}
-    engines: {node: '>= 0.8.0'}
-
-  svg.select.js@3.0.1:
-    resolution: {integrity: sha512-h5IS/hKkuVCbKSieR9uQCj9w+zLHoPh+ce19bBYyqF53g6mnPB8sAtIbe1s9dh2S2fCmYX2xel1Ln3PJBbK4kw==}
-    engines: {node: '>= 0.8.0'}
 
   tabbable@6.1.1:
     resolution: {integrity: sha512-4kl5w+nCB44EVRdO0g/UGoOp3vlwgycUVtkk/7DPyeLZUCuNFFKCFG6/t/DgHLrUPHjrZg6s5tNm+56Q2B0xyg==}
@@ -2338,12 +2311,12 @@ snapshots:
       - '@emotion/react'
       - '@types/react'
 
-  '@mantine/dates@6.0.9(@mantine/core@6.0.9(@emotion/react@11.10.6(@types/react@18.2.0)(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(dayjs@1.11.7)(react@18.2.0)':
+  '@mantine/dates@6.0.9(@mantine/core@6.0.9(@emotion/react@11.10.6(@types/react@18.2.0)(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(dayjs@1.11.23)(react@18.2.0)':
     dependencies:
       '@mantine/core': 6.0.9(@emotion/react@11.10.6(@types/react@18.2.0)(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mantine/hooks': 6.0.9(react@18.2.0)
       '@mantine/utils': 6.0.9(react@18.2.0)
-      dayjs: 1.11.7
+      dayjs: 1.11.23
       react: 18.2.0
 
   '@mantine/dropzone@6.0.11(@mantine/core@6.0.9(@emotion/react@11.10.6(@types/react@18.2.0)(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
@@ -2398,12 +2371,12 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@mantine/tiptap@6.0.9(@mantine/core@6.0.9(@emotion/react@11.10.6(@types/react@18.2.0)(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@tabler/icons-react@2.17.0(react@18.2.0))(@tiptap/extension-link@2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3))(@tiptap/react@2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)':
+  '@mantine/tiptap@6.0.9(@mantine/core@6.0.9(@emotion/react@11.10.6(@types/react@18.2.0)(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@tabler/icons-react@3.49.0(react@18.2.0))(@tiptap/extension-link@2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3))(@tiptap/react@2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@mantine/core': 6.0.9(@emotion/react@11.10.6(@types/react@18.2.0)(react@18.2.0))(@mantine/hooks@6.0.9(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mantine/hooks': 6.0.9(react@18.2.0)
       '@mantine/utils': 6.0.9(react@18.2.0)
-      '@tabler/icons-react': 2.17.0(react@18.2.0)
+      '@tabler/icons-react': 3.49.0(react@18.2.0)
       '@tiptap/extension-link': 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
       '@tiptap/react': 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
@@ -2566,13 +2539,12 @@ snapshots:
 
   '@rolldown/pluginutils@1.0.1': {}
 
-  '@tabler/icons-react@2.17.0(react@18.2.0)':
+  '@tabler/icons-react@3.49.0(react@18.2.0)':
     dependencies:
-      '@tabler/icons': 2.17.0
-      prop-types: 15.8.1
+      '@tabler/icons': 3.49.0
       react: 18.2.0
 
-  '@tabler/icons@2.17.0': {}
+  '@tabler/icons@3.49.0': {}
 
   '@tiptap/core@2.0.3(@tiptap/pm@2.0.3)':
     dependencies:
@@ -2906,14 +2878,11 @@ snapshots:
     dependencies:
       color-convert: 2.0.1
 
-  apexcharts@3.40.0:
+  apex-commons@0.8.2: {}
+
+  apexcharts@8.2.0:
     dependencies:
-      svg.draggable.js: 2.2.2
-      svg.easing.js: 2.0.0
-      svg.filter.js: 2.0.2
-      svg.pathmorphing.js: 0.1.3
-      svg.resize.js: 1.4.3
-      svg.select.js: 3.0.1
+      apex-commons: 0.8.2
 
   argparse@2.0.1: {}
 
@@ -3005,7 +2974,7 @@ snapshots:
 
   dash-get@1.0.2: {}
 
-  dayjs@1.11.7: {}
+  dayjs@1.11.23: {}
 
   debug@4.4.3:
     dependencies:
@@ -3540,9 +3509,9 @@ snapshots:
 
   punycode@2.3.0: {}
 
-  react-apexcharts@1.4.0(apexcharts@3.40.0)(react@18.2.0):
+  react-apexcharts@2.1.1(apexcharts@8.2.0)(react@18.2.0):
     dependencies:
-      apexcharts: 3.40.0
+      apexcharts: 8.2.0
       prop-types: 15.8.1
       react: 18.2.0
 
@@ -3697,37 +3666,6 @@ snapshots:
       has-flag: 4.0.0
 
   supports-preserve-symlinks-flag@1.0.0: {}
-
-  svg.draggable.js@2.2.2:
-    dependencies:
-      svg.js: 2.7.1
-
-  svg.easing.js@2.0.0:
-    dependencies:
-      svg.js: 2.7.1
-
-  svg.filter.js@2.0.2:
-    dependencies:
-      svg.js: 2.7.1
-
-  svg.js@2.7.1: {}
-
-  svg.pathmorphing.js@0.1.3:
-    dependencies:
-      svg.js: 2.7.1
-
-  svg.resize.js@1.4.3:
-    dependencies:
-      svg.js: 2.7.1
-      svg.select.js: 2.1.2
-
-  svg.select.js@2.1.2:
-    dependencies:
-      svg.js: 2.7.1
-
-  svg.select.js@3.0.1:
-    dependencies:
-      svg.js: 2.7.1
 
   tabbable@6.1.1: {}
 
