@@ -51,8 +51,13 @@ const mockdata = [
     },
 ];
 
-const CategorySelectItem = forwardRef<HTMLDivElement, any>(
-    ({title, ...others}: any, ref) => (
+interface ICategorySelectItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+    icon: React.FC<{ size?: number }>;
+    title: React.ReactNode;
+}
+
+const CategorySelectItem = forwardRef<HTMLDivElement, ICategorySelectItemProps>(
+    ({title, ...others}, ref) => (
         <div ref={ref} {...others}>
             <Group noWrap>
                 <others.icon size={18}/>

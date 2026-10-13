@@ -13,8 +13,8 @@ const FileDropzone = ({label, description, ...others}: IFileInputProps) => {
 
     return (
         <Dropzone
-            onDrop={(files: any) => console.log('accepted files', files)}
-            onReject={(files: any) => console.log('rejected files', files)}
+            onDrop={(files: Parameters<NonNullable<DropzoneProps['onDrop']>>[0]) => console.log('accepted files', files)}
+            onReject={(files: Parameters<NonNullable<DropzoneProps['onReject']>>[0]) => console.log('rejected files', files)}
             maxSize={3 * 1024 ** 2}
             accept={IMAGE_MIME_TYPE}
             {...others}

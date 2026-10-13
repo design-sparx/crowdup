@@ -60,7 +60,7 @@ import {randomId} from "@mantine/hooks";
 import {useForm} from "@mantine/form";
 
 interface ISocialProps {
-    icon: React.FC<any>;
+    icon: React.FC<{ size?: number; stroke?: number }>;
     title: React.ReactNode;
 }
 
