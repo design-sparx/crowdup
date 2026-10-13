@@ -1,5 +1,4 @@
 import {useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
 import {ICampaign} from "../types";
 import campaignsData from "../data/Campaigns.json";
 import {
@@ -37,7 +36,7 @@ import {notifications} from "@mantine/notifications";
 const CampaignDetailsPage = (): JSX.Element => {
     dayjs.extend(LocalizedFormat)
     const {id} = useParams();
-    const [campaign, setCampaign] = useState<ICampaign>();
+    const campaign = campaignsData.data.find(_ => _.id === id) as ICampaign | undefined;
     const [opened, {open, close}] = useDisclosure(false);
     const [donateOpened, {open: donateOpen, close: donateClose}] = useDisclosure(false);
     const [following, setFollowing] = useToggle();
@@ -62,10 +61,6 @@ const CampaignDetailsPage = (): JSX.Element => {
     }
 
     const iconSize = 18;
-
-    useEffect(() => {
-        setCampaign(campaignsData.data.find(_ => _.id === id))
-    }, [id]);
 
     return (
         <>

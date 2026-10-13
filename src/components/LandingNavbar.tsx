@@ -202,7 +202,7 @@ const LandingNavbar = ({compressed}: IProps) => {
     const stickNavbar = () => {
         if (window !== undefined) {
             const windowHeight = window.scrollY;
-            windowHeight > 240 ? setStickyClass(true) : setStickyClass(false);
+            setStickyClass(windowHeight > 240);
         }
     };
 
