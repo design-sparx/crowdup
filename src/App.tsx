@@ -10,7 +10,7 @@ import router from "./routes";
 function App() {
     return (
         <>
-            <MantineProvider theme={customTheme}>
+            <MantineProvider theme={customTheme} forceColorScheme="light">
                 <RouterProvider router={router}/>
                 <MontserratFont/>
                 <Notifications/>
