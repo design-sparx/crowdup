@@ -163,6 +163,35 @@ export async function updateCampaign(
     return (data ?? []).length > 0;
 }
 
+/**
+ * Closes a live campaign. The filters are a courtesy; RLS and the write guard trigger are
+ * the enforcement (owner only, live -> closed only). Returns false when nothing matched.
+ */
+export async function closeCampaign(client: SupabaseClient, userId: string, id: string): Promise<boolean> {
+    const {data, error} = await client
+        .from("campaign")
+        .update({status: "closed"})
+        .eq("id", id)
+        .eq("owner_id", userId)
+        .eq("status", "live")
+        .select("id");
+    if (error) fail(error);
+    return (data ?? []).length > 0;
+}
+
+/** Posts a plain-text update. RLS requires the owner of a live or closed campaign. */
+export async function postUpdate(
+    client: SupabaseClient,
+    userId: string,
+    campaignId: string,
+    body: string,
+): Promise<void> {
+    const {error} = await client
+        .from("campaign_update")
+        .insert({campaign_id: campaignId, author_id: userId, body});
+    if (error) fail(error);
+}
+
 export async function listOwnCampaigns(client: SupabaseClient, userId: string) {
     const {data, error} = await client
         .from("campaign")

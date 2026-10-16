@@ -12,7 +12,7 @@
 
 begin;
 
-select plan(80);
+select plan(85);
 
 -- Helpers, scoped to this session.
 
@@ -538,6 +538,46 @@ select is(
   (select count(*)::int from public.report),
   0,
   'a reporter cannot read reports, not even their own'
+);
+
+-- Lifecycle: automatic closing and the donation guard.
+
+select pg_temp.become('00000000-0000-4000-8000-000000000002', 'authenticated');
+
+select is(
+  pg_temp.sqlstate_of($$select public.close_expired_campaigns()$$),
+  '42501',
+  'signed-in users cannot run the expiry job'
+);
+
+reset role;
+update public.campaign set end_date = now() - interval '1 hour'
+  where id = '10000000-0000-4000-8000-000000000002';
+
+select pg_temp.become(null, 'service_role');
+select public.close_expired_campaigns();
+
+select is(
+  (select status from public.campaign where id = '10000000-0000-4000-8000-000000000002'),
+  'closed',
+  'the expiry job closes a live campaign past its end date'
+);
+select is(
+  (select status from public.campaign where id = '10000000-0000-4000-8000-000000000001'),
+  'live',
+  'the expiry job leaves campaigns with a future end date live'
+);
+select is(
+  pg_temp.sqlstate_of($$insert into public.donation (campaign_id, amount, currency, status, stripe_event_id)
+    values ('10000000-0000-4000-8000-000000000002', 100, 'KES', 'pending', 'evt_test_closed_0001')$$),
+  '23514',
+  'a new pending donation on a closed campaign is rejected'
+);
+select is(
+  pg_temp.sqlstate_of($$insert into public.donation (campaign_id, amount, currency, status, stripe_event_id)
+    values ('10000000-0000-4000-8000-000000000001', 100, 'KES', 'pending', 'evt_test_live_0001')$$),
+  null,
+  'a new pending donation on a live campaign is accepted'
 );
 
 select * from finish();

@@ -1,6 +1,7 @@
 import {buildMeta} from "../helpers";
 import {CampaignDetailsPage, DetailError404Page} from "../pages";
-import {getCampaignBySlug} from "../lib/campaigns/repository";
+import {getCampaignBySlug, listUpdates} from "../lib/campaigns/repository";
+import {canAcceptDonations, effectiveStatus} from "../lib/campaigns/lifecycle";
 import {renderStoryHtml} from "../lib/campaigns/story";
 import {createPublicClient} from "../lib/supabase/server-public";
 import {data} from "react-router";
@@ -21,7 +22,13 @@ export async function loader({params}: Route.LoaderArgs) {
         throw new Response("Campaign not found", {status: 404});
     }
     // Rendered on the server from the allowlisted extensions only; see lib/campaigns/story.ts.
-    return {campaign, storyHtml: renderStoryHtml(campaign.story)};
+    const client = createPublicClient();
+    const updates = await listUpdates(client, campaign.id);
+    // Only live campaigns are readable, so anything not accepting donations here has ended.
+    const now = new Date();
+    const status = effectiveStatus({status: "live", endDate: campaign.endDate}, now);
+    const acceptingDonations = canAcceptDonations({status: "live", endDate: campaign.endDate}, now);
+    return {campaign, storyHtml: renderStoryHtml(campaign.story), updates, status, acceptingDonations};
 }
 
 export function meta({loaderData}: Route.MetaArgs) {
@@ -37,7 +44,13 @@ export function meta({loaderData}: Route.MetaArgs) {
 }
 
 export default function CampaignDetails({loaderData}: Route.ComponentProps) {
-    return <CampaignDetailsPage campaign={loaderData.campaign} storyHtml={loaderData.storyHtml}/>;
+    return <CampaignDetailsPage
+            campaign={loaderData.campaign}
+            storyHtml={loaderData.storyHtml}
+            updates={loaderData.updates}
+            ended={loaderData.status === "ended"}
+            acceptingDonations={loaderData.acceptingDonations}
+        />;
 }
 
 export {DetailError404Page as ErrorBoundary};
