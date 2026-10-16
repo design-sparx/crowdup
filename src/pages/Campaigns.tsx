@@ -1,10 +1,9 @@
 import {Box, BoxProps, Container, Flex, Select, SimpleGrid, Stack, TextInput, Title, TitleProps} from "@mantine/core";
 import campaignsData from "../data/Campaigns.json";
 import {CampaignCard} from "../components";
-import {Helmet} from "react-helmet";
 import {useMediaQuery} from "@mantine/hooks";
 
-const CampaignsPage = (): JSX.Element => {
+const CampaignsPage = () => {
     const matchesMobile = useMediaQuery('(max-width: 768px)');
 
     const boxProps: BoxProps = {
@@ -25,9 +24,7 @@ const CampaignsPage = (): JSX.Element => {
 
     return (
         <>
-            <Helmet>
-                <title>Discover campaigns to fund</title>
-            </Helmet>
+            <title>Discover campaigns to fund</title>
             <Box>
                 <Container size="lg">
                     <Stack>

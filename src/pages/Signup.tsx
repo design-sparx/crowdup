@@ -11,15 +11,12 @@ import {
     TextInput,
     Title,
 } from '@mantine/core';
-import {Helmet} from "react-helmet";
 import {IconBrandFacebook, IconBrandGoogle} from "@tabler/icons-react";
 
 const SignupPage = () => {
     return (
         <>
-            <Helmet>
-                <title>Signup</title>
-            </Helmet>
+            <title>Signup</title>
             <Container size={420} my={40}>
                 <Title
                     ta="center"

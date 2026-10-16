@@ -8,9 +8,8 @@ import WaysToFundSection from "../sections/Home/WaysToFund";
 import CampaignsSection from "../sections/Home/Campaigns";
 import GetStartedSection from "../sections/Home/GetStarted";
 import TestimonialsSection from "../sections/Home/Testimonials";
-import {Helmet} from "react-helmet";
 
-const HomePage = (): JSX.Element => {
+const HomePage = () => {
     const boxProps: BoxProps = {
         mt: 96,
         mb: 136,
@@ -34,9 +33,7 @@ const HomePage = (): JSX.Element => {
 
     return (
         <>
-            <Helmet>
-                <title>Home</title>
-            </Helmet>
+            <title>Home</title>
             <Box>
                 <HeroSection/>
                 <Container>

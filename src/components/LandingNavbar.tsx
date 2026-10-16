@@ -324,7 +324,7 @@ const LandingNavbar = ({compressed}: IProps) => {
                             <IconChevronDown size={16} className={classes.linkIcon}/>
                         </Center>
                     </UnstyledButton>
-                    <Collapse in={linksOpened}>{links}</Collapse>
+                    <Collapse expanded={linksOpened}>{links}</Collapse>
 
                     <Button component={Link} to="/create-campaign" className={classes.link} {...buttonProps}>
                         Start a campaign

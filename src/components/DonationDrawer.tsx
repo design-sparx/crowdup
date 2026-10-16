@@ -67,7 +67,7 @@ const DonationDrawer = ({campaign, iconSize, ...others}: IProps) => {
                     <NumberInput
                         size="md"
                         label="Enter your donation"
-                        precision={2}
+                        decimalScale={2}
                         rightSection={<IconCurrencyDollar size={iconSize}/>}
                     />
                     <Paper {...paperProps}>

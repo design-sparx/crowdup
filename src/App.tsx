@@ -1,7 +1,7 @@
 import {MantineProvider} from "@mantine/core";
 import {Notifications} from "@mantine/notifications";
 import {customTheme} from "./theme";
-import MontserratFont from "./fonts/MontserratFont";
+import "./fonts/montserrat.css";
 
 import './App.css'
 import {RouterProvider} from "react-router-dom";
@@ -12,7 +12,6 @@ function App() {
         <>
             <MantineProvider theme={customTheme} forceColorScheme="light">
                 <RouterProvider router={router}/>
-                <MontserratFont/>
                 <Notifications/>
             </MantineProvider>
         </>

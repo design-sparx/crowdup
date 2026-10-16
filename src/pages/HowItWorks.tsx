@@ -1,4 +1,3 @@
-import {Helmet} from "react-helmet";
 import {
     AspectRatio,
     Box,
@@ -23,7 +22,7 @@ import ShareImg from "../assets/img/share-campaign.png"
 import TestimonialsSection from "../sections/Home/Testimonials";
 import {Link} from "react-router-dom";
 
-const HowItWorksPage = (): JSX.Element => {
+const HowItWorksPage = () => {
     const boxProps: BoxProps = {
         mt: 96,
         mb: 136,
@@ -62,9 +61,7 @@ const HowItWorksPage = (): JSX.Element => {
 
     return (
         <>
-            <Helmet>
-                <title>How it works</title>
-            </Helmet>
+            <title>How it works</title>
             <Box>
                 <Container>
                     <Box {...boxProps} style={{textAlign: 'center'}}>

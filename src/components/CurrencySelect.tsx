@@ -1,35 +1,40 @@
-import {forwardRef} from 'react';
-import {Group, Select, Text} from "@mantine/core";
-import {ICurrency} from "../types";
+import {ComboboxItem, Group, Select, Text} from "@mantine/core";
 import currencyData from "../data/Currencies.json";
 
-const CurrencySelectItem = forwardRef<HTMLDivElement, ICurrency>(
-    ({name, cc, ...others}: ICurrency, ref) => (
-        <div ref={ref} {...others}>
-            <Group wrap="nowrap">
-                <Text size="sm">{name}</Text>
-                <Text size="sm" opacity={0.65}>
-                    {cc}
-                </Text>
-            </Group>
-        </div>
-    )
-);
+const currenciesByName = new Map(currencyData.data.map(c => [c.name, c]));
+const options = currencyData.data.map(c => ({value: c.name, label: c.name}));
 
 const CurrencySelect = () => {
     return (
         <Select
             label="What currency do you want to raise money in?"
-            itemComponent={CurrencySelectItem}
-            data={currencyData.data.map(c => ({value: c.name, label: c.name, ...c}))}
+            data={options}
             searchable
             clearable
             maxDropdownHeight={300}
-            nothingFound="Nobody here"
-            filter={(value, item) =>
-                item?.name?.toLowerCase().includes(value?.toLowerCase().trim()) ||
-                item?.code?.toLowerCase().includes(value?.toLowerCase().trim())
-            }
+            nothingFoundMessage="Nobody here"
+            renderOption={({option}) => {
+                const currency = currenciesByName.get(option.value);
+
+                return (
+                    <Group wrap="nowrap">
+                        <Text size="sm">{currency?.name}</Text>
+                        <Text size="sm" opacity={0.65}>
+                            {currency?.cc}
+                        </Text>
+                    </Group>
+                );
+            }}
+            filter={({options, search}) => {
+                const query = search.toLowerCase().trim();
+
+                return (options as ComboboxItem[]).filter(option => {
+                    const currency = currenciesByName.get(option.value);
+
+                    return currency?.name.toLowerCase().includes(query) ||
+                        currency?.cc.toLowerCase().includes(query);
+                });
+            }}
         />
     );
 };

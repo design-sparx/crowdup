@@ -10,15 +10,12 @@ import {
     Group,
     Button, Divider,
 } from '@mantine/core';
-import {Helmet} from "react-helmet";
 import {IconBrandFacebook, IconBrandGoogle} from "@tabler/icons-react";
 
 const LoginPage = () => {
     return (
         <>
-            <Helmet>
-                <title>Login</title>
-            </Helmet>
+            <title>Login</title>
             <Container size={420} my={40}>
                 <Title
                     ta="center"

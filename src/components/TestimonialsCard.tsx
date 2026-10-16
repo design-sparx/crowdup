@@ -48,10 +48,10 @@ const CampaignCard = ({data, ...others}: IProps) => {
     return (
         <Paper radius="md" className={classes.card} mx={36} {...others}>
             <Grid style={{alignItems: 'center'}}>
-                {matchesMobile && <Grid.Col lg={5}>
-                    <Image src={createdByImage} height={360} fit="cover"/>
+                {matchesMobile && <Grid.Col span={{base: 12, lg: 5}}>
+                    <Image src={createdByImage} h={360} fit="cover"/>
                 </Grid.Col>}
-                <Grid.Col lg={7} pl={matchesMobile ? 'xl' : 'xl'} pb="xl">
+                <Grid.Col span={{base: 12, lg: 7}} pl={matchesMobile ? 'xl' : 'xl'} pb="xl">
                     <Stack gap="sm">
                         <Text size="xl">"{testimonial}"</Text>
                         <Text fw={700}>{createdBy}</Text>
@@ -62,8 +62,8 @@ const CampaignCard = ({data, ...others}: IProps) => {
                         </Group>
                     </Stack>
                 </Grid.Col>
-                {!matchesMobile && <Grid.Col lg={5}>
-                    <Image src={createdByImage} height={320} fit="cover"/>
+                {!matchesMobile && <Grid.Col span={{base: 12, lg: 5}}>
+                    <Image src={createdByImage} h={320} fit="cover"/>
                 </Grid.Col>}
             </Grid>
         </Paper>

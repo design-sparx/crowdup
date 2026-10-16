@@ -56,12 +56,8 @@ const StatsSection = ({boxProps, subtitleProps, titleProps}: IProps) => {
                     care about most</Text>
             </Box>
             <SimpleGrid
-                cols={3}
-                spacing="lg"
-                breakpoints={[
-                    {maxWidth: 'md', cols: 3, spacing: 'md'},
-                    {maxWidth: 'sm', cols: 1, spacing: 'sm'},
-                ]}
+                cols={{base: 1, sm: 3}}
+                spacing={{base: 'sm', sm: 'md', md: 'lg'}}
             >
                 {items}
             </SimpleGrid>

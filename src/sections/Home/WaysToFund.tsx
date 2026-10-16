@@ -42,7 +42,7 @@ const WaysToFundSection = ({boxProps, subtitleProps}: IProps) => {
         <Box style={{background: theme.colors.secondary[8], color: theme.white}} {...boxProps}>
             <Container fluid p={36}>
                 <Grid>
-                    <Grid.Col lg={4}>
+                    <Grid.Col span={{base: 12, lg: 4}}>
                         <Stack gap="xs" justify="center" style={{height: '100%'}}>
                             <TitleBadge title="Make your impact"/>
                             <Title order={3}>CrowdUp Gives You More</Title>
@@ -51,8 +51,8 @@ const WaysToFundSection = ({boxProps, subtitleProps}: IProps) => {
                                 support. Helping you raise more money than you could elsewhere!</Text>
                         </Stack>
                     </Grid.Col>
-                    <Grid.Col lg={8}>
-                        <SimpleGrid cols={3} breakpoints={[{maxWidth: 'sm', cols: 1}]} >
+                    <Grid.Col span={{base: 12, lg: 8}}>
+                        <SimpleGrid cols={{base: 1, sm: 3}}>
                             <Card
                                 className={cx(classes.feature, 'card')}
                                 shadow="md"

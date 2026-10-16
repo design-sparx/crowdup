@@ -24,7 +24,6 @@ import {
     IconTrophy
 } from "@tabler/icons-react";
 import {CampaignsTable, DonatorsTable, YearlyDonationChart} from "../components";
-import {Helmet} from "react-helmet";
 import {Link} from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
@@ -69,20 +68,14 @@ const DashboardPage = () => {
 
     return (
         <>
-            <Helmet>
-                <title>Dashboard</title>
-            </Helmet>
+            <title>Dashboard</title>
             <Box>
                 <Container fluid my="xl">
                     <Stack gap="xl">
                         <Title order={3}>Good evening, Jane</Title>
                         <SimpleGrid
-                            cols={4}
-                            breakpoints={[{maxWidth: 'md', cols: 2, spacing: 'md'}, {
-                                maxWidth: 'sm',
-                                cols: 1,
-                                spacing: 'sm'
-                            }]}
+                            cols={{base: 1, sm: 2, lg: 4}}
+                            spacing={{base: 'sm', sm: 'md'}}
                         >
                             <Paper {...paperProps}>
                                 <Group justify="space-between">

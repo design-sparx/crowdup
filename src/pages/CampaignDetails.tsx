@@ -28,12 +28,11 @@ import {
 import {IconFlag, IconHeart, IconHeartFilled, IconSeparator, IconShare} from "@tabler/icons-react";
 import {useDisclosure, useMediaQuery, useToggle} from "@mantine/hooks";
 import {BackButton, DonationDrawer, NotFound, ShareModal, UserCard} from "../components";
-import {Helmet} from "react-helmet";
 import * as dayjs from "dayjs";
 import * as LocalizedFormat from "dayjs/plugin/localizedFormat"
 import {notifications} from "@mantine/notifications";
 
-const CampaignDetailsPage = (): JSX.Element => {
+const CampaignDetailsPage = () => {
     dayjs.extend(LocalizedFormat)
     const {id} = useParams();
     const campaign = campaignsData.data.find(_ => _.id === id) as ICampaign | undefined;
@@ -64,14 +63,12 @@ const CampaignDetailsPage = (): JSX.Element => {
 
     return (
         <>
-            <Helmet>
-                <title>{campaign?.title}</title>
-            </Helmet>
+            <title>{campaign?.title}</title>
             <Box>
                 {campaign ? <Container size="lg">
                     <BackButton mb="md"/>
                     <Grid>
-                        <Grid.Col lg={8}>
+                        <Grid.Col span={{base: 12, lg: 8}}>
                             <Stack>
                                 <Card padding="md" shadow="sm">
                                     <Card.Section>
@@ -193,7 +190,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                                 }
                             </Stack>
                         </Grid.Col>
-                        <Grid.Col lg={4}>
+                        <Grid.Col span={{base: 12, lg: 4}}>
                             <Stack>
                                 {!matchesMobile &&
                                     <Paper {...paperProps}>

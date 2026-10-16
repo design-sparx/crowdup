@@ -139,7 +139,7 @@ const LandingFooter = ({data}: FooterLinksProps) => {
                 className={classes.link}
                 component="a"
                 href={link.link}
-                onClick={(event) => event.preventDefault()}
+                onClick={(event: React.MouseEvent) => event.preventDefault()}
             >
                 {link.label}
             </Text>

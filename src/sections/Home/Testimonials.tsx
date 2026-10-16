@@ -16,7 +16,7 @@ const TestimonialsSection = ({boxProps, titleProps}: IProps) => {
     return (
         <Box {...boxProps}>
             <Title {...titleProps} ta="center">Testimonials</Title>
-            <Carousel slideSize="95%" align="center" slideGap="lg">
+            <Carousel slideSize="95%" slideGap="lg" emblaOptions={{align: 'center'}}>
                 {slides}
             </Carousel>
         </Box>

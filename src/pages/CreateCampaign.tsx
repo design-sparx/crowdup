@@ -1,4 +1,3 @@
-import {Helmet} from "react-helmet";
 import {
     ActionIcon,
     Alert,
@@ -32,7 +31,7 @@ import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
-import React, {forwardRef, useState} from "react";
+import {useState} from "react";
 import {DateInput} from "@mantine/dates";
 import {
     IconBrandApple,
@@ -59,27 +58,20 @@ import {CategorySelect, CountrySelect, CurrencySelect, FileDropzone} from "../co
 import {randomId} from "@mantine/hooks";
 import {useForm} from "@mantine/form";
 
-interface ISocialProps {
-    icon: React.FC<{ size?: number; stroke?: number }>;
-    title: React.ReactNode;
-}
-
-const SocialSelectItem = forwardRef<HTMLDivElement, ISocialProps>(
-    ({title, icon: Icon, ...others}: ISocialProps, ref) => (
-        <div ref={ref} {...others}>
-            <Group wrap="nowrap">
-                <Icon size={18} stroke={1.5}/>
-                <Text size="sm" tt="capitalize">{title}</Text>
-            </Group>
-        </div>
-    )
-);
+const socialOptions = [
+    {title: 'Facebook', icon: IconBrandFacebook},
+    {title: 'Whatsapp', icon: IconBrandWhatsapp},
+    {title: 'LinkedIn', icon: IconBrandLinkedin},
+    {title: 'Twitter', icon: IconBrandTwitter},
+    {title: 'Youtube', icon: IconBrandYoutube},
+    {title: 'Other links', icon: IconLink},
+];
 
 const CreateCampaignPage = () => {
     const theme = useMantineTheme()
     const [active, setActive] = useState(0);
     const [target, setTarget] = useState('deadline');
-    const [deadlineDate, setDeadlineDate] = useState<Date | null>(null);
+    const [deadlineDate, setDeadlineDate] = useState<string | null>(null);
     const [donationType, setDonationType] = useState('any');
     const [minimumCheck, setMinimumCheck] = useState(false);
     const editor = useEditor({
@@ -108,16 +100,17 @@ const CreateCampaignPage = () => {
         <Group key={item.key} mt="xs">
             <Select
                 aria-label="social"
-                data={
-                    [
-                        {title: 'Facebook', icon: IconBrandFacebook},
-                        {title: 'Whatsapp', icon: IconBrandWhatsapp},
-                        {title: 'LinkedIn', icon: IconBrandLinkedin},
-                        {title: 'Twitter', icon: IconBrandTwitter},
-                        {title: 'Youtube', icon: IconBrandYoutube},
-                        {title: 'Other links', icon: IconLink},
-                    ].map(c => ({value: c.title, label: c.title, ...c}))}
-                itemComponent={SocialSelectItem}
+                data={socialOptions.map(c => ({value: c.title, label: c.title}))}
+                renderOption={({option}) => {
+                    const Icon = socialOptions.find(c => c.title === option.value)?.icon;
+
+                    return (
+                        <Group wrap="nowrap">
+                            {Icon && <Icon size={18} stroke={1.5}/>}
+                            <Text size="sm" tt="capitalize">{option.label}</Text>
+                        </Group>
+                    );
+                }}
             />
             <TextInput
                 placeholder="https://"
@@ -150,20 +143,18 @@ const CreateCampaignPage = () => {
 
     return (
         <>
-            <Helmet>
-                <title>Create campaign</title>
-            </Helmet>
+            <title>Create campaign</title>
             <Box>
                 <Container my={36}>
                     <Title mb="xl" ta="center">Create your campaign</Title>
-                    <Stepper active={active} onStepClick={setActive} breakpoint="sm">
+                    <Stepper active={active} onStepClick={setActive}>
                         <Stepper.Step
                             label="Get started"
                             description="Set essential fundraiser details such as fundraiser title, target and currency"
                         >
                             <Title {...titleProps}>Campaign information</Title>
                             <Paper {...paperProps}>
-                                <SimpleGrid cols={2} breakpoints={[{maxWidth: 'sm', cols: 1}]}>
+                                <SimpleGrid cols={{base: 1, sm: 2}}>
                                     <TextInput label="Title"/>
                                     <CategorySelect/>
                                 </SimpleGrid>
@@ -173,7 +164,7 @@ const CreateCampaignPage = () => {
                                 <Text size="sm" mb="sm">Please select the country that we&apos;ll be sending funds to
                                     (typically where you&apos;re resident). This helps match you to the correct payment
                                     processors.</Text>
-                                <SimpleGrid cols={2} breakpoints={[{maxWidth: 'sm', cols: 1}]}>
+                                <SimpleGrid cols={{base: 1, sm: 2}}>
                                     <CountrySelect/>
                                     <TextInput label="City" placeholder="city"/>
                                 </SimpleGrid>
@@ -203,7 +194,7 @@ const CreateCampaignPage = () => {
                                                     onChange={setDeadlineDate}
                                                     label="Deadline"
                                                     placeholder="Date input"
-                                                    icon={<IconCalendar size={18}/>}
+                                                    leftSection={<IconCalendar size={18}/>}
                                                 />
                                                 <NumberInput
                                                     label="Target amount"
@@ -256,7 +247,7 @@ const CreateCampaignPage = () => {
                                     <Text size="sm">*Name of the person receiving funds. For organizations, the legal
                                         representative
                                         name (this can be amended later).</Text>
-                                    <SimpleGrid cols={2} breakpoints={[{maxWidth: 'sm', cols: 1}]}>
+                                    <SimpleGrid cols={{base: 1, sm: 2}}>
                                         <TextInput label="First name"/>
                                         <TextInput label="Last name"/>
                                     </SimpleGrid>
@@ -355,7 +346,7 @@ const CreateCampaignPage = () => {
                                         Please remember, team members can change all elements of the page.</Text>
                                     <Alert color="orange" variant="light" icon={<IconInfoCircleFilled size={18}/>}>You
                                         haven't invited anyone to help manage this fundraiser yet.</Alert>
-                                    <SimpleGrid cols={2} breakpoints={[{maxWidth: 'sm', cols: 1}]}>
+                                    <SimpleGrid cols={{base: 1, sm: 2}}>
                                         <TextInput label="First name"/>
                                         <TextInput label="Last name"/>
                                         <TextInput label="Email" mb="xs"/>
