@@ -1,8 +1,8 @@
 import {ComboboxItem, Group, Select, Text} from "@mantine/core";
 import currencyData from "../data/Currencies.json";
 
-const currenciesByName = new Map(currencyData.data.map(c => [c.name, c]));
-const options = currencyData.data.map(c => ({value: c.name, label: c.name}));
+const currenciesByCode = new Map(currencyData.data.map(c => [c.cc, c]));
+const options = currencyData.data.map(c => ({value: c.cc, label: c.name}));
 
 const CurrencySelect = () => {
     return (
@@ -14,7 +14,7 @@ const CurrencySelect = () => {
             maxDropdownHeight={300}
             nothingFoundMessage="Nobody here"
             renderOption={({option}) => {
-                const currency = currenciesByName.get(option.value);
+                const currency = currenciesByCode.get(option.value);
 
                 return (
                     <Group wrap="nowrap">
@@ -29,7 +29,7 @@ const CurrencySelect = () => {
                 const query = search.toLowerCase().trim();
 
                 return (options as ComboboxItem[]).filter(option => {
-                    const currency = currenciesByName.get(option.value);
+                    const currency = currenciesByCode.get(option.value);
 
                     return currency?.name.toLowerCase().includes(query) ||
                         currency?.cc.toLowerCase().includes(query);

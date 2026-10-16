@@ -132,8 +132,8 @@ const DashboardPage = () => {
                                 </Text>
                             </Paper>
                         </SimpleGrid>
-                        <Paper {...paperProps}>
-                            <Card.Section mb="lg">
+                        <Card padding="md" shadow="sm">
+                            <Card.Section mb="lg" px="md" pt="md">
                                 <Flex align="center" justify="space-between">
                                     <Box>
                                         <Title {...subTitleProps}>Campaigns</Title>
@@ -151,14 +151,13 @@ const DashboardPage = () => {
                             <Card.Section>
                                 <CampaignsTable/>
                             </Card.Section>
-                        </Paper>
-                        <Paper {...paperProps}>
-                            <Card.Section>
-                                <Title {...subTitleProps}>Top Contributors</Title>
+                        </Card>
+                        <Card padding="md" shadow="sm">
+                            <Title {...subTitleProps}>Top Contributors</Title>
+                            <Card.Section mt="md">
                                 <DonatorsTable/>
                             </Card.Section>
-                            <Card.Section></Card.Section>
-                        </Paper>
+                        </Card>
                         <Paper {...paperProps}>
                             <Title {...subTitleProps}>Donations per Category</Title>
                             <YearlyDonationChart/>

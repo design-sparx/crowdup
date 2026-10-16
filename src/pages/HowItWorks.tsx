@@ -145,7 +145,7 @@ const HowItWorksPage = () => {
                                 </Card.Section>
                                 <Stack gap="sm" align="start" mt="md">
                                     <Text size="lg" fw={500}>Discover amazing fundraising campaigns</Text>
-                                    <Button size="md" component={Link} to="/campaigns">Fund Someone</Button>
+                                    <Button size="md">Fund Someone</Button>
                                 </Stack>
                             </Card>
                             <Card
