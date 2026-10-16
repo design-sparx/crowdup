@@ -5,6 +5,7 @@ function fakes(opts: {accountId?: string | null; account?: Partial<{detailsSubmi
     const calls: string[] = [];
     let accountId = opts.accountId ?? null;
     const published: {id: string; currency: string}[] = [];
+    const submitted: {id: string; currency: string}[] = [];
     const saved: {complete: boolean; currency: string | null}[] = [];
     const api: StripeConnectApi = {
         async createAccount() { calls.push("createAccount"); return {id: "acct_new"}; },
@@ -21,8 +22,9 @@ function fakes(opts: {accountId?: string | null; account?: Partial<{detailsSubmi
         async saveStatus(_u, s) { saved.push(s); },
         async listDrafts() { return (opts.drafts ?? []).map(id => ({id})); },
         async publish(id, currency) { published.push({id, currency}); return true; },
+        async submitForApproval(id, currency) { submitted.push({id, currency}); return true; },
     };
-    return {api, store, calls, published, saved};
+    return {api, store, calls, published, submitted, saved};
 }
 
 describe("startOnboarding", () => {
@@ -48,7 +50,7 @@ describe("syncAccountStatus", () => {
     it("does nothing without a connected account", async () => {
         const f = fakes();
         expect(await syncAccountStatus({api: f.api, store: f.store, userId: "u1", mode: "auto"}))
-            .toEqual({status: "not_started", currency: null, published: 0});
+            .toEqual({status: "not_started", currency: null, published: 0, submitted: 0});
         expect(f.saved).toEqual([]);
     });
     it("stores incomplete status and publishes nothing", async () => {
@@ -61,14 +63,23 @@ describe("syncAccountStatus", () => {
     it("publishes drafts with the account currency when complete in auto mode", async () => {
         const f = fakes({accountId: "acct_1", drafts: ["c1", "c2"]});
         const r = await syncAccountStatus({api: f.api, store: f.store, userId: "u1", mode: "auto"});
-        expect(r).toEqual({status: "connected", currency: "KES", published: 2});
+        expect(r).toEqual({status: "connected", currency: "KES", published: 2, submitted: 0});
         expect(f.published).toEqual([{id: "c1", currency: "KES"}, {id: "c2", currency: "KES"}]);
     });
-    it("leaves drafts alone in approval mode", async () => {
+    it("submits drafts for approval instead of publishing in approval mode", async () => {
         const f = fakes({accountId: "acct_1", drafts: ["c1"]});
         const r = await syncAccountStatus({api: f.api, store: f.store, userId: "u1", mode: "approval"});
-        expect(r).toEqual({status: "connected", currency: "KES", published: 0});
+        expect(r).toEqual({status: "connected", currency: "KES", published: 0, submitted: 1});
         expect(f.published).toEqual([]);
+        expect(f.submitted).toEqual([{id: "c1", currency: "KES"}]);
+    });
+    it("submits nothing in either mode before onboarding completes", async () => {
+        for (const mode of ["auto", "approval"] as const) {
+            const f = fakes({accountId: "acct_1", drafts: ["c1"], account: {chargesEnabled: false}});
+            await syncAccountStatus({api: f.api, store: f.store, userId: "u1", mode});
+            expect(f.published).toEqual([]);
+            expect(f.submitted).toEqual([]);
+        }
     });
     it("does not publish for a suspended owner", async () => {
         const f = fakes({accountId: "acct_1", drafts: ["c1"], suspended: true});
@@ -93,6 +104,7 @@ describe("publishOwnDraft", () => {
         const f = fakes({stored: true, drafts: ["c1"]});
         expect(await run(f, "approval")).toBe("awaiting_approval");
         expect(f.published).toEqual([]);
+        expect(f.submitted).toEqual([{id: "c1", currency: "KES"}]);
     });
     it("cannot publish a campaign that is not one of the owner's drafts", async () => {
         const f = fakes({stored: true, drafts: ["c1"]});

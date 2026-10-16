@@ -3,7 +3,7 @@ import {Link, Outlet, useLoaderData} from "react-router";
 import classes from "./Dashboard.module.css";
 
 const AdminLayout = () => {
-    const {openCount} = useLoaderData() as {openCount: number};
+    const {openCount, pendingCount} = useLoaderData() as {openCount: number; pendingCount: number};
     return (
         <AppShell header={{height: 60}} classNames={{main: classes.main}}>
             <AppShell.Header>
@@ -15,6 +15,12 @@ const AdminLayout = () => {
                                 <Group gap={6}>
                                     <Text c="dark">Reports</Text>
                                     <Badge color="red" aria-label={`${openCount} open reports`}>{openCount}</Badge>
+                                </Group>
+                            </Link>
+                            <Link to="/admin/approvals" style={{textDecoration: "none"}}>
+                                <Group gap={6}>
+                                    <Text c="dark">Approvals</Text>
+                                    <Badge color="yellow" aria-label={`${pendingCount} campaigns pending approval`}>{pendingCount}</Badge>
                                 </Group>
                             </Link>
                             <Text component={Link} to="/dashboard" c="dimmed">Dashboard</Text>

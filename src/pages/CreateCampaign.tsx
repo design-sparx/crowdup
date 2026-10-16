@@ -8,6 +8,7 @@ interface Props {
     values: CampaignFormValues;
     errors?: CampaignFormErrors & {form?: string; cover?: string};
     status?: string;
+    rejectionReason?: string | null;
     saved?: boolean;
     publish?: string | null;
 }

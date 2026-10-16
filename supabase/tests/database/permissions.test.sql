@@ -12,7 +12,7 @@
 
 begin;
 
-select plan(97);
+select plan(125);
 
 -- Helpers, scoped to this session.
 
@@ -655,6 +655,188 @@ select is(
   pg_temp.sqlstate_of('select donor_user_id, flagged_reason from public.donation'),
   '42501',
   'a signed-in donor cannot read the donation table, so donor ids and flags stay private'
+);
+
+-- Admin approval mode (ticket 22): pending_approval, rejected, approve/reject functions.
+-- Uses c3 (Amara's draft). Admin is ...0001, Amara ...0002, Liam ...0003.
+
+select ok(
+  not public.campaign_status_transition_allowed('owner', 'draft', 'live')
+  and not public.campaign_status_transition_allowed('owner', 'draft', 'pending_approval')
+  and public.campaign_status_transition_allowed('owner', 'rejected', 'draft')
+  and public.campaign_status_transition_allowed('server', 'draft', 'pending_approval')
+  and not public.campaign_status_transition_allowed('server', 'live', 'pending_approval')
+  and not public.campaign_status_transition_allowed('server', 'live', 'rejected'),
+  'the transition table matches the documented rules'
+);
+
+select pg_temp.become('00000000-0000-4000-8000-000000000002', 'authenticated');
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set status = 'pending_approval'
+    where id = '10000000-0000-4000-8000-000000000003'$$),
+  '42501',
+  'an owner cannot submit their own draft for approval (the server does)'
+);
+
+select pg_temp.become(null, 'service_role');
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set status = 'pending_approval'
+    where id = '10000000-0000-4000-8000-000000000003'$$),
+  null,
+  'the server moves a draft to pending_approval'
+);
+select is(
+  pg_temp.sqlstate_of($$insert into public.donation (campaign_id, amount, currency, status, stripe_event_id)
+    values ('10000000-0000-4000-8000-000000000003', 100, 'KES', 'pending', 'evt_test_pending_campaign')$$),
+  '23514',
+  'a pending_approval campaign does not accept donations'
+);
+
+select pg_temp.become(null, 'anon');
+select is(
+  (select count(*)::int from public.campaign where id = '10000000-0000-4000-8000-000000000003'),
+  0,
+  'anon cannot see a pending_approval campaign'
+);
+select is(
+  pg_temp.sqlstate_of($$select public.approve_campaign('10000000-0000-4000-8000-000000000003')$$),
+  '42501',
+  'anon cannot call approve_campaign'
+);
+
+select pg_temp.become('00000000-0000-4000-8000-000000000002', 'authenticated');
+select is(
+  pg_temp.affected($$update public.campaign set status = 'live', published_at = now()
+    where id = '10000000-0000-4000-8000-000000000003'$$),
+  0,
+  'an owner cannot self-approve (a pending campaign is locked for the owner)'
+);
+select is(
+  pg_temp.affected($$update public.campaign set title = 'Edited while pending'
+    where id = '10000000-0000-4000-8000-000000000003'$$),
+  0,
+  'an owner cannot edit a campaign while it is pending approval'
+);
+select is(
+  pg_temp.sqlstate_of($$select public.approve_campaign('10000000-0000-4000-8000-000000000003')$$),
+  '42501',
+  'the owner cannot call approve_campaign'
+);
+
+select pg_temp.become('00000000-0000-4000-8000-000000000003', 'authenticated');
+select is(
+  pg_temp.sqlstate_of($$select public.approve_campaign('10000000-0000-4000-8000-000000000003')$$),
+  '42501',
+  'a non-admin organiser cannot approve'
+);
+select is(
+  pg_temp.sqlstate_of($$select public.reject_campaign('10000000-0000-4000-8000-000000000003', 'Not good enough')$$),
+  '42501',
+  'a non-admin organiser cannot reject'
+);
+
+select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
+select is(
+  pg_temp.sqlstate_of($$select public.reject_campaign('10000000-0000-4000-8000-000000000003', '  ')$$),
+  '23514',
+  'an admin must give a rejection reason'
+);
+select is(
+  pg_temp.sqlstate_of($$select public.reject_campaign('10000000-0000-4000-8000-000000000003', 'Needs a clearer description')$$),
+  null,
+  'an admin rejects a pending campaign with a reason'
+);
+select is(
+  (select status || '/' || rejection_reason from public.campaign where id = '10000000-0000-4000-8000-000000000003'),
+  'rejected/Needs a clearer description',
+  'the campaign is rejected and stores the reason'
+);
+select is(
+  pg_temp.sqlstate_of($$select public.approve_campaign('10000000-0000-4000-8000-000000000003')$$),
+  'P0002',
+  'a rejected campaign cannot be approved without being resubmitted'
+);
+
+select pg_temp.become('00000000-0000-4000-8000-000000000002', 'authenticated');
+select is(
+  (select rejection_reason from public.campaign where id = '10000000-0000-4000-8000-000000000003'),
+  'Needs a clearer description',
+  'the owner can read the rejection reason'
+);
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set rejection_reason = null
+    where id = '10000000-0000-4000-8000-000000000003'$$),
+  '42501',
+  'the owner cannot clear the rejection reason'
+);
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set status = 'live', published_at = now()
+    where id = '10000000-0000-4000-8000-000000000003'$$),
+  '42501',
+  'the owner cannot publish a rejected campaign'
+);
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set status = 'pending_approval'
+    where id = '10000000-0000-4000-8000-000000000003'$$),
+  '42501',
+  'the owner cannot resubmit a rejected campaign directly; it must be reopened as a draft first'
+);
+select is(
+  pg_temp.affected($$update public.campaign set status = 'draft'
+    where id = '10000000-0000-4000-8000-000000000003'$$),
+  1,
+  'the owner reopens a rejected campaign as a draft'
+);
+
+select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
+select is(
+  pg_temp.sqlstate_of($$select public.approve_campaign('10000000-0000-4000-8000-000000000003')$$),
+  'P0002',
+  'a draft cannot be approved (it must be submitted first)'
+);
+
+select pg_temp.become(null, 'service_role');
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set status = 'pending_approval'
+    where id = '10000000-0000-4000-8000-000000000003'$$),
+  null,
+  'the server resubmits the reopened draft'
+);
+select is(
+  (select rejection_reason from public.campaign where id = '10000000-0000-4000-8000-000000000003'),
+  null,
+  'resubmission clears the old rejection reason'
+);
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set status = 'pending_approval'
+    where id = '10000000-0000-4000-8000-000000000001'$$),
+  '42501',
+  'even the server cannot move a live campaign to pending_approval'
+);
+
+select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
+select is(
+  pg_temp.sqlstate_of($$select public.approve_campaign('10000000-0000-4000-8000-000000000003')$$),
+  null,
+  'an admin approves a pending campaign'
+);
+select is(
+  (select status from public.campaign where id = '10000000-0000-4000-8000-000000000003')
+    || '/' || (select (published_at is not null)::text from public.campaign where id = '10000000-0000-4000-8000-000000000003'),
+  'live/true',
+  'approval makes the campaign live and sets published_at'
+);
+select is(
+  pg_temp.sqlstate_of($$select public.reject_campaign('10000000-0000-4000-8000-000000000003', 'Too late to reject')$$),
+  'P0002',
+  'a live campaign cannot be rejected'
+);
+
+select pg_temp.become(null, 'anon');
+select is(
+  (select count(*)::int from public.campaign where id = '10000000-0000-4000-8000-000000000003'),
+  1,
+  'an approved campaign is publicly visible'
 );
 
 select * from finish();

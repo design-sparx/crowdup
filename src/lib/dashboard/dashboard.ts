@@ -8,6 +8,8 @@ export interface DashboardCampaign {
     /** Null for a draft that has not gone live yet (currency is set at go-live). */
     currency: string | null;
     goalAmount: number;
+    /** Set while status is rejected. */
+    rejectionReason?: string | null;
 }
 
 /** A confirmed donation as the organiser may see it (from the `public_donation` view). */

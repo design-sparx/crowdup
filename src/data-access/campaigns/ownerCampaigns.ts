@@ -17,6 +17,7 @@ export interface OwnCampaign extends CampaignValues {
     slug: string;
     status: string;
     coverImageUrl: string | null;
+    rejectionReason: string | null;
 }
 
 interface Row {
@@ -33,10 +34,11 @@ interface Row {
     end_date: string | null;
     cover_image_url: string | null;
     story: unknown;
+    rejection_reason: string | null;
 }
 
 const COLUMNS =
-    "id, owner_id, slug, status, title, category, country, description, goal_amount, currency, end_date, cover_image_url, story";
+    "id, owner_id, slug, status, title, category, country, description, goal_amount, currency, end_date, cover_image_url, story, rejection_reason";
 
 const UNIQUE_VIOLATION = "23505";
 
@@ -74,6 +76,7 @@ export async function getOwnCampaign(
         endDate: r.end_date,
         coverImageUrl: r.cover_image_url,
         story: r.story as OwnCampaign["story"],
+        rejectionReason: r.rejection_reason,
     };
 }
 
@@ -161,7 +164,18 @@ export async function updateCampaign(
         .eq("owner_id", userId)
         .select("id");
     if (error) fail(error);
-    return (data ?? []).length > 0;
+    if ((data ?? []).length === 0) return false;
+    // Editing a rejected campaign reopens it as a draft; the organiser then resubmits it
+    // with Publish. The status filter makes this a no-op for every other status, and the
+    // guard trigger allows only rejected -> draft for owners.
+    const {error: reopenError} = await client
+        .from("campaign")
+        .update({status: "draft"})
+        .eq("id", id)
+        .eq("owner_id", userId)
+        .eq("status", "rejected");
+    if (reopenError) fail(reopenError);
+    return true;
 }
 
 /**

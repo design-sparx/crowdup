@@ -7,7 +7,7 @@ export interface StripePanelProps {
     status: OnboardingStatus;
     currency: string | null;
     mode: PublishingMode;
-    campaigns: {id: string; title: string; status: string}[];
+    campaigns: {id: string; title: string; status: string; rejectionReason?: string | null}[];
     /** Result of returning from Stripe (?stripe=...), shown once. */
     notice?: string | null;
 }
@@ -49,11 +49,11 @@ const StripeStatusPanel = ({status, currency, mode, campaigns, notice}: StripePa
                         <Group key={c.id} justify="space-between" wrap="nowrap" align="flex-start">
                             <div>
                                 <Text component={Link} to={`/campaigns/${c.id}/edit`} size="sm" fw={500}>{c.title}</Text>
-                                <Text size="xs" c="dimmed">{campaignLiveExplanation({status: c.status, onboarding: status, mode})}</Text>
+                                <Text size="xs" c="dimmed">{campaignLiveExplanation({status: c.status, rejectionReason: c.rejectionReason, onboarding: status, mode})}</Text>
                             </div>
-                            {c.status === "draft" && status === "connected" && mode === "auto" && (
+                            {c.status === "draft" && status === "connected" && (
                                 <Form method="post" action={`/campaigns/${c.id}/publish`}>
-                                    <Button type="submit" size="xs" variant="light">Publish</Button>
+                                    <Button type="submit" size="xs" variant="light">{mode === "approval" ? "Submit for approval" : "Publish"}</Button>
                                 </Form>
                             )}
                         </Group>

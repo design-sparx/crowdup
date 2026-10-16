@@ -62,6 +62,7 @@ export default function EditCampaign({loaderData, actionData}: Route.ComponentPr
             <CreateCampaignPage
                 mode="edit"
                 status={campaign.status}
+                rejectionReason={campaign.rejectionReason}
                 saved={saved}
                 publish={publish}
                 errors={result?.errors}
@@ -77,7 +78,7 @@ export default function EditCampaign({loaderData, actionData}: Route.ComponentPr
                     coverImageUrl: campaign.coverImageUrl,
                 }}
             />
-            {campaign.status !== "draft" && (
+            {!["draft", "pending_approval", "rejected"].includes(campaign.status) && (
                 <CampaignLifecyclePanel
                     status={campaign.status}
                     updates={updates}

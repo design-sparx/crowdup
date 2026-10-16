@@ -23,7 +23,7 @@ CrowdUp uses Stripe Connect with **Standard** accounts. Each organiser connects 
 - Drafts can be saved **before** connecting. A draft has no currency (the create form shows it as "set from your Stripe account").
 - The currency is taken from the Stripe account when the campaign goes live and is then fixed (a database trigger rejects any later change, even from the service role). Clients cannot write currency at all.
 - `PUBLISHING_MODE=auto` (default): drafts go live when onboarding completes, or when the connected organiser presses Publish on a draft.
-- `PUBLISHING_MODE=approval`: drafts stay drafts. The `pending_approval` status and approval queue are not in the schema yet; ticket #22 adds them.
+- `PUBLISHING_MODE=approval`: drafts move to `pending_approval` (after onboarding, or on the Submit for approval button) and an administrator decides. See [moderation.md](moderation.md).
 
 ## Donations (ticket #18)
 
