@@ -1,5 +1,5 @@
 import ScrollToTop from "./ScrollToTop";
-import {formatAmount} from "./formatAmount";
+import {formatAmount, formatMinorAmount} from "./formatAmount";
 import {buildMeta} from "./buildMeta";
 
-export {ScrollToTop, formatAmount, buildMeta}
+export {ScrollToTop, formatAmount, formatMinorAmount, buildMeta}

@@ -1,18 +1,14 @@
-export interface ICampaign {
+/** Row shape of the dashboard mock table data (src/data/DashboardRows.json). */
+export interface IDashboardRow {
     id: string
-    title: string
-    description: string
-    createdAt: string
-    mainImage: string
     createdBy: string
-    daysLeft: number
+    createdByImage: string
+    title: string
+    category: string
     amountRaised: string
     goal: string
     contributors: number
-    createdByImage: string
-    category: string
     country: string
-    type: string | null
 }
 
 export interface ITestimonial {

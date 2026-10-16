@@ -1,6 +1,5 @@
-import {useParams} from "react-router";
-import {ICampaign} from "../types";
-import campaignsData from "../data/Campaigns.json";
+import type {CampaignDetails} from "../lib/campaigns/types";
+import {formatMinorAmount} from "../helpers";
 import {
     Accordion,
     ActionIcon,
@@ -27,15 +26,13 @@ import {
 } from "@mantine/core";
 import {IconFlag, IconHeart, IconHeartFilled, IconSeparator, IconShare} from "@tabler/icons-react";
 import {useDisclosure, useMediaQuery, useToggle} from "@mantine/hooks";
-import {BackButton, DonationDrawer, NotFound, ShareModal, UserCard} from "../components";
+import {BackButton, DonationDrawer, ShareModal, UserCard} from "../components";
 import dayjs from "dayjs";
 import LocalizedFormat from "dayjs/plugin/localizedFormat";
 import {notifications} from "@mantine/notifications";
 
-const CampaignDetailsPage = () => {
+const CampaignDetailsPage = ({campaign}: {campaign: CampaignDetails}) => {
     dayjs.extend(LocalizedFormat)
-    const {id} = useParams();
-    const campaign = campaignsData.data.find(_ => _.id === id) as ICampaign | undefined;
     const [opened, {open, close}] = useDisclosure(false);
     const [donateOpened, {open: donateOpen, close: donateClose}] = useDisclosure(false);
     const [following, setFollowing] = useToggle();
@@ -63,65 +60,64 @@ const CampaignDetailsPage = () => {
 
     return (
         <>
-            <title>{campaign?.title}</title>
             <Box>
-                {campaign ? <Container size="lg">
+                <Container size="lg">
                     <BackButton mb="md"/>
                     <Grid>
                         <Grid.Col span={{base: 12, lg: 8}}>
                             <Stack>
                                 <Card padding="md" shadow="sm">
                                     <Card.Section>
-                                        <Image src={campaign?.mainImage} height={480}/>
+                                        <Image src={campaign.imageUrl} height={480}/>
                                     </Card.Section>
                                     <Stack mt="md">
-                                        <Title>{campaign?.title}</Title>
+                                        <Title>{campaign.title}</Title>
                                         {!matchesMobile ?
                                             <Flex gap="xs" align="center">
                                                 <Text size="sm">Fundraise campaign created by</Text>
                                                 <UnstyledButton component="a">
                                                     <Flex gap="xs" align="center">
-                                                        <Avatar src={campaign?.createdByImage} radius="xl" size="sm"/>
-                                                        <Text size="sm">{campaign?.createdBy}</Text>
+                                                        <Avatar src={campaign.organizerAvatarUrl} radius="xl" size="sm"/>
+                                                        <Text size="sm">{campaign.organizerName}</Text>
                                                     </Flex>
                                                 </UnstyledButton>
                                                 <IconSeparator size={18}/>
-                                                <Anchor size="sm">{campaign?.country}</Anchor>
+                                                <Anchor size="sm">{campaign.country}</Anchor>
                                                 <IconSeparator size={18}/>
-                                                <Anchor size="sm">{campaign?.category}</Anchor>
+                                                <Anchor size="sm">{campaign.category}</Anchor>
                                             </Flex> :
                                             <Stack>
                                                 <Flex gap="md">
                                                     <Text size="sm">Fundraise campaign created by</Text>
                                                     <UnstyledButton component="a">
                                                         <Flex gap="xs" align="center">
-                                                            <Avatar src={campaign?.createdByImage} radius="xl"
+                                                            <Avatar src={campaign.organizerAvatarUrl} radius="xl"
                                                                     size="sm"/>
-                                                            <Text size="sm">{campaign?.createdBy}</Text>
+                                                            <Text size="sm">{campaign.organizerName}</Text>
                                                         </Flex>
                                                     </UnstyledButton>
                                                 </Flex>
                                                 <Group>
                                                     <Text size="sm">Location
-                                                        - <Anchor>{campaign?.country}</Anchor></Text>
+                                                        - <Anchor>{campaign.country}</Anchor></Text>
                                                     <Text size="sm">Category
-                                                        - <Anchor>{campaign?.category}</Anchor></Text>
+                                                        - <Anchor>{campaign.category}</Anchor></Text>
                                                 </Group>
                                             </Stack>
                                         }
                                         <Text {...subTitleProps}>Our story</Text>
-                                        <Text size="sm">{campaign?.description}</Text>
+                                        <Text size="sm">{campaign.description}</Text>
                                         {matchesMobile && <>
                                             <Divider/>
                                             <Flex align="flex-end" gap="sm">
-                                                <Title {...titleProps} ta="center">{campaign?.amountRaised}</Title>
+                                                <Title {...titleProps} ta="center">{formatMinorAmount(campaign.raisedAmount, campaign.currency)}</Title>
                                                 <Text fw={500} ta="center" c="dimmed">raised
-                                                    of {campaign?.goal}</Text>
+                                                    of {formatMinorAmount(campaign.goalAmount, campaign.currency)}</Text>
                                             </Flex>
-                                            <Progress value={campaign?.daysLeft} size="md"/>
+                                            <Progress value={campaign.percentFunded} size="md"/>
                                             <Flex justify="space-between">
-                                                <Text fw={500}>{campaign?.daysLeft}% Funded</Text>
-                                                <Text fw={500}>{campaign?.contributors} Donors</Text>
+                                                <Text fw={500}>{campaign.percentFunded}% Funded</Text>
+                                                <Text fw={500}>{campaign.donorCount} Donors</Text>
                                             </Flex>
                                             <Flex align="center" gap="xs">
                                                 <Button onClick={donateOpen} fullWidth>Donate</Button>
@@ -174,10 +170,10 @@ const CampaignDetailsPage = () => {
                                 </Card>
                                 <Paper {...paperProps}>
                                     <Text {...subTitleProps} mb="sm">Organizer</Text>
-                                    <UserCard/>
+                                    <UserCard name={campaign.organizerName} avatar={campaign.organizerAvatarUrl}/>
                                 </Paper>
                                 <Paper {...paperProps}>
-                                    <Text>Created on {dayjs(campaign?.createdAt).format('LL')}</Text>
+                                    <Text>Created on {dayjs(campaign.createdAt).format('LL')}</Text>
                                 </Paper>
                                 {!matchesMobile &&
                                     <Button
@@ -195,13 +191,13 @@ const CampaignDetailsPage = () => {
                                 {!matchesMobile &&
                                     <Paper {...paperProps}>
                                         <Stack gap="sm">
-                                            <Title {...titleProps} ta="center">{campaign?.amountRaised}</Title>
+                                            <Title {...titleProps} ta="center">{formatMinorAmount(campaign.raisedAmount, campaign.currency)}</Title>
                                             <Text fw={500} ta="center" c="dimmed">raised
-                                                of {campaign?.goal}</Text>
-                                            <Progress value={campaign?.daysLeft} size="md"/>
+                                                of {formatMinorAmount(campaign.goalAmount, campaign.currency)}</Text>
+                                            <Progress value={campaign.percentFunded} size="md"/>
                                             <Flex justify="space-between">
-                                                <Text fw={500}>{campaign?.daysLeft}% Funded</Text>
-                                                <Text fw={500}>{campaign?.contributors} Donors</Text>
+                                                <Text fw={500}>{campaign.percentFunded}% Funded</Text>
+                                                <Text fw={500}>{campaign.donorCount} Donors</Text>
                                             </Flex>
                                             <Button size="xl" onClick={donateOpen}>Donate</Button>
                                             <Button
@@ -250,9 +246,9 @@ const CampaignDetailsPage = () => {
                                     <Text {...subTitleProps} mb="md">Donation FAQ</Text>
                                     <Accordion defaultValue="customization" variant="separated">
                                         <Accordion.Item value="customization">
-                                            <Accordion.Control>When will {campaign?.createdBy} get my
+                                            <Accordion.Control>When will {campaign.organizerName} get my
                                                 payment?</Accordion.Control>
-                                            <Accordion.Panel>Your payment is sent directly to Dora so it immediately
+                                            <Accordion.Panel>Your payment is sent directly to the organizer so it immediately
                                                 helps
                                                 their campaign.</Accordion.Panel>
                                         </Accordion.Item>
@@ -277,7 +273,7 @@ const CampaignDetailsPage = () => {
                             </Stack>
                         </Grid.Col>
                     </Grid>
-                </Container> : <NotFound/>}
+                </Container>
                 <ShareModal opened={opened} onClose={close} campaign={campaign} iconSize={iconSize}/>
                 <DonationDrawer campaign={campaign} opened={donateOpened} onClose={donateClose} iconSize={iconSize}/>
             </Box>
