@@ -9,6 +9,7 @@ import SignupPage from "./Signup";
 import ForgotPasswordPage from "./ForgotPassword";
 import UpdatePasswordPage from "./UpdatePassword";
 import DashboardPage from "./Dashboard";
+import MyDonationsPage from "./MyDonations";
 import CreateCampaignPage from "./CreateCampaign";
 import TermsPage from "./Terms";
 import PrivacyPage from "./Privacy";
@@ -28,6 +29,7 @@ export {
     ForgotPasswordPage,
     UpdatePasswordPage,
     DashboardPage,
+    MyDonationsPage,
     CreateCampaignPage,
     TermsPage,
     PrivacyPage,

@@ -1,6 +1,6 @@
 /**
  * Campaign status transitions, the TypeScript twin of the SQL function
- * `campaign_status_transition_allowed` (supabase/migrations/20261019100000_campaign_approval.sql).
+ * `campaign_status_transition_allowed` (supabase/migrations/20261019110000_campaign_approval.sql).
  * Keep both in sync; the pgTAP tests exercise the SQL side. See docs/moderation.md.
  *
  *   draft --(server: Stripe ready)--> live                  (auto mode)

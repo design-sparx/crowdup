@@ -12,7 +12,7 @@
 
 begin;
 
-select plan(125);
+select plan(131);
 
 -- Helpers, scoped to this session.
 
@@ -837,6 +837,48 @@ select is(
   (select count(*)::int from public.campaign where id = '10000000-0000-4000-8000-000000000003'),
   1,
   'an approved campaign is publicly visible'
+-- Donor donation history (ticket 19): my_donation shows a user only their own confirmed rows.
+
+select pg_temp.become(null, 'service_role');
+insert into public.donation (id, campaign_id, amount, currency, donor_name, donor_email, status, stripe_event_id, confirmed_at, donor_user_id)
+values
+  ('20000000-0000-4000-8000-000000000001', '10000000-0000-4000-8000-000000000001', 1100, 'KES', 'Dana Donor', 'dana@crowdup.example', 'confirmed', 'evt_test_hist_0001', now(), '00000000-0000-4000-8000-000000000005'),
+  ('20000000-0000-4000-8000-000000000002', '10000000-0000-4000-8000-000000000001', 1200, 'KES', 'Liam', 'liam@crowdup.example', 'confirmed', 'evt_test_hist_0002', now(), '00000000-0000-4000-8000-000000000003'),
+  ('20000000-0000-4000-8000-000000000003', '10000000-0000-4000-8000-000000000001', 1300, 'KES', 'Dana Guest', 'dana@crowdup.example', 'confirmed', 'evt_test_hist_0003', now(), null);
+insert into public.donation (id, campaign_id, amount, currency, status, donor_user_id)
+values ('20000000-0000-4000-8000-000000000004', '10000000-0000-4000-8000-000000000001', 1400, 'KES', 'pending', '00000000-0000-4000-8000-000000000005');
+
+select pg_temp.become('00000000-0000-4000-8000-000000000005', 'authenticated');
+select is(
+  (select count(*)::int from public.my_donation where id = '20000000-0000-4000-8000-000000000001'),
+  1,
+  'a donor sees their own confirmed donation in my_donation'
+);
+select is(
+  (select count(*)::int from public.my_donation where id = '20000000-0000-4000-8000-000000000002'),
+  0,
+  'a donor does not see another user''s donation in my_donation'
+);
+select is(
+  (select count(*)::int from public.my_donation where id = '20000000-0000-4000-8000-000000000003'),
+  0,
+  'a guest donation with the same email as the donor is not exposed in my_donation'
+);
+select is(
+  (select count(*)::int from public.my_donation where id = '20000000-0000-4000-8000-000000000004'),
+  0,
+  'a donor''s own pending donation is not listed in my_donation'
+);
+select is(
+  pg_temp.sqlstate_of('select donor_email from public.my_donation'),
+  '42703',
+  'my_donation exposes no donor email'
+);
+select pg_temp.become(null, 'anon');
+select is(
+  pg_temp.sqlstate_of('select * from public.my_donation'),
+  '42501',
+  'anonymous visitors cannot read my_donation'
 );
 
 select * from finish();
