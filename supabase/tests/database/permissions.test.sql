@@ -12,7 +12,7 @@
 
 begin;
 
-select plan(166);
+select plan(167);
 
 -- Helpers, scoped to this session.
 
@@ -70,9 +70,9 @@ select is(
 -- Seed sanity.
 
 
-select is((select count(*)::int from public.campaign), 6, 'seed creates six campaigns');
-select is((select count(*)::int from public.donation where status = 'confirmed'), 7,
-  'seed creates seven confirmed donations');
+select is((select count(*)::int from public.campaign), 7, 'seed creates seven campaigns');
+select is((select count(*)::int from public.donation where status = 'confirmed'), 5,
+  'seed creates five confirmed donations');
 select is(
   (select raised_amount from public.campaign_totals where campaign_id = '10000000-0000-4000-8000-000000000001'),
   40000::bigint,
@@ -190,12 +190,12 @@ select is(
   'organiser cannot read donor emails through the donation view'
 );
 
-select is((select count(*)::int from public.campaign), 4,
+select is((select count(*)::int from public.campaign), 5,
   'owner sees their own campaigns in every state plus other live campaigns');
 select is(
   (select count(*)::int from public.campaign where owner_id = '00000000-0000-4000-8000-000000000002'),
-  3,
-  'owner sees all three of their campaigns, including the draft'
+  4,
+  'owner sees all four of their campaigns, including the draft and the pending one'
 );
 select is(
   (select count(*)::int from public.campaign where id = '10000000-0000-4000-8000-000000000006'),
@@ -306,7 +306,7 @@ select is(
   'a user cannot grant themselves the admin role'
 );
 select is(
-  pg_temp.sqlstate_of($$update public.profile set suspended = false
+  pg_temp.sqlstate_of($$update public.profile set suspended = true
     where id = '00000000-0000-4000-8000-000000000005'$$),
   '42501',
   'a user cannot change their own suspension flag'
@@ -375,7 +375,7 @@ select is(
 
 select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
 
-select is((select count(*)::int from public.campaign), 7, 'admin reads every campaign, including drafts and suspended (and the draft created by an owner earlier in this file)');
+select is((select count(*)::int from public.campaign), 8, 'admin reads every campaign, including drafts and suspended (and the draft created by an owner earlier in this file)');
 select is((select count(*)::int from public.report), 2, 'admin reads every report');
 select is(
   pg_temp.sqlstate_of($$insert into public.donation (campaign_id, amount, currency, status)
@@ -399,6 +399,13 @@ select is(
     where id = '00000000-0000-4000-8000-000000000005'$$),
   1,
   'admin can grant the admin role to another user'
+);
+-- Restore Dana to a plain user so later tests that act as her really exercise a non-admin.
+select is(
+  pg_temp.affected($$update public.profile set role = 'user'
+    where id = '00000000-0000-4000-8000-000000000005'$$),
+  1,
+  'admin can revoke the admin role again'
 );
 select is(
   pg_temp.sqlstate_of($$update public.profile set suspended = false
@@ -451,6 +458,7 @@ select is(
   null,
   'service role records a pending donation'
 );
+reset role;
 select is(
   (select raised_amount from public.campaign_totals where campaign_id = '10000000-0000-4000-8000-000000000002'),
   1000::bigint,
@@ -515,6 +523,7 @@ select is(
 
 -- Cover image storage (campaign-covers bucket, migration 20261016100300).
 
+reset role;
 select is(
   (select file_size_limit from storage.buckets where id = 'campaign-covers'),
   3145728::bigint,
@@ -525,6 +534,7 @@ select is(
   array['image/jpeg', 'image/png', 'image/webp'],
   'the cover bucket allows only jpeg, png and webp'
 );
+select pg_temp.become('00000000-0000-4000-8000-000000000003', 'authenticated');
 select is(
   pg_temp.sqlstate_of($$insert into storage.objects (bucket_id, name, owner)
     values ('campaign-covers', '00000000-0000-4000-8000-000000000003/mine.png', '00000000-0000-4000-8000-000000000003')$$),
@@ -538,6 +548,9 @@ select is(
   'a user cannot upload a cover into another user''s folder'
 );
 
+-- An admin test above unsuspended Sam; suspend him again so this really tests a suspended user.
+reset role;
+update public.profile set suspended = true where id = '00000000-0000-4000-8000-000000000004';
 select pg_temp.become('00000000-0000-4000-8000-000000000004', 'authenticated');
 
 select is(
@@ -709,6 +722,12 @@ select is(
 select is(
   pg_temp.sqlstate_of($$select public.admin_restore_campaign('10000000-0000-4000-8000-000000000002')$$),
   '23514', 'a campaign that is not suspended cannot be restored');
+-- The lifecycle block above closed campaign 2 with the expiry job; reopen it so this test
+-- really suspends a live campaign.
+reset role;
+update public.campaign set status = 'live', end_date = null
+  where id = '10000000-0000-4000-8000-000000000002';
+select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
 select is(
   pg_temp.sqlstate_of($$select public.admin_suspend_campaign('10000000-0000-4000-8000-000000000002', 'Misleading claims')$$),
   null, 'admin can suspend a live campaign with a reason');
@@ -853,14 +872,14 @@ select is(
 
 select pg_temp.become('00000000-0000-4000-8000-000000000002', 'authenticated');
 select is(
-  pg_temp.affected($$update public.campaign set status = 'live', published_at = now()
-    where id = '10000000-0000-4000-8000-000000000003'$$),
-  0,
+  pg_temp.sqlstate_of($$update public.campaign set status = 'live', published_at = now()
+    where id = '10000000-0000-4000-8000-000000000007'$$),
+  '42501',
   'an owner cannot self-approve (a pending campaign is locked for the owner)'
 );
 select is(
   pg_temp.affected($$update public.campaign set title = 'Edited while pending'
-    where id = '10000000-0000-4000-8000-000000000003'$$),
+    where id = '10000000-0000-4000-8000-000000000007'$$),
   0,
   'an owner cannot edit a campaign while it is pending approval'
 );
@@ -984,6 +1003,8 @@ select is(
   (select count(*)::int from public.campaign where id = '10000000-0000-4000-8000-000000000003'),
   1,
   'an approved campaign is publicly visible'
+);
+
 -- Donor donation history (ticket 19): my_donation shows a user only their own confirmed rows.
 
 select pg_temp.become(null, 'service_role');

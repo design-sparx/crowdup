@@ -75,7 +75,13 @@ insert into public.campaign (
    null, 'Suspended after reports. Kept to exercise moderation.',
    1000000, 'GBP', null,
    '{"type":"doc","content":[]}',
-   'suspended', now() - interval '3 days', now() - interval '4 days');
+   'suspended', now() - interval '3 days', now() - interval '4 days'),
+  ('10000000-0000-4000-8000-000000000007', '00000000-0000-4000-8000-000000000002',
+   'Books for the harbour library', 'books-harbour-library', 'Education', 'GB',
+   null, 'Awaiting admin approval. Kept to exercise the approval queue.',
+   250000, 'GBP', null,
+   '{"type":"doc","content":[]}',
+   'pending_approval', null, now() - interval '1 day');
 
 insert into public.campaign_update (campaign_id, author_id, body, created_at) values
   ('10000000-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000002',
