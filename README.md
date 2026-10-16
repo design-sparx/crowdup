@@ -2,6 +2,8 @@
 
 # CrowdUp: crowdfunding website
 
+[![CI](https://github.com/design-sparx/crowdup/actions/workflows/ci.yml/badge.svg)](https://github.com/design-sparx/crowdup/actions/workflows/ci.yml)
+
 [Online Demo](https://crowd-up.netlify.app/ "Online Demo")
 
 ### About
