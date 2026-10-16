@@ -1,0 +1,28 @@
+# Local Supabase stack. Start with `supabase start`, rebuild the schema and seed
+# with `supabase db reset`, and run the permission tests with `pnpm test:db`.
+project_id = "crowdup"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 17
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]
+
+[auth]
+enabled = true
+site_url = "http://localhost:5173"
+additional_redirect_urls = ["http://localhost:5173"]
+enable_signup = true
+
+[auth.email]
+# The demo turns confirmation off because the default Supabase mailer is rate limited.
+enable_confirmations = false
