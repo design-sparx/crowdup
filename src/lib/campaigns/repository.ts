@@ -152,3 +152,32 @@ export async function listCategories(client: CampaignClient): Promise<string[]> 
     if (error) fail(error);
     return [...new Set((data as {category: string}[]).map((r) => r.category))].sort();
 }
+
+export interface RecentDonor {
+    id: string;
+    /** Null for anonymous donors: the view hides the name and message. */
+    donorName: string | null;
+    message: string | null;
+    amount: number;
+    currency: string;
+    createdAt: string;
+}
+
+/** Newest confirmed donations from the public_donation view (anonymous donors are masked there). */
+export async function listRecentDonors(client: CampaignClient, campaignId: string, limit = 10): Promise<RecentDonor[]> {
+    const {data, error} = await client
+        .from("public_donation")
+        .select("id, donor_name, message, amount, currency, created_at")
+        .eq("campaign_id", campaignId)
+        .order("created_at", {ascending: false})
+        .limit(limit);
+    if (error) fail(error);
+    return (data as {id: string; donor_name: string | null; message: string | null; amount: number; currency: string; created_at: string}[]).map((r) => ({
+        id: r.id,
+        donorName: r.donor_name,
+        message: r.message,
+        amount: Number(r.amount),
+        currency: r.currency,
+        createdAt: r.created_at,
+    }));
+}
