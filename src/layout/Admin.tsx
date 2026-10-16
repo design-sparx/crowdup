@@ -17,6 +17,8 @@ const AdminLayout = () => {
                                     <Badge color="red" aria-label={`${openCount} open reports`}>{openCount}</Badge>
                                 </Group>
                             </Link>
+                            <Text component={Link} to="/admin/campaigns" c="dark">Campaigns</Text>
+                            <Text component={Link} to="/admin/users" c="dark">Users</Text>
                             <Text component={Link} to="/dashboard" c="dimmed">Dashboard</Text>
                         </Group>
                     </Group>

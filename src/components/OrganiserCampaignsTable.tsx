@@ -2,6 +2,7 @@ import {Badge, Button, Group, Progress, Stack, Table, Text} from "@mantine/core"
 import {IconEdit, IconExternalLink} from "@tabler/icons-react";
 import {Link} from "react-router";
 import {formatMinorAmount} from "../helpers/formatAmount";
+import {campaignSuspensionNotice} from "../lib/moderation/moderation";
 import type {CampaignStats} from "../lib/dashboard/dashboard";
 
 const STATUS_COLOR: Record<string, string> = {draft: "gray", live: "green", closed: "blue", suspended: "red"};
@@ -23,6 +24,9 @@ const OrganiserCampaignsTable = ({campaigns}: {campaigns: CampaignStats[]}) => (
                     <Table.Tr key={c.id}>
                         <Table.Td>
                             <Text fw={500}>{c.title}</Text>
+                            {campaignSuspensionNotice(c.status, c.suspendedReason ?? null) && (
+                                <Text size="xs" c="red">{campaignSuspensionNotice(c.status, c.suspendedReason ?? null)}</Text>
+                            )}
                         </Table.Td>
                         <Table.Td>
                             <Badge color={STATUS_COLOR[c.status] ?? "gray"} variant="light">{c.status}</Badge>

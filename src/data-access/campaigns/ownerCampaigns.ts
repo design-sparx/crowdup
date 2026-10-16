@@ -17,6 +17,8 @@ export interface OwnCampaign extends CampaignValues {
     slug: string;
     status: string;
     coverImageUrl: string | null;
+    /** Moderator's reason while status is suspended. */
+    suspendedReason: string | null;
 }
 
 interface Row {
@@ -33,10 +35,11 @@ interface Row {
     end_date: string | null;
     cover_image_url: string | null;
     story: unknown;
+    suspended_reason: string | null;
 }
 
 const COLUMNS =
-    "id, owner_id, slug, status, title, category, country, description, goal_amount, currency, end_date, cover_image_url, story";
+    "id, owner_id, slug, status, title, category, country, description, goal_amount, currency, end_date, cover_image_url, story, suspended_reason";
 
 const UNIQUE_VIOLATION = "23505";
 
@@ -74,6 +77,7 @@ export async function getOwnCampaign(
         endDate: r.end_date,
         coverImageUrl: r.cover_image_url,
         story: r.story as OwnCampaign["story"],
+        suspendedReason: r.suspended_reason,
     };
 }
 

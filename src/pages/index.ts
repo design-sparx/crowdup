@@ -15,6 +15,8 @@ import TermsPage from "./Terms";
 import PrivacyPage from "./Privacy";
 import SecurityPage from "./Security";
 import AdminReportsPage from "./AdminReports";
+import AdminCampaignsPage from "./AdminCampaigns";
+import AdminUsersPage from "./AdminUsers";
 
 export {
     HomePage,
@@ -33,5 +35,7 @@ export {
     TermsPage,
     PrivacyPage,
     SecurityPage,
-    AdminReportsPage
+    AdminReportsPage,
+    AdminCampaignsPage,
+    AdminUsersPage
 }
