@@ -13,6 +13,7 @@ import {
 import {IconBrandGoogle} from "@tabler/icons-react";
 import {Form, Link, useActionData, useLoaderData, useNavigation, useSearchParams} from "react-router";
 import type {AuthActionResult} from "../data-access/auth";
+import {SignupConsent} from "../components";
 
 const SignupPage = () => {
     const {googleEnabled} = useLoaderData<{googleEnabled: boolean}>();
@@ -55,6 +56,7 @@ const SignupPage = () => {
                         <TextInput label="Email" name="email" type="email" autoComplete="email" required mt="md"/>
                         <PasswordInput label="Password" name="password" autoComplete="new-password"
                                        description="At least 8 characters" minLength={8} required mt="md"/>
+                        <SignupConsent/>
                         <Button type="submit" name="intent" value="password" fullWidth mt="xl" loading={busy}>
                             Sign up
                         </Button>

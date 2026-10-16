@@ -10,6 +10,9 @@ import ForgotPasswordPage from "./ForgotPassword";
 import UpdatePasswordPage from "./UpdatePassword";
 import DashboardPage from "./Dashboard";
 import CreateCampaignPage from "./CreateCampaign";
+import TermsPage from "./Terms";
+import PrivacyPage from "./Privacy";
+import SecurityPage from "./Security";
 
 export {
     HomePage,
@@ -23,5 +26,8 @@ export {
     ForgotPasswordPage,
     UpdatePasswordPage,
     DashboardPage,
-    CreateCampaignPage
+    CreateCampaignPage,
+    TermsPage,
+    PrivacyPage,
+    SecurityPage
 }
