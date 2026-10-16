@@ -1,9 +1,7 @@
 import {
     Badge,
     Card,
-    createStyles,
     Flex,
-    getStylesRef,
     Group,
     Image,
     PaperProps,
@@ -13,36 +11,7 @@ import {
 } from '@mantine/core';
 import {ICampaign} from "../types";
 import {Link} from "react-router-dom";
-
-const useStyles = createStyles((theme) => ({
-    card: {
-        position: 'relative',
-        padding: theme.spacing.lg,
-        backdropFilter: `blur(16px) saturate(180%)`,
-        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : `rgba(255, 255, 255, 0.75)`,
-        border: `2px solid rgba(209, 213, 219, 0.3)`,
-
-        [`&:hover .${getStylesRef('image')}`]: {
-            transform: 'scale(1.03)',
-        },
-
-        '&:hover': {
-            boxShadow: theme.shadows.xl,
-            border: `2px solid ${theme.colors.primary[7]}`,
-            backgroundColor: theme.colors.primary[0],
-            transition: 'all 150ms ease',
-        }
-    },
-
-    title: {
-        marginTop: theme.spacing.md,
-    },
-
-    image: {
-        ref: getStylesRef('image'),
-        transition: 'transform 150ms ease',
-    }
-}));
+import classes from "./CampaignCard.module.css";
 
 interface IProps extends PaperProps {
     data: ICampaign
@@ -50,7 +19,6 @@ interface IProps extends PaperProps {
 }
 
 const CampaignCard = ({data, showActions}: IProps) => {
-    const {classes} = useStyles();
     const {
         mainImage,
         id,
