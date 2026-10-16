@@ -20,7 +20,7 @@ import AddImg from "../assets/img/add-campaign.png"
 import MoneyImg from "../assets/img/money-income.png"
 import ShareImg from "../assets/img/share-campaign.png"
 import TestimonialsSection from "../sections/Home/Testimonials";
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 
 const HowItWorksPage = () => {
     const boxProps: BoxProps = {

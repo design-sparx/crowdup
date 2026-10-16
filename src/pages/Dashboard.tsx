@@ -22,7 +22,7 @@ import {
     IconTrophy
 } from "@tabler/icons-react";
 import {CampaignsTable, DonatorsTable, YearlyDonationChart} from "../components";
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 import classes from "./Dashboard.module.css";
 
 const DashboardPage = () => {

@@ -10,7 +10,7 @@ import {
     Text,
 } from '@mantine/core';
 import {ICampaign} from "../types";
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 import classes from "./CampaignCard.module.css";
 
 interface IProps extends PaperProps {

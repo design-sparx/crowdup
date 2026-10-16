@@ -1,5 +1,5 @@
 import {Text, Title, TitleProps, UnstyledButton} from "@mantine/core";
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 import classes from "./BrandName.module.css";
 
 interface IProps extends TitleProps {
