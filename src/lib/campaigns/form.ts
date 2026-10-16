@@ -7,13 +7,12 @@ export interface CampaignValues {
     description: string;
     /** Minor units (cents). */
     goalAmount: number;
-    currency: string;
     endDate: string | null;
     story: StoryDoc;
 }
 
 export type CampaignFormErrors = Partial<Record<
-    "title" | "category" | "country" | "goal" | "currency" | "description" | "endDate" | "story",
+    "title" | "category" | "country" | "goal" | "description" | "endDate" | "story",
     string
 >>;
 
@@ -49,7 +48,7 @@ function parseEndDate(raw: string, now: Date): {value: string | null} | {error: 
 /** Validates the create/edit form. Never trusts the client: story is sanitised here. */
 export function parseCampaignForm(
     form: FormData,
-    {now = new Date(), requireCurrency = true}: {now?: Date; requireCurrency?: boolean} = {},
+    {now = new Date()}: {now?: Date} = {},
 ): ParsedCampaignForm {
     const errors: CampaignFormErrors = {};
 
@@ -68,9 +67,6 @@ export function parseCampaignForm(
     const goalAmount = parseGoal(str(form, "goal"));
     if (goalAmount === null) errors.goal = "Enter a goal greater than zero, with at most 2 decimals.";
 
-    const currency = str(form, "currency");
-    if (requireCurrency && !/^[A-Z]{3}$/.test(currency)) errors.currency = "Choose a currency.";
-
     const end = parseEndDate(str(form, "endDate"), now);
     if ("error" in end) errors.endDate = end.error;
 
@@ -86,7 +82,7 @@ export function parseCampaignForm(
     return {
         ok: true,
         values: {
-            title, category, country, description, currency,
+            title, category, country, description,
             goalAmount: goalAmount as number,
             endDate: "error" in end ? null : end.value,
             story,

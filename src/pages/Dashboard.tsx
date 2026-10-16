@@ -24,8 +24,9 @@ import {
 import {CampaignsTable, DonatorsTable, YearlyDonationChart} from "../components";
 import {Link} from "react-router";
 import classes from "./Dashboard.module.css";
+import type {ReactNode} from "react";
 
-const DashboardPage = () => {
+const DashboardPage = ({stripePanel}: {stripePanel?: ReactNode}) => {
     const paperProps: PaperProps = {
         p: "md",
         shadow: "sm"
@@ -43,6 +44,7 @@ const DashboardPage = () => {
                 <Container fluid my="xl">
                     <Stack gap="xl">
                         <Title order={3}>Good evening, Jane</Title>
+                        {stripePanel}
                         <SimpleGrid
                             cols={{base: 1, sm: 2, lg: 4}}
                             spacing={{base: 'sm', sm: 'md'}}

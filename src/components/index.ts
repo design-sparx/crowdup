@@ -27,6 +27,7 @@ import AppNavbar from "./AppNavbar";
 import LegalDocument from "./LegalDocument";
 import SignupConsent from "./SignupConsent";
 import CampaignForm from "./CampaignForm";
+import StripeStatusPanel from "./StripeStatusPanel";
 
 export {
     LandingNavbar,
@@ -57,5 +58,6 @@ export {
     LegalDocument,
     SignupConsent,
     CampaignForm,
-    ReportModal
+    ReportModal,
+    StripeStatusPanel
 };

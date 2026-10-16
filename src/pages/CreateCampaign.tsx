@@ -9,6 +9,7 @@ interface Props {
     errors?: CampaignFormErrors & {form?: string; cover?: string};
     status?: string;
     saved?: boolean;
+    publish?: string | null;
 }
 
 const CreateCampaignPage = (props: Props) => (

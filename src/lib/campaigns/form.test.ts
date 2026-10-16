@@ -12,7 +12,6 @@ const valid = {
     category: "Community",
     country: "KE",
     goal: "5000.50",
-    currency: "KES",
     description: "Taps for six schools.",
     endDate: "",
     story: JSON.stringify({type: "doc", content: [{type: "paragraph", content: [{type: "text", text: "Hi"}]}]}),
@@ -28,7 +27,6 @@ describe("parseCampaignForm", () => {
             category: "Community",
             country: "KE",
             goalAmount: 500050,
-            currency: "KES",
             endDate: null,
         });
         expect(r.values.story.content).toHaveLength(1);
@@ -44,13 +42,13 @@ describe("parseCampaignForm", () => {
 
     it("reports a field error for each invalid field", () => {
         const r = parseCampaignForm(
-            form({title: "ab", category: "  ", country: "Kenya", goal: "-5", currency: "ke", description: "x".repeat(301), endDate: "garbage", story: "{"}),
+            form({title: "ab", category: "  ", country: "Kenya", goal: "-5", description: "x".repeat(301), endDate: "garbage", story: "{"}),
             {now: new Date()},
         );
         expect(r.ok).toBe(false);
         if (r.ok) return;
         expect(Object.keys(r.errors).sort()).toEqual(
-            ["category", "country", "currency", "description", "endDate", "goal", "story", "title"],
+            ["category", "country", "description", "endDate", "goal", "story", "title"],
         );
     });
 
@@ -75,8 +73,9 @@ describe("parseCampaignForm", () => {
         expect(r.ok && r.values.title).toBe("Hello there");
     });
 
-    it("does not require a currency in edit mode (it is fixed after creation)", () => {
-        const r = parseCampaignForm(form({...valid, currency: ""}), {now: new Date(), requireCurrency: false});
-        expect(r.ok).toBe(true);
+    it("ignores any submitted currency (it comes from the Stripe account)", () => {
+        const r = parseCampaignForm(form({...valid, currency: "EUR"}), {now: new Date()});
+        expect(r.ok && "currency" in r.values).toBe(false);
     });
+
 });

@@ -12,6 +12,8 @@ import {slugify, withSuffix} from "../../lib/campaigns/slug";
 
 export interface OwnCampaign extends CampaignValues {
     id: string;
+    /** Null for a draft created before Stripe onboarding; set (and fixed) at go-live. */
+    currency: string | null;
     slug: string;
     status: string;
     coverImageUrl: string | null;
@@ -27,7 +29,7 @@ interface Row {
     country: string;
     description: string;
     goal_amount: number;
-    currency: string;
+    currency: string | null;
     end_date: string | null;
     cover_image_url: string | null;
     story: unknown;
@@ -117,7 +119,6 @@ export async function createDraft(
                 country: values.country,
                 description: values.description,
                 goal_amount: values.goalAmount,
-                currency: values.currency,
                 end_date: values.endDate,
                 story: values.story,
                 cover_image_url: coverImageUrl,
@@ -132,14 +133,14 @@ export async function createDraft(
 
 /**
  * Updates the editable fields. Slug and currency are deliberately untouched: the slug is
- * the public address and the currency is fixed after creation. Returns false when RLS
+ * the public address and the currency comes from the Stripe account at go-live. Returns false when RLS
  * filtered the row out (not the owner, suspended user, suspended campaign).
  */
 export async function updateCampaign(
     client: SupabaseClient,
     userId: string,
     id: string,
-    values: Omit<CampaignValues, "currency">,
+    values: CampaignValues,
     coverImageUrl: string | undefined,
 ): Promise<boolean> {
     const patch: Record<string, unknown> = {

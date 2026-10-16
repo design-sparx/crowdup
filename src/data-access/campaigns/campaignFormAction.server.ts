@@ -28,7 +28,7 @@ export async function handleCampaignForm(args: {
 }) {
     const {request, supabase, userId, headers, campaignId} = args;
     const form = await request.formData();
-    const parsed = parseCampaignForm(form, {requireCurrency: !campaignId});
+    const parsed = parseCampaignForm(form);
     if (!parsed.ok) return invalid(parsed.errors, headers);
 
     try {
@@ -45,7 +45,6 @@ export async function handleCampaignForm(args: {
             return redirect(`/campaigns/${id}/edit?saved=1`, {headers});
         }
 
-        // updateCampaign never writes currency, so passing the full values is safe.
         const updated = await updateCampaign(supabase, userId, campaignId, parsed.values, coverUrl);
         if (!updated) return invalid({form: "This campaign cannot be edited."}, headers, 403);
         return redirect(`/campaigns/${campaignId}/edit?saved=1`, {headers});

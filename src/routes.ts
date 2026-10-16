@@ -8,6 +8,11 @@ export default [
     route("update-password", "routes/update-password.tsx"),
     route("auth/callback", "routes/auth-callback.tsx"),
     route("logout", "routes/logout.tsx"),
+    route("stripe/connect", "routes/stripe-connect.tsx"),
+    route("stripe/return", "routes/stripe-return.tsx"),
+    route("stripe/refresh", "routes/stripe-refresh.tsx"),
+    route("campaigns/:id/publish", "routes/stripe-publish.tsx"),
+    route("api/stripe/webhook", "routes/api-stripe-webhook.tsx"),
     layout("routes/public-layout.tsx", [
         route("how-it-works", "routes/how-it-works.tsx"),
         route("campaigns", "routes/campaigns.tsx"),

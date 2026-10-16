@@ -11,7 +11,8 @@ export async function loader({request, params}: Route.LoaderArgs) {
     // Same 404 for "does not exist" and "not yours", so ids cannot be probed.
     if (!campaign) throw new Response("Campaign not found", {status: 404, headers});
     const saved = new URL(request.url).searchParams.get("saved") === "1";
-    return data({campaign, saved}, {headers});
+    const publish = new URL(request.url).searchParams.get("publish");
+    return data({campaign, saved, publish}, {headers});
 }
 
 export async function action({request, params}: Route.ActionArgs) {
@@ -20,12 +21,13 @@ export async function action({request, params}: Route.ActionArgs) {
 }
 
 export default function EditCampaign({loaderData, actionData}: Route.ComponentProps) {
-    const {campaign, saved} = loaderData;
+    const {campaign, saved, publish} = loaderData;
     return (
         <CreateCampaignPage
             mode="edit"
             status={campaign.status}
             saved={saved}
+            publish={publish}
             errors={actionData?.errors}
             values={{
                 title: campaign.title,

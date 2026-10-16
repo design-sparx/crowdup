@@ -5,7 +5,7 @@ import type {SupabaseClient} from "@supabase/supabase-js";
 
 const values: CampaignValues = {
     title: "Clean water", category: "Community", country: "KE", description: "", goalAmount: 1000,
-    currency: "KES", endDate: null, story: {type: "doc", content: []},
+    endDate: null, story: {type: "doc", content: []},
 };
 
 /** Fake insert builder: fails with a unique violation `conflicts` times, then succeeds. */
