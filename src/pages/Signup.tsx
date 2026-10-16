@@ -1,54 +1,64 @@
 import {
+    Alert,
     Anchor,
     Button,
-    Checkbox,
     Container,
     Divider,
-    Group,
     Paper,
     PasswordInput,
     Text,
     TextInput,
     Title,
 } from '@mantine/core';
-import {IconBrandFacebook, IconBrandGoogle} from "@tabler/icons-react";
+import {IconBrandGoogle} from "@tabler/icons-react";
+import {Form, Link, useActionData, useLoaderData, useNavigation, useSearchParams} from "react-router";
+import type {AuthActionResult} from "../data-access/auth";
 
 const SignupPage = () => {
+    const {googleEnabled} = useLoaderData<{googleEnabled: boolean}>();
+    const result = useActionData<AuthActionResult>();
+    const next = useSearchParams()[0].get("next") ?? "";
+    const busy = useNavigation().state !== "idle";
+
     return (
         <>
             <title>Signup</title>
             <Container size={420} my={40}>
-                <Title
-                    ta="center"
-                    style={{fontWeight: 900}}
-                >
-                    Welcome back!
+                <Title ta="center" style={{fontWeight: 900}}>
+                    Create your account
                 </Title>
                 <Text c="dimmed" size="sm" ta="center" mt={5}>
                     Already have an account?{' '}
-                    <Anchor size="sm" component="button">
+                    <Anchor size="sm" component={Link} to="/login">
                         Login
                     </Anchor>
                 </Text>
 
                 <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-                    <Group grow mb="md" mt="md">
-                        <Button radius="xl" leftSection={<IconBrandFacebook size={18}/>}>Facebook</Button>
-                        <Button radius="xl" leftSection={<IconBrandGoogle size={18}/>}>Google</Button>
-                    </Group>
-                    <Divider label="Or continue with email" labelPosition="center" my="lg" />
-                    <TextInput label="Name" placeholder="your name" required/>
-                    <TextInput label="Email" placeholder="your email" required mt="md"/>
-                    <PasswordInput label="Password" placeholder="your password" required mt="md"/>
-                    <Group justify="space-between" mt="lg">
-                        <Checkbox label="Remember me"/>
-                        <Anchor component="button" size="sm">
-                            Forgot password?
-                        </Anchor>
-                    </Group>
-                    <Button fullWidth mt="xl">
-                        Sign Up
-                    </Button>
+                    {googleEnabled && (
+                        <>
+                            <Form method="post">
+                                <input type="hidden" name="next" value={next}/>
+                                <Button type="submit" name="intent" value="google" fullWidth radius="xl"
+                                        leftSection={<IconBrandGoogle size={18}/>}>
+                                    Continue with Google
+                                </Button>
+                            </Form>
+                            <Divider label="Or continue with email" labelPosition="center" my="lg"/>
+                        </>
+                    )}
+                    {result?.error && <Alert color="red" mb="md">{result.error}</Alert>}
+                    {result?.message && <Alert color="green" mb="md">{result.message}</Alert>}
+                    <Form method="post">
+                        <input type="hidden" name="next" value={next}/>
+                        <TextInput label="Name" name="name" autoComplete="name" required/>
+                        <TextInput label="Email" name="email" type="email" autoComplete="email" required mt="md"/>
+                        <PasswordInput label="Password" name="password" autoComplete="new-password"
+                                       description="At least 8 characters" minLength={8} required mt="md"/>
+                        <Button type="submit" name="intent" value="password" fullWidth mt="xl" loading={busy}>
+                            Sign up
+                        </Button>
+                    </Form>
                 </Paper>
             </Container>
         </>

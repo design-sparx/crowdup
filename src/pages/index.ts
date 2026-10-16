@@ -6,6 +6,8 @@ import CampaignDetailsPage from "./CampaignDetails";
 import DetailError404Page from "./DetailError404";
 import LoginPage from "./Login";
 import SignupPage from "./Signup";
+import ForgotPasswordPage from "./ForgotPassword";
+import UpdatePasswordPage from "./UpdatePassword";
 import DashboardPage from "./Dashboard";
 import CreateCampaignPage from "./CreateCampaign";
 
@@ -18,6 +20,8 @@ export {
     DetailError404Page,
     LoginPage,
     SignupPage,
+    ForgotPasswordPage,
+    UpdatePasswordPage,
     DashboardPage,
     CreateCampaignPage
 }
