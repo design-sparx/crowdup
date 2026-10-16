@@ -33,10 +33,10 @@ import {
     IconShieldCheckFilled
 } from "@tabler/icons-react";
 import {CountrySelect} from "./index";
-import {ICampaign} from "../types";
+import type {Campaign} from "../lib/campaigns/types";
 
 interface IProps extends Pick<DrawerProps, 'opened' | 'onClose' | 'size'> {
-    campaign?: ICampaign
+    campaign?: Campaign
     iconSize: number
 }
 
@@ -61,7 +61,7 @@ const DonationDrawer = ({campaign, iconSize, ...others}: IProps) => {
             <Container>
                 <Stack>
                     <Flex gap="xs" align="center">
-                        <Image src={campaign?.mainImage} height={96} width={120} fit="contain" radius="sm"/>
+                        <Image src={campaign?.imageUrl} height={96} width={120} fit="contain" radius="sm"/>
                         <Text>You&apos;re supporting <b>{campaign?.title}</b></Text>
                     </Flex>
                     <NumberInput

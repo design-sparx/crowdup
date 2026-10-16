@@ -2,16 +2,19 @@ import {Avatar, Button, Flex, Paper, PaperProps, Stack, Text} from '@mantine/cor
 import {IconSend} from "@tabler/icons-react";
 import userData from "../data/User.json"
 
-type IProps = PaperProps
+interface IProps extends PaperProps {
+    name?: string
+    avatar?: string | null
+}
 
-const UserCard = ({...others}: IProps) => {
+const UserCard = ({name, avatar, ...others}: IProps) => {
     return (
         <Paper{...others}>
             <Flex gap="lg" align="center">
-                <Avatar src={userData.avatar} size={120} radius={120}/>
+                <Avatar src={avatar === undefined ? userData.avatar : avatar} size={120} radius={120}/>
                 <Stack gap="xs" align="flex-start">
                     <Text ta="center" fz="lg" fw={500}>
-                        {userData.name}
+                        {name ?? userData.name}
                     </Text>
                     <Text ta="center" c="dimmed" fz="sm">
                         {userData.email} • {userData.job}

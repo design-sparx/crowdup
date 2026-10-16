@@ -21,11 +21,11 @@ import {
     IconCopy,
     IconMail
 } from "@tabler/icons-react";
-import {ICampaign} from "../types";
+import type {Campaign} from "../lib/campaigns/types";
 import {useMediaQuery} from "@mantine/hooks";
 
 interface IProps {
-    campaign?: ICampaign
+    campaign?: Campaign
     iconSize: number
     opened: boolean
     onClose: () => void
@@ -61,10 +61,10 @@ const ShareModal = ({campaign, iconSize, ...others}: IProps) => {
                         <Flex align="flex-end" gap="sm">
                             <TextInput
                                 label="Copy Link"
-                                value={`https://crowdup.com/${campaign?.id}`}
+                                value={`https://crowdup.com/campaigns/${campaign?.slug}`}
                                 disabled
                                 style={{flex: '1 1 auto'}}/>
-                            <CopyButton value={`https://crowdup.com/${campaign?.id}`} timeout={2000}>
+                            <CopyButton value={`https://crowdup.com/campaigns/${campaign?.slug}`} timeout={2000}>
                                 {({copied, copy}) => (
                                     <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
                                         <Button
@@ -100,10 +100,10 @@ const ShareModal = ({campaign, iconSize, ...others}: IProps) => {
                         <Flex align="flex-end" gap="sm">
                             <TextInput
                                 label="Copy Link"
-                                value={`https://crowdup.com/${campaign?.id}`}
+                                value={`https://crowdup.com/campaigns/${campaign?.slug}`}
                                 disabled
                                 style={{flex: '1 1 auto'}}/>
-                            <CopyButton value={`https://crowdup.com/${campaign?.id}`} timeout={2000}>
+                            <CopyButton value={`https://crowdup.com/campaigns/${campaign?.slug}`} timeout={2000}>
                                 {({copied, copy}) => (
                                     <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
                                         <Button

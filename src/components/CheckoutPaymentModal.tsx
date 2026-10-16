@@ -13,15 +13,13 @@ import {
     TextInput,
     Title
 } from "@mantine/core";
-import {CampaignCard} from "./index";
-import campaignsData from "../data/Campaigns.json";
+
 import {IconApple, IconBrandGoogle, IconBrandPaypal, IconBrandStripe, IconCreditCard} from "@tabler/icons-react";
 
 type IProps = Pick<ModalProps, 'opened' | 'onClose'>
 const CheckoutPaymentModal = ({...others}: IProps) => {
     return (
         <Modal title="Select payment method" {...others}>
-            <CampaignCard data={campaignsData.data[0]}/>
             <Paper>
                 <NumberInput label="Enter your donation amount"/>
                 <Checkbox label="Hide your donation amount on CrowdUp"/>

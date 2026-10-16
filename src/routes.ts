@@ -7,7 +7,7 @@ export default [
     layout("routes/public-layout.tsx", [
         route("how-it-works", "routes/how-it-works.tsx"),
         route("campaigns", "routes/campaigns.tsx"),
-        route("campaigns/:id", "routes/campaign-details.tsx"),
+        route("campaigns/:slug", "routes/campaign-details.tsx"),
     ]),
     layout("routes/dashboard-layout.tsx", [
         route("dashboard", "routes/dashboard.tsx"),

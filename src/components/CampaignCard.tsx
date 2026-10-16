@@ -9,33 +9,35 @@ import {
     Stack,
     Text,
 } from '@mantine/core';
-import {ICampaign} from "../types";
+import type {Campaign} from "../lib/campaigns/types";
+import {formatMinorAmount} from "../helpers";
 import {Link} from "react-router";
 import classes from "./CampaignCard.module.css";
 
 interface IProps extends PaperProps {
-    data: ICampaign
+    data: Campaign
     showActions?: boolean
 }
 
 const CampaignCard = ({data, showActions}: IProps) => {
     const {
-        mainImage,
-        id,
+        imageUrl,
+        slug,
         title,
-        amountRaised,
-        daysLeft,
-        contributors,
+        raisedAmount,
+        currency,
+        percentFunded,
+        donorCount,
         description,
         category,
         country
     } = data;
-    const linkProps = {to: `/campaigns/${id}`, rel: 'noopener noreferrer'};
+    const linkProps = {to: `/campaigns/${slug}`};
 
     return (
         <Card radius="sm" shadow="md" ml="xs" component={Link} {...linkProps} className={classes.card}>
             <Card.Section>
-                <Image src={mainImage} height={280} className={classes.image}/>
+                <Image src={imageUrl} height={280} className={classes.image}/>
             </Card.Section>
 
             <Card.Section pt={0} px="md" pb="md">
@@ -51,11 +53,11 @@ const CampaignCard = ({data, showActions}: IProps) => {
 
                     {showActions && <Text lineClamp={3} size="sm">{description}</Text>}
 
-                    <Progress value={daysLeft}/>
+                    <Progress value={percentFunded}/>
 
                     <Flex justify="space-between">
-                        <Text><b>{amountRaised}</b> raised</Text>
-                        <Text><b>{contributors}</b> donations</Text>
+                        <Text><b>{formatMinorAmount(raisedAmount, currency)}</b> raised</Text>
+                        <Text><b>{donorCount}</b> donations</Text>
                     </Flex>
 
                     {/*{showActions && <Button>Donate Now</Button>}*/}

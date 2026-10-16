@@ -1,6 +1,6 @@
-import {ICampaign} from "../types";
+import type {IDashboardRow} from "../types";
 import {Avatar, Group, Text} from "@mantine/core";
-import campaignsData from "../data/Campaigns.json";
+import campaignsData from "../data/DashboardRows.json";
 import {DataTable} from "mantine-datatable";
 import {useState} from "react";
 
@@ -16,7 +16,7 @@ const CampaignsTable = () => {
             columns={[
                 {
                     accessor: 'createdBy',
-                    render: ({createdBy, createdByImage}: ICampaign) =>
+                    render: ({createdBy, createdByImage}: IDashboardRow) =>
                         <Group>
                             <Avatar src={createdByImage} alt={`${createdBy} profile avatar`} size="sm" radius="xl"/>
                             <Text>{createdBy}</Text>
