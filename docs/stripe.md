@@ -25,6 +25,30 @@ CrowdUp uses Stripe Connect with **Standard** accounts. Each organiser connects 
 - `PUBLISHING_MODE=auto` (default): drafts go live when onboarding completes, or when the connected organiser presses Publish on a draft.
 - `PUBLISHING_MODE=approval`: drafts stay drafts. The `pending_approval` status and approval queue are not in the schema yet; ticket #22 adds them.
 
-## Not built here
+## Donations (ticket #18)
 
-The donation checkout and the donation webhook belong to ticket #18. `verifyStripeWebhook` in `src/data-access/stripe/webhook.server.ts` verifies signatures on the raw body and is meant to be reused there.
+NOT RUN against real Stripe or a database: everything below is covered by unit tests with fakes and locally signed fixture events only.
+
+- **Checkout**: the campaign page action (`intent=donate`) creates a Checkout Session as a **direct charge** on the organiser's connected account (`stripeAccount` option, i.e. the `Stripe-Account` header). It is refused server side unless the campaign passes `canAcceptDonations` and the organiser has a connected, onboarded, unsuspended account. Success and cancel URLs come from `SITE_URL` only. Guests and signed-in users both work; the signed-in id is stored in `donation.donor_user_id`.
+- **Amounts**: 1 to 100,000 in major units of the campaign currency, converted to integer minor units with the currency's exponent (JPY 0, KWD 3, most others 2). Presets are 10, 25, 50, 100 or a custom amount.
+- **Platform fee** (`PLATFORM_FEE_PERCENT`, default `0`, max 30, at most 2 decimals): percentage of the donation, in integer minor units, rounded half up. When the fee is 0, `application_fee_amount` is **not sent at all**. An invalid value fails checkout (fail closed) rather than guessing.
+- **Metadata** on the session and PaymentIntent (keys `crowdup_*`: campaign id, anonymous flag, donor name, message, user id, fee), values truncated to Stripe's 500-character limit. The webhook treats it as untrusted: it checks the campaign exists, the event's connected account owns it, and the currency matches.
+- **Webhook**: `checkout.session.completed` and `checkout.session.async_payment_succeeded` from connected accounts insert one `confirmed` donation, only when `payment_status` is `paid`. The unique `stripe_event_id` and `stripe_checkout_session_id` make duplicates and out-of-order replays a no-op that still returns 200. Unknown, unpaid or irrelevant events return 200 without writing. Database errors return 500 so Stripe retries.
+- **Campaign not live when the payment completes**: the donation is still recorded and counted (the money already reached the organiser) and `donation.flagged_reason` is set for admin review.
+- **Totals and donors**: only `confirmed` rows count (`campaign_totals`); the recent donors list reads `public_donation`, which hides name and message of anonymous donors. The success redirect writes nothing, so the total updates when the webhook lands.
+
+### Webhook setup
+
+One endpoint serves both onboarding and donations. In the Dashboard create an endpoint at `<SITE_URL>/api/stripe/webhook`, choose **Events from connected accounts**, and subscribe to `account.updated`, `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Its signing secret goes in `STRIPE_WEBHOOK_SECRET`. A Connect endpoint has its own secret, different from any platform ("Your account") endpoint; events from connected accounts are signed with the Connect endpoint's secret, which is the one to use here.
+
+Local development:
+
+```
+stripe listen --forward-connect-to localhost:5173/api/stripe/webhook
+```
+
+(`--forward-connect-to` forwards connected-account events; plain `--forward-to` only forwards platform events.) Use the `whsec_...` it prints as `STRIPE_WEBHOOK_SECRET`.
+
+### Test cards
+
+`4242 4242 4242 4242` succeeds, `4000 0000 0000 9995` is declined (insufficient funds), `4000 0025 0000 3155` requires 3D Secure. Any future expiry, any CVC.
