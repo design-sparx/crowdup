@@ -13,6 +13,7 @@ import CreateCampaignPage from "./CreateCampaign";
 import TermsPage from "./Terms";
 import PrivacyPage from "./Privacy";
 import SecurityPage from "./Security";
+import AdminReportsPage from "./AdminReports";
 
 export {
     HomePage,
@@ -29,5 +30,6 @@ export {
     CreateCampaignPage,
     TermsPage,
     PrivacyPage,
-    SecurityPage
+    SecurityPage,
+    AdminReportsPage
 }
