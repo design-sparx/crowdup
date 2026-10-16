@@ -34,7 +34,7 @@
     "@tiptap/pm": "^3.32.0",
     "@tiptap/react": "^3.32.0",
     "@tiptap/starter-kit": "^3.32.0",
-    "apexcharts": "^8.2.0",
+    "apexcharts": "^8.3.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.23",
     "embla-carousel": "^8.6.0",
