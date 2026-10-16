@@ -1,10 +1,9 @@
 import {Box, BoxProps, Container, Flex, Select, SimpleGrid, Stack, TextInput, Title, TitleProps} from "@mantine/core";
 import campaignsData from "../data/Campaigns.json";
 import {CampaignCard} from "../components";
-import {Helmet} from "react-helmet";
 import {useMediaQuery} from "@mantine/hooks";
 
-const CampaignsPage = (): JSX.Element => {
+const CampaignsPage = () => {
     const matchesMobile = useMediaQuery('(max-width: 768px)');
 
     const boxProps: BoxProps = {
@@ -15,31 +14,29 @@ const CampaignsPage = (): JSX.Element => {
 
     const titleProps: TitleProps = {
         size: 32,
-        weight: 700,
+        fw: 700,
         mb: "lg",
-        transform: 'capitalize',
-        sx: {lineHeight: '40px'}
+        tt: 'capitalize',
+        style: {lineHeight: '40px'}
     }
 
     const items = campaignsData.data.map(c => (<CampaignCard key={c.id} data={c} showActions={true}/>))
 
     return (
         <>
-            <Helmet>
-                <title>Discover campaigns to fund</title>
-            </Helmet>
+            <title>Discover campaigns to fund</title>
             <Box>
                 <Container size="lg">
                     <Stack>
                         <Box {...boxProps}>
-                            <Title {...titleProps} align="center">Discover campaigns to fund</Title>
+                            <Title {...titleProps} ta="center">Discover campaigns to fund</Title>
                         </Box>
                         <Flex
                             justify="space-between"
                             gap={{base: 'sm', sm: 'lg'}}
                             direction={{base: 'column-reverse', sm: 'row'}}
                         >
-                            <TextInput placeholder="search campaigns..." sx={{width: 500}}/>
+                            <TextInput placeholder="search campaigns..." style={{width: 500}}/>
                             <Flex align="center" gap="sm" justify={{base: 'space-between', sm: 'flex-start'}}>
                                 <Select
                                     label=""
@@ -65,12 +62,8 @@ const CampaignsPage = (): JSX.Element => {
                             </Flex>
                         </Flex>
                         <SimpleGrid
-                            cols={3}
-                            spacing="lg"
-                            breakpoints={[
-                                {maxWidth: 'md', cols: 2, spacing: 'md'},
-                                {maxWidth: 'sm', cols: 1, spacing: 0},
-                            ]}
+                            cols={{base: 1, sm: 2, md: 3}}
+                            spacing={{base: 0, sm: 'md', md: 'lg'}}
                         >
                             {items}
                         </SimpleGrid>

@@ -20,22 +20,22 @@ const FileDropzone = ({label, description, ...others}: IFileInputProps) => {
             {...others}
         >
             <Group
-                position="center"
-                spacing="xl"
+                justify="center"
+                gap="xl"
                 style={{minHeight: rem(120), pointerEvents: 'none'}}
             >
                 <Dropzone.Accept>
                     <IconUpload
                         size="3.2rem"
                         stroke={1.5}
-                        color={theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 4 : 6]}
+                        color={theme.colors[theme.primaryColor][6]}
                     />
                 </Dropzone.Accept>
                 <Dropzone.Reject>
                     <IconX
                         size="3.2rem"
                         stroke={1.5}
-                        color={theme.colors.red[theme.colorScheme === 'dark' ? 4 : 6]}
+                        color={theme.colors.red[6]}
                     />
                 </Dropzone.Reject>
                 <Dropzone.Idle>
@@ -49,7 +49,7 @@ const FileDropzone = ({label, description, ...others}: IFileInputProps) => {
                     <Text size="xl" inline>
                         {label || 'Upload your profile picture'}
                     </Text>
-                    <Text size="sm" color="dimmed" inline mt={7}>
+                    <Text size="sm" c="dimmed" inline mt={7}>
                         {description || 'This picture will be shown next to your name'}
                     </Text>
                 </div>

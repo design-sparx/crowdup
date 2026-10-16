@@ -35,8 +35,8 @@ const JoinUsSection = ({boxProps, subtitleProps}: IProps) => {
                         <ThemeIcon size="xl" color="secondary" variant="filled">
                             <IconWorld/>
                         </ThemeIcon>
-                        <Stack spacing={2}>
-                            <Text weight={600}>Global community</Text>
+                        <Stack gap={2}>
+                            <Text fw={600}>Global community</Text>
                             <Text size="sm">Reach a community that can make us strong and useful.</Text>
                         </Stack>
                     </Flex>
@@ -44,8 +44,8 @@ const JoinUsSection = ({boxProps, subtitleProps}: IProps) => {
                         <ThemeIcon size="xl" color="secondary" variant="filled">
                             <IconUsers/>
                         </ThemeIcon>
-                        <Stack spacing={2}>
-                            <Text weight={600}>Crowdfunding</Text>
+                        <Stack gap={2}>
+                            <Text fw={600}>Crowdfunding</Text>
                             <Text size="sm">Affordable ceiling and are very suitable for novice funders.</Text>
                         </Stack>
                     </Flex>

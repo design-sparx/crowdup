@@ -27,7 +27,7 @@ function Stats({amount, description}: IStatsProps) {
             p="md"
             shadow="md"
             radius="sm"
-            sx={{
+            style={{
                 backdropFilter: `blur(16px) saturate(180%)`,
                 backgroundColor: `rgba(255, 255, 255, 0.75)`,
                 border: `1px solid rgba(209, 213, 219, 0.3)`
@@ -56,12 +56,8 @@ const StatsSection = ({boxProps, subtitleProps, titleProps}: IProps) => {
                     care about most</Text>
             </Box>
             <SimpleGrid
-                cols={3}
-                spacing="lg"
-                breakpoints={[
-                    {maxWidth: 'md', cols: 3, spacing: 'md'},
-                    {maxWidth: 'sm', cols: 1, spacing: 'sm'},
-                ]}
+                cols={{base: 1, sm: 3}}
+                spacing={{base: 'sm', sm: 'md', md: 'lg'}}
             >
                 {items}
             </SimpleGrid>

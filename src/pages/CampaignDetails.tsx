@@ -28,12 +28,11 @@ import {
 import {IconFlag, IconHeart, IconHeartFilled, IconSeparator, IconShare} from "@tabler/icons-react";
 import {useDisclosure, useMediaQuery, useToggle} from "@mantine/hooks";
 import {BackButton, DonationDrawer, NotFound, ShareModal, UserCard} from "../components";
-import {Helmet} from "react-helmet";
-import * as dayjs from "dayjs";
-import * as LocalizedFormat from "dayjs/plugin/localizedFormat"
+import dayjs from "dayjs";
+import LocalizedFormat from "dayjs/plugin/localizedFormat";
 import {notifications} from "@mantine/notifications";
 
-const CampaignDetailsPage = (): JSX.Element => {
+const CampaignDetailsPage = () => {
     dayjs.extend(LocalizedFormat)
     const {id} = useParams();
     const campaign = campaignsData.data.find(_ => _.id === id) as ICampaign | undefined;
@@ -49,29 +48,27 @@ const CampaignDetailsPage = (): JSX.Element => {
 
     const titleProps: TitleProps = {
         size: 32,
-        weight: 700,
-        transform: 'capitalize',
-        sx: {lineHeight: '40px'}
+        fw: 700,
+        tt: 'capitalize',
+        style: {lineHeight: '40px'}
     }
 
     const subTitleProps: TextProps = {
-        size: 20,
-        weight: 600,
-        sx: {lineHeight: '28px'}
+        fz: 20,
+        fw: 600,
+        style: {lineHeight: '28px'}
     }
 
     const iconSize = 18;
 
     return (
         <>
-            <Helmet>
-                <title>{campaign?.title}</title>
-            </Helmet>
+            <title>{campaign?.title}</title>
             <Box>
                 {campaign ? <Container size="lg">
                     <BackButton mb="md"/>
                     <Grid>
-                        <Grid.Col lg={8}>
+                        <Grid.Col span={{base: 12, lg: 8}}>
                             <Stack>
                                 <Card padding="md" shadow="sm">
                                     <Card.Section>
@@ -82,21 +79,21 @@ const CampaignDetailsPage = (): JSX.Element => {
                                         {!matchesMobile ?
                                             <Flex gap="xs" align="center">
                                                 <Text size="sm">Fundraise campaign created by</Text>
-                                                <UnstyledButton component={Anchor}>
+                                                <UnstyledButton component="a">
                                                     <Flex gap="xs" align="center">
                                                         <Avatar src={campaign?.createdByImage} radius="xl" size="sm"/>
                                                         <Text size="sm">{campaign?.createdBy}</Text>
                                                     </Flex>
                                                 </UnstyledButton>
                                                 <IconSeparator size={18}/>
-                                                <Text component={Anchor} size="sm">{campaign?.country}</Text>
+                                                <Anchor size="sm">{campaign?.country}</Anchor>
                                                 <IconSeparator size={18}/>
-                                                <Text component={Anchor} size="sm">{campaign?.category}</Text>
+                                                <Anchor size="sm">{campaign?.category}</Anchor>
                                             </Flex> :
                                             <Stack>
                                                 <Flex gap="md">
                                                     <Text size="sm">Fundraise campaign created by</Text>
-                                                    <UnstyledButton component={Anchor}>
+                                                    <UnstyledButton component="a">
                                                         <Flex gap="xs" align="center">
                                                             <Avatar src={campaign?.createdByImage} radius="xl"
                                                                     size="sm"/>
@@ -117,8 +114,8 @@ const CampaignDetailsPage = (): JSX.Element => {
                                         {matchesMobile && <>
                                             <Divider/>
                                             <Flex align="flex-end" gap="sm">
-                                                <Title {...titleProps} align="center">{campaign?.amountRaised}</Title>
-                                                <Text fw={500} align="center" color="dimmed">raised
+                                                <Title {...titleProps} ta="center">{campaign?.amountRaised}</Title>
+                                                <Text fw={500} ta="center" c="dimmed">raised
                                                     of {campaign?.goal}</Text>
                                             </Flex>
                                             <Progress value={campaign?.daysLeft} size="md"/>
@@ -184,7 +181,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                                 </Paper>
                                 {!matchesMobile &&
                                     <Button
-                                        leftIcon={<IconFlag size={iconSize}/>}
+                                        leftSection={<IconFlag size={iconSize}/>}
                                         variant="subtle"
                                         color="secondary"
                                     >
@@ -193,13 +190,13 @@ const CampaignDetailsPage = (): JSX.Element => {
                                 }
                             </Stack>
                         </Grid.Col>
-                        <Grid.Col lg={4}>
+                        <Grid.Col span={{base: 12, lg: 4}}>
                             <Stack>
                                 {!matchesMobile &&
                                     <Paper {...paperProps}>
-                                        <Stack spacing="sm">
-                                            <Title {...titleProps} align="center">{campaign?.amountRaised}</Title>
-                                            <Text fw={500} align="center" color="dimmed">raised
+                                        <Stack gap="sm">
+                                            <Title {...titleProps} ta="center">{campaign?.amountRaised}</Title>
+                                            <Text fw={500} ta="center" c="dimmed">raised
                                                 of {campaign?.goal}</Text>
                                             <Progress value={campaign?.daysLeft} size="md"/>
                                             <Flex justify="space-between">
@@ -208,7 +205,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                                             </Flex>
                                             <Button size="xl" onClick={donateOpen}>Donate</Button>
                                             <Button
-                                                leftIcon={<IconShare size={iconSize}/>}
+                                                leftSection={<IconShare size={iconSize}/>}
                                                 variant="outline"
                                                 onClick={open}
                                                 color="blue"
@@ -216,7 +213,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                                                 Share with friends
                                             </Button>
                                             <Button
-                                                leftIcon={following ? <IconHeartFilled size={iconSize}/> :
+                                                leftSection={following ? <IconHeartFilled size={iconSize}/> :
                                                     <IconHeart size={iconSize}/>}
                                                 variant={following ? 'filled' : 'subtle'}
                                                 color="secondary"
@@ -270,7 +267,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                                 </Paper>
                                 {matchesMobile &&
                                     <Button
-                                        leftIcon={<IconFlag size={iconSize}/>}
+                                        leftSection={<IconFlag size={iconSize}/>}
                                         variant="subtle"
                                         color="secondary"
                                     >
