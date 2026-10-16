@@ -1,4 +1,5 @@
 import ReportModal from "./ReportModal";
+import CampaignLifecyclePanel from "./CampaignLifecyclePanel";
 import LandingNavbar from "./LandingNavbar.tsx";
 import SectionTitle from "./SectionTitle.tsx";
 import TitleBadge from "./TitleBadge"
@@ -58,6 +59,7 @@ export {
     LegalDocument,
     SignupConsent,
     CampaignForm,
+    CampaignLifecyclePanel,
     ReportModal,
     StripeStatusPanel
 };

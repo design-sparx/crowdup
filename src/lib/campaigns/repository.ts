@@ -126,6 +126,27 @@ export async function getCampaignBySlug(
     return {...campaign, story: row.story};
 }
 
+export interface CampaignUpdate {
+    id: string;
+    body: string;
+    createdAt: string;
+}
+
+/** Newest first. RLS limits readers to updates of live campaigns (owners see their own). */
+export async function listUpdates(client: CampaignClient, campaignId: string): Promise<CampaignUpdate[]> {
+    const {data, error} = await client
+        .from("campaign_update")
+        .select("id, body, created_at")
+        .eq("campaign_id", campaignId)
+        .order("created_at", {ascending: false});
+    if (error) fail(error);
+    return (data as {id: string; body: string; created_at: string}[]).map((r) => ({
+        id: r.id,
+        body: r.body,
+        createdAt: r.created_at,
+    }));
+}
+
 export async function listCategories(client: CampaignClient): Promise<string[]> {
     const {data, error} = await client.from("campaign").select("category").eq("status", "live");
     if (error) fail(error);

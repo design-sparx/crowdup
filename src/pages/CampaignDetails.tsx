@@ -1,4 +1,5 @@
 import type {CampaignDetails} from "../lib/campaigns/types";
+import type {CampaignUpdate} from "../lib/campaigns/repository";
 import {formatMinorAmount} from "../helpers";
 import {
     Accordion,
@@ -32,7 +33,15 @@ import dayjs from "dayjs";
 import LocalizedFormat from "dayjs/plugin/localizedFormat";
 import {notifications} from "@mantine/notifications";
 
-const CampaignDetailsPage = ({campaign, storyHtml = ""}: {campaign: CampaignDetails; storyHtml?: string}) => {
+interface DetailsProps {
+    campaign: CampaignDetails;
+    storyHtml?: string;
+    updates?: CampaignUpdate[];
+    ended?: boolean;
+    acceptingDonations?: boolean;
+}
+
+const CampaignDetailsPage = ({campaign, storyHtml = "", updates = [], ended = false, acceptingDonations = true}: DetailsProps) => {
     dayjs.extend(LocalizedFormat)
     const [opened, {open, close}] = useDisclosure(false);
     const [donateOpened, {open: donateOpen, close: donateClose}] = useDisclosure(false);
@@ -74,6 +83,7 @@ const CampaignDetailsPage = ({campaign, storyHtml = ""}: {campaign: CampaignDeta
                                     </Card.Section>
                                     <Stack mt="md">
                                         <Title>{campaign.title}</Title>
+                                        {ended && <Text c="red" fw={600}>This campaign has ended.</Text>}
                                         {!matchesMobile ?
                                             <Flex gap="xs" align="center">
                                                 <Text size="sm">Fundraise campaign created by</Text>
@@ -125,7 +135,7 @@ const CampaignDetailsPage = ({campaign, storyHtml = ""}: {campaign: CampaignDeta
                                                 <Text fw={500}>{campaign.donorCount} Donors</Text>
                                             </Flex>
                                             <Flex align="center" gap="xs">
-                                                <Button onClick={donateOpen} fullWidth>Donate</Button>
+                                                <Button onClick={donateOpen} fullWidth disabled={!acceptingDonations}>{acceptingDonations ? "Donate" : "Campaign ended"}</Button>
                                                 <ActionIcon
                                                     variant="subtle"
                                                     onClick={open}
@@ -173,6 +183,20 @@ const CampaignDetailsPage = ({campaign, storyHtml = ""}: {campaign: CampaignDeta
                                         </>}
                                     </Stack>
                                 </Card>
+                                {updates.length > 0 && (
+                                    <Paper {...paperProps} aria-label="Campaign updates">
+                                        <Text {...subTitleProps} mb="sm">Updates</Text>
+                                        <Stack gap="sm">
+                                            {updates.map((u) => (
+                                                <Box key={u.id}>
+                                                    <Text size="xs" c="dimmed">{dayjs(u.createdAt).format('LL')}</Text>
+                                                    {/* Plain text: React escapes it, newlines preserved by CSS. */}
+                                                    <Text size="sm" style={{whiteSpace: 'pre-wrap'}}>{u.body}</Text>
+                                                </Box>
+                                            ))}
+                                        </Stack>
+                                    </Paper>
+                                )}
                                 <Paper {...paperProps}>
                                     <Text {...subTitleProps} mb="sm">Organizer</Text>
                                     <UserCard name={campaign.organizerName} avatar={campaign.organizerAvatarUrl}/>
@@ -205,7 +229,7 @@ const CampaignDetailsPage = ({campaign, storyHtml = ""}: {campaign: CampaignDeta
                                                 <Text fw={500}>{campaign.percentFunded}% Funded</Text>
                                                 <Text fw={500}>{campaign.donorCount} Donors</Text>
                                             </Flex>
-                                            <Button size="xl" onClick={donateOpen}>Donate</Button>
+                                            <Button size="xl" onClick={donateOpen} disabled={!acceptingDonations}>{acceptingDonations ? "Donate" : "Campaign ended"}</Button>
                                             <Button
                                                 leftSection={<IconShare size={iconSize}/>}
                                                 variant="outline"
