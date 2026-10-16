@@ -79,21 +79,21 @@ const CampaignDetailsPage = () => {
                                         {!matchesMobile ?
                                             <Flex gap="xs" align="center">
                                                 <Text size="sm">Fundraise campaign created by</Text>
-                                                <UnstyledButton component={Anchor}>
+                                                <UnstyledButton component="a">
                                                     <Flex gap="xs" align="center">
                                                         <Avatar src={campaign?.createdByImage} radius="xl" size="sm"/>
                                                         <Text size="sm">{campaign?.createdBy}</Text>
                                                     </Flex>
                                                 </UnstyledButton>
                                                 <IconSeparator size={18}/>
-                                                <Text component={Anchor} size="sm">{campaign?.country}</Text>
+                                                <Anchor size="sm">{campaign?.country}</Anchor>
                                                 <IconSeparator size={18}/>
-                                                <Text component={Anchor} size="sm">{campaign?.category}</Text>
+                                                <Anchor size="sm">{campaign?.category}</Anchor>
                                             </Flex> :
                                             <Stack>
                                                 <Flex gap="md">
                                                     <Text size="sm">Fundraise campaign created by</Text>
-                                                    <UnstyledButton component={Anchor}>
+                                                    <UnstyledButton component="a">
                                                         <Flex gap="xs" align="center">
                                                             <Avatar src={campaign?.createdByImage} radius="xl"
                                                                     size="sm"/>

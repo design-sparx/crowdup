@@ -1,0 +1,11 @@
+.badge {
+    width: fit-content;
+    padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+    border-radius: var(--mantine-radius-xl);
+    background-color: var(--mantine-color-secondary-1);
+    color: var(--mantine-color-black);
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: var(--mantine-font-size-sm);
+    line-height: 14px;
+}
