@@ -15,7 +15,9 @@
  * (approve/reject) or an admin session.
  */
 
-export const CAMPAIGN_STATUSES = ["draft", "pending_approval", "rejected", "live", "closed", "suspended"] as const;
+import {REASON_MAX, REASON_MIN, parseReason} from "../validation/reason";
+
+export const CAMPAIGN_STATUSES =["draft", "pending_approval", "rejected", "live", "closed", "suspended"] as const;
 export type CampaignStatus = (typeof CAMPAIGN_STATUSES)[number];
 export type CampaignActor = "owner" | "server";
 
@@ -45,15 +47,15 @@ export function statusLabel(status: string): string {
     return (LABELS as Record<string, string>)[status] ?? status;
 }
 
-export const REJECTION_REASON_MIN = 3;
-export const REJECTION_REASON_MAX = 1000;
+export const REJECTION_REASON_MIN = REASON_MIN;
+export const REJECTION_REASON_MAX = REASON_MAX;
 
 export type RejectionReasonResult = {ok: true; reason: string} | {ok: false; error: string};
 
 export function parseRejectionReason(value: unknown): RejectionReasonResult {
-    const reason = typeof value === "string" ? value.trim() : "";
-    if (reason.length < REJECTION_REASON_MIN || reason.length > REJECTION_REASON_MAX) {
-        return {ok: false, error: `Give a reason of ${REJECTION_REASON_MIN} to ${REJECTION_REASON_MAX} characters.`};
+    const parsed = parseReason(value);
+    if (!parsed.ok) {
+        return {ok: false, error: `Give a reason of ${REASON_MIN} to ${REASON_MAX} characters.`};
     }
-    return {ok: true, reason};
+    return parsed;
 }

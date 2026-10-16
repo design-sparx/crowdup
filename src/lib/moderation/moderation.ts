@@ -1,19 +1,18 @@
 /** Pure moderation rules shared by the admin routes and organiser-facing messages. */
 
-export const MODERATION_REASON_MIN = 3;
-export const MODERATION_REASON_MAX = 1000;
+import {REASON_MAX, REASON_MIN, parseReason} from "../validation/reason";
 
 export type ReasonResult = {ok: true; reason: string} | {ok: false; error: string};
 
 export function parseModerationReason(value: unknown): ReasonResult {
-    const reason = typeof value === "string" ? value.trim() : "";
-    if (reason.length < MODERATION_REASON_MIN || reason.length > MODERATION_REASON_MAX) {
+    const parsed = parseReason(value);
+    if (!parsed.ok) {
         return {
             ok: false,
-            error: `A reason of ${MODERATION_REASON_MIN} to ${MODERATION_REASON_MAX} characters is required.`,
+            error: `A reason of ${REASON_MIN} to ${REASON_MAX} characters is required.`,
         };
     }
-    return {ok: true, reason};
+    return parsed;
 }
 
 /** Only published campaigns can be suspended; drafts are private already. */
