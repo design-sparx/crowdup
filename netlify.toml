@@ -1,0 +1,39 @@
+[build]
+  command = "pnpm build"
+  publish = "build/client"
+
+# Single-page mode: known routes get the app shell (index.html) with 200.
+# Anything else gets the same shell with a real 404 status, and the client
+# renders the 404 page. Keep this list in sync with src/routes.ts.
+[[redirects]]
+  from = "/login"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/signup"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/how-it-works"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/campaigns"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/campaigns/:id"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/dashboard"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/create-campaign"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 404
