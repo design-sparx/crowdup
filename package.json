@@ -10,6 +10,7 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "test": "vitest run",
+    "test:db": "supabase db reset && supabase test db",
     "preview": "vite preview"
   },
   "dependencies": {
