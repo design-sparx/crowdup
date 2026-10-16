@@ -9,10 +9,10 @@ import BrandName from "./BrandName";
 import UserCard from "./UserCard";
 import ContactCard from "./ContactCard";
 import UserButton from "./UserButton";
+import DonationsChart from "./DonationsChart";
+import OrganiserCampaignsTable from "./OrganiserCampaignsTable";
+import RecentDonorsTable from "./RecentDonorsTable";
 import AppLinks from "./AppLinks";
-import CampaignsTable from "./CampaignsTable";
-import DonatorsTable from "./DonatorsTable";
-import YearlyDonationChart from "./YearlyDonationChart";
 import CheckoutPaymentModal from "./CheckoutPaymentModal";
 import FileDropzone from "./FileDropzone";
 import CountrySelect from "./CountrySelect";
@@ -39,10 +39,10 @@ export {
     UserCard,
     ContactCard,
     UserButton,
+    DonationsChart,
+    OrganiserCampaignsTable,
+    RecentDonorsTable,
     AppLinks,
-    CampaignsTable,
-    DonatorsTable,
-    YearlyDonationChart,
     CheckoutPaymentModal,
     FileDropzone,
     CountrySelect,

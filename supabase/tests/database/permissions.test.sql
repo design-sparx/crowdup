@@ -12,7 +12,7 @@
 
 begin;
 
-select plan(80);
+select plan(83);
 
 -- Helpers, scoped to this session.
 
@@ -171,6 +171,24 @@ select is(
 -- Organiser (owner). Amara owns c1, c2 and c3.
 
 select pg_temp.become('00000000-0000-4000-8000-000000000002', 'authenticated');
+
+-- Organiser dashboard reads (ticket 12): confirmed donations only, anonymity respected.
+select is(
+  (select count(*)::int from public.public_donation where campaign_id = '10000000-0000-4000-8000-000000000001'),
+  3,
+  'organiser sees only the three confirmed donations on their campaign'
+);
+select is(
+  (select count(*)::int from public.public_donation
+    where campaign_id = '10000000-0000-4000-8000-000000000001' and anonymous and donor_name is null),
+  1,
+  'organiser sees the anonymous donation without a donor name'
+);
+select is(
+  pg_temp.sqlstate_of($$select donor_email from public.public_donation$$),
+  '42703',
+  'organiser cannot read donor emails through the donation view'
+);
 
 select is((select count(*)::int from public.campaign), 4,
   'owner sees their own campaigns in every state plus other live campaigns');
