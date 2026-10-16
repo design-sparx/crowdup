@@ -34,7 +34,7 @@ CrowdUp is a crowdfunding platform that helps you get funding for your personal 
 Before proceeding, please ensure you have the following software installed on your computer.
 
 - Node
-- Yarn (optional but recommended)
+- pnpm 9 (install with `corepack enable`)
 - Git command line tools
 
 ### Useful links
@@ -43,7 +43,6 @@ Before proceeding, please ensure you have the following software installed on yo
     - Windows: https://git-scm.com/download/windows
     - Mac: https://git-scm.com/download/mac
 - Download Node - https://nodejs.org/en/
-- Download Yarn cli - https://yarnpkg.com/lang/en/docs/install/
 - Download VSCode - https://code.visualstudio.com/
 
 ### Getting started
@@ -59,9 +58,9 @@ Clone the repo to your machine
 
 1. Open a new terminal window and navigate in your root folder
    `cd <../root>`
-   `yarn install OR npm install`
+   `pnpm install`
 2. Run the start script
-   `yarn run start OR npm run start`
+   `pnpm dev`
 
 Your app should be running on: http://localhost:3000
 

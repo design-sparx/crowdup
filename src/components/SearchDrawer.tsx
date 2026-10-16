@@ -15,15 +15,15 @@ const SearchDrawer = ({...others}: IProps) => {
             size="100%"
             {...others}
         >
-            <Center sx={{minHeight: '80vh'}}>
-                <Stack spacing="lg" sx={{width: matchesMobile ? '75%' : '60%'}}>
+            <Center style={{minHeight: '80vh'}}>
+                <Stack gap="lg" style={{width: matchesMobile ? '75%' : '60%'}}>
                     <Title>Search</Title>
                     <TextInput
                         size={matchesMobile ? "sm" : "lg"}
-                        icon={<IconSearch size={24}/>}
+                        leftSection={<IconSearch size={24}/>}
                         placeholder="Try searching people, titles and hashtags"
                     />
-                    <SimpleGrid cols={2} spacing="lg" breakpoints={[{maxWidth: 'md', cols: 1, spacing: 'md'}]}>
+                    <SimpleGrid cols={{base: 1, md: 2}} spacing={{base: "md", md: "lg"}}>
                         <CategorySelect/>
                         <CountrySelect/>
                     </SimpleGrid>

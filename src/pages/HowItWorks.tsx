@@ -1,4 +1,3 @@
-import {Helmet} from "react-helmet";
 import {
     AspectRatio,
     Box,
@@ -23,7 +22,7 @@ import ShareImg from "../assets/img/share-campaign.png"
 import TestimonialsSection from "../sections/Home/Testimonials";
 import {Link} from "react-router-dom";
 
-const HowItWorksPage = (): JSX.Element => {
+const HowItWorksPage = () => {
     const boxProps: BoxProps = {
         mt: 96,
         mb: 136,
@@ -32,10 +31,10 @@ const HowItWorksPage = (): JSX.Element => {
 
     const titleProps: TitleProps = {
         size: 32,
-        weight: 800,
+        fw: 800,
         mb: "xl",
-        transform: 'capitalize',
-        sx: {lineHeight: '40px'}
+        tt: 'capitalize',
+        style: {lineHeight: '40px'}
     }
 
     const listProps: Omit<ListProps, 'children'> = {
@@ -47,7 +46,7 @@ const HowItWorksPage = (): JSX.Element => {
         radius: "sm",
         shadow: "md",
         padding: "lg",
-        sx: {
+        style: {
             backdropFilter: `blur(16px) saturate(180%)`,
             backgroundColor: `rgba(255, 255, 255, 0.75)`,
             border: `none`,
@@ -55,19 +54,17 @@ const HowItWorksPage = (): JSX.Element => {
     }
 
     const imageProps: ImageProps = {
-        height: 160,
+        h: 160,
         fit: "contain",
         py: "xl"
     }
 
     return (
         <>
-            <Helmet>
-                <title>How it works</title>
-            </Helmet>
+            <title>How it works</title>
             <Box>
                 <Container>
-                    <Box {...boxProps} sx={{textAlign: 'center'}}>
+                    <Box {...boxProps} style={{textAlign: 'center'}}>
                         <Title mb={48} fw={800}>How to Fundraise Online</Title>
                         <Text>GoGetFunding is the best place to fundraise, whether you are an individual, group,
                             or organization.</Text>
@@ -84,14 +81,10 @@ const HowItWorksPage = (): JSX.Element => {
                         </AspectRatio>
                     </Box>
                     <Box {...boxProps}>
-                        <Title {...titleProps} align="center">Here's how it works</Title>
+                        <Title {...titleProps} ta="center">Here's how it works</Title>
                         <SimpleGrid
-                            cols={3}
-                            spacing="lg"
-                            breakpoints={[
-                                {maxWidth: 'md', cols: 3, spacing: 'md'},
-                                {maxWidth: 'sm', cols: 1, spacing: 0},
-                            ]}
+                            cols={{base: 1, sm: 3}}
+                            spacing={{base: 0, sm: 'md', md: 'lg'}}
                         >
                             <Card {...cardProps}>
                                 <Card.Section>
@@ -137,10 +130,8 @@ const HowItWorksPage = (): JSX.Element => {
                     <TestimonialsSection boxProps={boxProps} titleProps={titleProps}/>
                     <Box {...boxProps}>
                         <SimpleGrid
-                            cols={2}
-                            breakpoints={[
-                                {maxWidth: 'sm', cols: 1, spacing: 0},
-                            ]}
+                            cols={{base: 1, sm: 2}}
+                            spacing={{base: 0, sm: 'md'}}
                         >
                             <Card
                                 shadow="md"
@@ -152,9 +143,9 @@ const HowItWorksPage = (): JSX.Element => {
                                     <Image
                                         src="https://images.unsplash.com/photo-1674574124649-778f9afc0e9c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"/>
                                 </Card.Section>
-                                <Stack spacing="sm" align="start" mt="md">
+                                <Stack gap="sm" align="start" mt="md">
                                     <Text size="lg" fw={500}>Discover amazing fundraising campaigns</Text>
-                                    <Button size="md" component={Link} to="/campaigns">Fund Someone</Button>
+                                    <Button size="md">Fund Someone</Button>
                                 </Stack>
                             </Card>
                             <Card
@@ -167,7 +158,7 @@ const HowItWorksPage = (): JSX.Element => {
                                     <Image
                                         src="https://images.unsplash.com/photo-1593113598332-cd288d649433?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"/>
                                 </Card.Section>
-                                <Stack spacing="sm" align="start" mt="md">
+                                <Stack gap="sm" align="start" mt="md">
                                     <Text size="lg" fw={500}>Create your campaign</Text>
                                     <Button size="md">Start Fundraising</Button>
                                 </Stack>

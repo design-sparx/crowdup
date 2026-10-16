@@ -1,0 +1,107 @@
+.footer {
+    margin-top: rem(120px);
+    padding-top: calc(var(--mantine-spacing-xl) * 2);
+    padding-bottom: calc(var(--mantine-spacing-xl) * 2);
+    background-color: var(--mantine-color-gray-0);
+    border-top: rem(1px) solid var(--mantine-color-gray-2);
+}
+
+.logo {
+    max-width: rem(200px);
+
+    @mixin smaller-than $mantine-breakpoint-md {
+        max-width: 40%;
+    }
+
+    @mixin smaller-than $mantine-breakpoint-sm {
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.description {
+    margin-top: rem(5px);
+
+    @mixin smaller-than $mantine-breakpoint-sm {
+        margin-top: var(--mantine-spacing-xs);
+        text-align: center;
+    }
+}
+
+.inner {
+    display: flex;
+    justify-content: space-between;
+
+    @mixin smaller-than $mantine-breakpoint-sm {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.groups {
+    display: flex;
+    flex-wrap: wrap;
+
+    @mixin smaller-than $mantine-breakpoint-md {
+        margin-left: 12px;
+    }
+
+    @mixin smaller-than $mantine-breakpoint-sm {
+        display: flex;
+        width: 92vw;
+        margin-top: var(--mantine-spacing-sm);
+    }
+}
+
+.wrapper {
+    width: rem(200px);
+
+    @mixin smaller-than $mantine-breakpoint-md {
+        margin: var(--mantine-spacing-sm) 0;
+    }
+
+    @mixin smaller-than $mantine-breakpoint-sm {
+        width: 100%;
+    }
+}
+
+.link {
+    display: block;
+    color: var(--mantine-color-gray-6);
+    font-size: var(--mantine-font-size-sm);
+    padding-top: rem(3px);
+    padding-bottom: rem(3px);
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.title {
+    font-size: var(--mantine-font-size-lg);
+    font-weight: 700;
+    margin-bottom: calc(var(--mantine-spacing-xs) / 2);
+    color: var(--mantine-color-black);
+}
+
+.afterFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--mantine-spacing-xl);
+    padding-top: var(--mantine-spacing-xl);
+    padding-bottom: var(--mantine-spacing-xl);
+    border-top: rem(1px) solid var(--mantine-color-gray-2);
+
+    @mixin smaller-than $mantine-breakpoint-sm {
+        flex-direction: column;
+    }
+}
+
+.social {
+    @mixin smaller-than $mantine-breakpoint-sm {
+        margin-top: var(--mantine-spacing-xs);
+    }
+}

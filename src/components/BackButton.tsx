@@ -7,7 +7,7 @@ const BackButton = ({...others}: IProps) => {
         <Button
             variant="subtle"
             {...others}
-            leftIcon={<IconArrowLeft size={18}/>}
+            leftSection={<IconArrowLeft size={18}/>}
             onClick={() => {
                 window.history.go(-1);
                 return false;

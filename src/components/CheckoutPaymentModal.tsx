@@ -51,9 +51,9 @@ const CheckoutPaymentModal = ({...others}: IProps) => {
                 </Accordion>
 
                 <Group>
-                    <Button leftIcon={<IconBrandGoogle size={rem(18)}/>}>Google Pay</Button>
-                    <Button leftIcon={<IconApple size={rem(18)}/>}>Apple Pay</Button>
-                    <Button leftIcon={<IconBrandStripe size={rem(18)}/>}>Stripe</Button>
+                    <Button leftSection={<IconBrandGoogle size={rem(18)}/>}>Google Pay</Button>
+                    <Button leftSection={<IconApple size={rem(18)}/>}>Apple Pay</Button>
+                    <Button leftSection={<IconBrandStripe size={rem(18)}/>}>Stripe</Button>
                 </Group>
             </Paper>
             <Paper>

@@ -17,7 +17,7 @@ const GetStartedSection = ({boxProps, titleProps}: IProps) => {
         <Box {...boxProps}>
             <Flex align="center" gap={{base: 'sm', sm: 'lg'}} direction={{base: 'column-reverse', sm: 'row'}}>
                 <Stack align={matchesMobile ? 'center' : 'stretch'}>
-                    <Title {...titleProps} align={matchesMobile ? 'center' : 'start'}>Ready to get started? Join thousands of others today.</Title>
+                    <Title {...titleProps} ta={matchesMobile ? 'center' : 'start'}>Ready to get started? Join thousands of others today.</Title>
                     <Flex gap="sm">
                         <Button size="lg" variant="filled" component={Link} to="/create-campaign">Start a
                             Campaign</Button>

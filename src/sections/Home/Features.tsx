@@ -3,7 +3,6 @@ import {
     BoxProps,
     Button,
     Card,
-    createStyles,
     Image,
     PaperProps,
     SimpleGrid,
@@ -14,15 +13,8 @@ import {
     TitleProps
 } from '@mantine/core';
 import {TitleBadge} from "../../components";
-
-const useStyles = createStyles((theme) => ({
-    feature: {
-        padding: theme.spacing.lg,
-        backdropFilter: `blur(16px) saturate(180%)`,
-        backgroundColor: `rgba(255, 255, 255, 0.75)`,
-        border: `1px solid rgba(209, 213, 219, 0.3)`
-    },
-}));
+import clsx from "clsx";
+import classes from "./Features.module.css";
 
 interface FeatureProps extends PaperProps {
     image: string
@@ -63,14 +55,13 @@ const mockdata = [
 ];
 
 function Feature({image, title, description, action}: FeatureProps) {
-    const {classes, cx} = useStyles();
 
     return (
-        <Card className={cx(classes.feature, 'card')} shadow="md" radius="sm">
+        <Card className={clsx(classes.feature, 'card')} shadow="md" radius="sm">
             <Card.Section>
                 <Image src={image} height={240} fit="cover"/>
             </Card.Section>
-            <Stack spacing="sm" mt="md">
+            <Stack gap="sm" mt="md">
                 <Title order={4}>{title}</Title>
                 <Text size="sm">{description}</Text>
                 <Button variant="subtle" color="secondary">{action}</Button>
@@ -95,7 +86,7 @@ const FeaturesSection = ({boxProps, subtitleProps}: IProps) => {
                 <Text {...subtitleProps}>CrowdUp exists to support social impact projects, enterprises and founders.
                     What good can we help you start?</Text>
             </Box>
-            <SimpleGrid cols={2} spacing="lg" breakpoints={[{maxWidth: 'md', cols: 2, spacing: 'sm'}]} >
+            <SimpleGrid cols={2} spacing={{base: 'sm', md: 'lg'}}>
                 {items}
             </SimpleGrid>
         </Box>

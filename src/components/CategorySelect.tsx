@@ -1,4 +1,3 @@
-import {forwardRef} from 'react';
 import {Group, Select, Text} from "@mantine/core";
 import {
     IconAugmentedReality,
@@ -51,34 +50,28 @@ const mockdata = [
     },
 ];
 
-const CategorySelectItem = forwardRef<HTMLDivElement, any>(
-    ({title, ...others}: any, ref) => (
-        <div ref={ref} {...others}>
-            <Group noWrap>
-                <others.icon size={18}/>
-
-                <div>
-                    <Text size="sm">{title}</Text>
-                </div>
-            </Group>
-        </div>
-    )
-);
-
+const categoriesByTitle = new Map(mockdata.map(c => [c.title, c]));
+const options = mockdata.map(c => ({value: c.title, label: c.title}));
 
 const CategorySelect = () => {
     return (
         <Select
             label="Category"
-            itemComponent={CategorySelectItem}
-            data={mockdata.map(c => ({value: c.title, label: c.title, ...c}))}
+            data={options}
             searchable
             clearable
             maxDropdownHeight={300}
-            nothingFound="Nothing found"
-            filter={(value, item) =>
-                item?.title?.toLowerCase().includes(value?.toLowerCase().trim())
-            }
+            nothingFoundMessage="Nothing found"
+            renderOption={({option}) => {
+                const Icon = categoriesByTitle.get(option.value)?.icon;
+
+                return (
+                    <Group wrap="nowrap">
+                        {Icon && <Icon size={18}/>}
+                        <Text size="sm">{option.label}</Text>
+                    </Group>
+                );
+            }}
         />
     );
 };

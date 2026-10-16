@@ -1,0 +1,35 @@
+.title {
+    text-align: center;
+    font-weight: 900;
+    letter-spacing: -1px;
+    color: var(--mantine-color-black);
+
+    @mixin smaller-than $mantine-breakpoint-md {
+        font-weight: 700;
+    }
+
+    @mixin smaller-than $mantine-breakpoint-sm {
+        font-size: rem(24px);
+        text-align: left;
+    }
+}
+
+.highlight {
+    color: var(--mantine-color-primary-6);
+}
+
+.white {
+    text-align: center;
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: var(--mantine-color-gray-0);
+
+    @mixin smaller-than $mantine-breakpoint-md {
+        font-weight: 700;
+    }
+
+    @mixin smaller-than $mantine-breakpoint-sm {
+        font-size: rem(24px);
+        text-align: left;
+    }
+}

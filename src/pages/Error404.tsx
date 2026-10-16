@@ -1,7 +1,7 @@
 import { useRouteError } from "react-router-dom";
 
 const Error404Page = () => {
-    const error: any = useRouteError();
+    const error = useRouteError() as { statusText?: string; message?: string };
     console.error(error);
 
     return (

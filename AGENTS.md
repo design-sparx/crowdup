@@ -4,12 +4,12 @@ CrowdUp: a crowdfunding front-end (Vite + React 18 + TypeScript + Mantine v6). C
 
 ## Commands
 
-Yarn is the package manager (`yarn.lock`).
+pnpm is the package manager (`pnpm-lock.yaml`). Use `pnpm`, not `npm` or `yarn`.
 
-- `yarn dev` starts the Vite dev server
-- `yarn build` runs `tsc` then `vite build` (type errors fail the build)
-- `yarn lint` runs ESLint with `--max-warnings 0`, so any warning fails
-- `yarn preview` serves the production build
+- `pnpm dev` starts the Vite dev server
+- `pnpm build` runs `tsc` then `vite build` (type errors fail the build)
+- `pnpm lint` runs ESLint with `--max-warnings 0`, so any warning fails
+- `pnpm preview` serves the production build
 
 There is no test runner configured.
 
