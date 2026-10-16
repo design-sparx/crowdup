@@ -23,6 +23,7 @@ export default [
     ]),
     layout("routes/dashboard-layout.tsx", [
         route("dashboard", "routes/dashboard.tsx"),
+        route("dashboard/donations", "routes/my-donations.tsx"),
         route("create-campaign", "routes/create-campaign.tsx"),
         route("campaigns/:id/edit", "routes/edit-campaign.tsx"),
     ]),
