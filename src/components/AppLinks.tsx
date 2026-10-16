@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {Button, Flex, FlexProps} from '@mantine/core';
-import {IconFileDollar, IconFolderPlus, IconHeart, IconHome,} from '@tabler/icons-react';
+import {IconFileDollar, IconFolderPlus, IconHeart, IconHome, IconReceipt2,} from '@tabler/icons-react';
 import {Link} from "react-router";
 import clsx from "clsx";
 import classes from "./AppLinks.module.css";
@@ -8,6 +8,7 @@ import classes from "./AppLinks.module.css";
 const data = [
     {link: '/create-campaign', label: 'Create New Campaign', icon: IconFolderPlus},
     {link: '/dashboard', label: 'My Dashboard', icon: IconHome},
+    {link: '/dashboard/donations', label: 'My Donations', icon: IconReceipt2},
     {link: '', label: 'Following Campaigns', icon: IconHeart},
     {link: '', label: 'Funded Campaigns', icon: IconFileDollar},
 ];
