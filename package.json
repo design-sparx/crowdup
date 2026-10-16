@@ -33,7 +33,6 @@
     "@tiptap/extension-subscript": "^3.32.0",
     "@tiptap/extension-superscript": "^3.32.0",
     "@tiptap/extension-text-align": "^3.32.0",
-    "@tiptap/extension-underline": "^3.32.0",
     "@tiptap/html": "^3.32.0",
     "@tiptap/pm": "^3.32.0",
     "@tiptap/react": "^3.32.0",
@@ -43,13 +42,12 @@
     "dayjs": "^1.11.23",
     "embla-carousel": "^8.6.0",
     "embla-carousel-react": "8.6.0",
-    "isbot": "^5",
-    "mantine-datatable": "^9.4.0",
     "react": "^19.3.1",
     "react-apexcharts": "^2.1.1",
     "react-dom": "^19.3.1",
     "react-router": "^8.4.0",
-    "stripe": "23.0.0"
+    "stripe": "23.0.0",
+    "isbot": "^5"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
