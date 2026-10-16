@@ -22,9 +22,10 @@ pnpm dev       # Vite dev server at http://localhost:5173
 pnpm build     # tsc type-check, then production build
 pnpm lint      # ESLint, zero warnings allowed
 pnpm preview   # serve the production build
+pnpm test      # run the unit tests (vitest)
 ```
 
-There is no test runner yet. Before opening a pull request, run `pnpm build` and `pnpm lint` and make sure both pass.
+Before opening a pull request, run `pnpm lint`, `pnpm build` and `pnpm test` and make sure all three pass.
 
 For a map of the codebase (routing, barrels, where shared UI lives), read [AGENTS.md](AGENTS.md).
 
@@ -33,7 +34,62 @@ For a map of the codebase (routing, barrels, where shared UI lives), read [AGENT
 1. Fork the repository and create a branch from `main`.
 2. Keep the change focused. One concern per pull request.
 3. Follow the existing conventions: export new files from the relevant `index.ts` barrel, and name pages with a `Page` suffix.
-4. Use [Conventional Commits](https://www.conventionalcommits.org/) for commit messages, for example `feat: add campaign filter` or `fix: correct donation total`.
+4. Use [Conventional Commits](https://www.conventionalcommits.org/) for commit messages (see below).
+
+## Commit messages
+
+Release versions and the changelog are generated from commit messages by [release-please](https://github.com/googleapis/release-please). Every commit that lands on `main` (usually via squash-merged pull request titles) should follow this format:
+
+```text
+<type>(optional scope): <short summary>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+Allowed types:
+
+| Type       | Use for                                   | Changelog section  |
+| ---------- | ----------------------------------------- | ------------------ |
+| `feat`     | a new user-facing feature                 | Features           |
+| `fix`      | a bug fix                                 | Bug Fixes          |
+| `perf`     | a performance improvement                 | Performance        |
+| `docs`     | documentation only                        | Documentation      |
+| `refactor` | a code change that neither fixes nor adds | hidden             |
+| `test`     | adding or fixing tests                    | hidden             |
+| `build`    | build system or dependency changes        | hidden             |
+| `ci`       | CI configuration                          | hidden             |
+| `chore`    | maintenance that does not fit above       | hidden             |
+| `style`    | formatting only, no logic change          | hidden             |
+| `revert`   | reverting an earlier commit               | Reverts            |
+
+Examples:
+
+```text
+feat: add campaign filter
+fix(donations): correct donation total
+docs: explain release process in CONTRIBUTING
+```
+
+Mark breaking changes with a `!` after the type or a `BREAKING CHANGE:` footer:
+
+```text
+feat(api)!: rename campaign goal field
+
+BREAKING CHANGE: `goal` is now `targetAmount` in campaign JSON.
+```
+
+While the project is on `0.x`, release-please uses these rules:
+
+- a breaking change bumps the minor version (`0.1.0` -> `0.2.0`);
+- a `feat` also bumps the minor version (`0.1.0` -> `0.2.0`);
+- a `fix` or `perf` bumps the patch version (`0.1.0` -> `0.1.1`);
+- other types do not trigger a release on their own.
+
+The first major release (`1.0.0`) is a deliberate decision, so a breaking change on `0.x` does not move to `1.0.0` automatically.
+
+On every push to `main`, release-please keeps one open "release pull request" that collects the unreleased changes and updates the changelog. Merging that pull request tags the release and creates the GitHub Release.
 
 ## Opening a pull request
 
