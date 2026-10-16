@@ -1,6 +1,7 @@
 import {buildMeta} from "../helpers";
 import {CampaignDetailsPage, DetailError404Page} from "../pages";
 import {getCampaignBySlug} from "../lib/campaigns/repository";
+import {renderStoryHtml} from "../lib/campaigns/story";
 import {createPublicClient} from "../lib/supabase/server-public";
 import type {Route} from "./+types/campaign-details";
 
@@ -9,7 +10,8 @@ export async function loader({params}: Route.LoaderArgs) {
     if (!campaign) {
         throw new Response("Campaign not found", {status: 404});
     }
-    return {campaign};
+    // Rendered on the server from the allowlisted extensions only; see lib/campaigns/story.ts.
+    return {campaign, storyHtml: renderStoryHtml(campaign.story)};
 }
 
 export function meta({loaderData}: Route.MetaArgs) {
@@ -25,7 +27,7 @@ export function meta({loaderData}: Route.MetaArgs) {
 }
 
 export default function CampaignDetails({loaderData}: Route.ComponentProps) {
-    return <CampaignDetailsPage campaign={loaderData.campaign}/>;
+    return <CampaignDetailsPage campaign={loaderData.campaign} storyHtml={loaderData.storyHtml}/>;
 }
 
 export {DetailError404Page as ErrorBoundary};

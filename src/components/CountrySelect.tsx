@@ -1,20 +1,25 @@
 import countriesData from "../data/Countries.json";
-import {Avatar, ComboboxItem, Group, Select, Text} from "@mantine/core";
+import {Avatar, ComboboxItem, Group, Select, SelectProps, Text} from "@mantine/core";
 
 const countriesByName = new Map(countriesData.data.map(c => [c.name, c]));
-const options = countriesData.data.map(c => ({value: c.name, label: c.name}));
+const countriesByCode = new Map(countriesData.data.map(c => [c.code, c]));
+const nameOptions = countriesData.data.map(c => ({value: c.name, label: c.name}));
+const codeOptions = countriesData.data.map(c => ({value: c.code, label: c.name}));
 
-const CountrySelect = () => {
+/** `byCode` makes the value the ISO 3166 alpha-2 code (what the database stores). */
+const CountrySelect = ({byCode, ...props}: Omit<SelectProps, "data"> & {byCode?: boolean}) => {
+    const lookup = byCode ? countriesByCode : countriesByName;
     return (
         <Select
             label="Country"
-            data={options}
+            data={byCode ? codeOptions : nameOptions}
             searchable
             clearable
             maxDropdownHeight={300}
             nothingFoundMessage="Nothing found"
+            {...props}
             renderOption={({option}) => {
-                const country = countriesByName.get(option.value);
+                const country = lookup.get(option.value);
 
                 return (
                     <Group wrap="nowrap">
@@ -33,7 +38,7 @@ const CountrySelect = () => {
                 const query = search.toLowerCase().trim();
 
                 return (options as ComboboxItem[]).filter(option => {
-                    const country = countriesByName.get(option.value);
+                    const country = lookup.get(option.value);
 
                     return country?.name.toLowerCase().includes(query) ||
                         country?.code.toLowerCase().includes(query);

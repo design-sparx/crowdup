@@ -25,6 +25,7 @@ import SearchDrawer from "./SearchDrawer";
 import AppNavbar from "./AppNavbar";
 import LegalDocument from "./LegalDocument";
 import SignupConsent from "./SignupConsent";
+import CampaignForm from "./CampaignForm";
 
 export {
     LandingNavbar,
@@ -53,5 +54,6 @@ export {
     SearchDrawer,
     AppNavbar,
     LegalDocument,
-    SignupConsent
+    SignupConsent,
+    CampaignForm
 };

@@ -26,6 +26,20 @@ export async function requireUser(request: Request) {
     return {user, headers};
 }
 
+/**
+ * Like requireUser, but also returns the cookie-bound Supabase client so data-access calls
+ * run as the signed-in user and row-level security applies.
+ */
+export async function requireUserClient(request: Request) {
+    const {supabase, headers} = createSupabaseServerClient(request);
+    const {data} = await supabase.auth.getUser();
+    if (!data.user) {
+        const url = new URL(request.url);
+        throw redirect(`/login?next=${encodeURIComponent(url.pathname + url.search)}`);
+    }
+    return {user: data.user, supabase, headers};
+}
+
 export function isGoogleEnabled(request: Request): boolean {
     return createSupabaseServerClient(request).config.googleEnabled;
 }
