@@ -28,8 +28,8 @@ import {
 import {IconFlag, IconHeart, IconHeartFilled, IconSeparator, IconShare} from "@tabler/icons-react";
 import {useDisclosure, useMediaQuery, useToggle} from "@mantine/hooks";
 import {BackButton, DonationDrawer, NotFound, ShareModal, UserCard} from "../components";
-import * as dayjs from "dayjs";
-import * as LocalizedFormat from "dayjs/plugin/localizedFormat"
+import dayjs from "dayjs";
+import LocalizedFormat from "dayjs/plugin/localizedFormat";
 import {notifications} from "@mantine/notifications";
 
 const CampaignDetailsPage = () => {

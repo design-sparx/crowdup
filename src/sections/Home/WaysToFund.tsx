@@ -3,7 +3,6 @@ import {
     BoxProps,
     Card,
     Container,
-    createStyles,
     Grid,
     Image,
     SimpleGrid,
@@ -15,19 +14,8 @@ import {
 } from "@mantine/core";
 import {TitleBadge} from "../../components";
 import {Link} from "react-router-dom";
-
-const useStyles = createStyles((theme) => ({
-    feature: {
-        padding: theme.spacing.lg,
-        backdropFilter: `blur(16px) saturate(180%)`,
-        backgroundColor: `rgba(255, 255, 255, 0.75)`,
-        border: `none`,
-
-        '&:hover': {
-            backgroundColor: theme.colors.secondary[2]
-        }
-    },
-}));
+import clsx from "clsx";
+import classes from "./WaysToFund.module.css";
 
 interface IProps {
     boxProps: BoxProps
@@ -36,10 +24,9 @@ interface IProps {
 }
 
 const WaysToFundSection = ({boxProps, subtitleProps}: IProps) => {
-    const {classes, cx, theme} = useStyles();
 
     return (
-        <Box style={{background: theme.colors.secondary[8], color: theme.white}} {...boxProps}>
+        <Box className={classes.root} {...boxProps}>
             <Container fluid p={36}>
                 <Grid>
                     <Grid.Col span={{base: 12, lg: 4}}>
@@ -54,7 +41,7 @@ const WaysToFundSection = ({boxProps, subtitleProps}: IProps) => {
                     <Grid.Col span={{base: 12, lg: 8}}>
                         <SimpleGrid cols={{base: 1, sm: 3}}>
                             <Card
-                                className={cx(classes.feature, 'card')}
+                                className={clsx(classes.feature, 'card')}
                                 shadow="md"
                                 radius="sm"
                                 component={Link}
@@ -67,7 +54,7 @@ const WaysToFundSection = ({boxProps, subtitleProps}: IProps) => {
                                 <Text mt="md" ta="center" {...subtitleProps}>Yourself</Text>
                             </Card>
                             <Card
-                                className={cx(classes.feature, 'card')}
+                                className={clsx(classes.feature, 'card')}
                                 shadow="md"
                                 radius="sm"
                                 component={Link}
@@ -80,7 +67,7 @@ const WaysToFundSection = ({boxProps, subtitleProps}: IProps) => {
                                 <Text mt="md" ta="center" {...subtitleProps}>Friends & Family</Text>
                             </Card>
                             <Card
-                                className={cx(classes.feature, 'card')}
+                                className={clsx(classes.feature, 'card')}
                                 shadow="md"
                                 radius="sm"
                                 component={Link}

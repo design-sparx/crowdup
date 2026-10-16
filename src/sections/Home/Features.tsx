@@ -3,7 +3,6 @@ import {
     BoxProps,
     Button,
     Card,
-    createStyles,
     Image,
     PaperProps,
     SimpleGrid,
@@ -14,15 +13,8 @@ import {
     TitleProps
 } from '@mantine/core';
 import {TitleBadge} from "../../components";
-
-const useStyles = createStyles((theme) => ({
-    feature: {
-        padding: theme.spacing.lg,
-        backdropFilter: `blur(16px) saturate(180%)`,
-        backgroundColor: `rgba(255, 255, 255, 0.75)`,
-        border: `1px solid rgba(209, 213, 219, 0.3)`
-    },
-}));
+import clsx from "clsx";
+import classes from "./Features.module.css";
 
 interface FeatureProps extends PaperProps {
     image: string
@@ -63,10 +55,9 @@ const mockdata = [
 ];
 
 function Feature({image, title, description, action}: FeatureProps) {
-    const {classes, cx} = useStyles();
 
     return (
-        <Card className={cx(classes.feature, 'card')} shadow="md" radius="sm">
+        <Card className={clsx(classes.feature, 'card')} shadow="md" radius="sm">
             <Card.Section>
                 <Image src={image} height={240} fit="cover"/>
             </Card.Section>

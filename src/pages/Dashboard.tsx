@@ -3,12 +3,10 @@ import {
     Button,
     Card,
     Container,
-    createStyles,
     Flex,
     Group,
     Paper,
     PaperProps,
-    rem,
     SimpleGrid,
     Stack,
     Text,
@@ -25,37 +23,9 @@ import {
 } from "@tabler/icons-react";
 import {CampaignsTable, DonatorsTable, YearlyDonationChart} from "../components";
 import {Link} from "react-router-dom";
-
-const useStyles = createStyles((theme) => ({
-    root: {
-        padding: `calc(${theme.spacing.xl} * 1.5)`,
-    },
-
-    value: {
-        fontSize: rem(24),
-        fontWeight: 700,
-        lineHeight: 1,
-    },
-
-    diff: {
-        lineHeight: 1,
-        display: 'flex',
-        alignItems: 'center',
-    },
-
-    icon: {
-        color: theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[5],
-    },
-
-    title: {
-        fontWeight: 700,
-        textTransform: 'uppercase',
-    },
-}));
+import classes from "./Dashboard.module.css";
 
 const DashboardPage = () => {
-    const {classes} = useStyles();
-
     const paperProps: PaperProps = {
         p: "md",
         shadow: "sm"
