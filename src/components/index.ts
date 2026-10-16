@@ -14,7 +14,6 @@ import DonationsChart from "./DonationsChart";
 import OrganiserCampaignsTable from "./OrganiserCampaignsTable";
 import RecentDonorsTable from "./RecentDonorsTable";
 import AppLinks from "./AppLinks";
-import CheckoutPaymentModal from "./CheckoutPaymentModal";
 import FileDropzone from "./FileDropzone";
 import CountrySelect from "./CountrySelect";
 import CurrencySelect from "./CurrencySelect";
@@ -45,7 +44,6 @@ export {
     OrganiserCampaignsTable,
     RecentDonorsTable,
     AppLinks,
-    CheckoutPaymentModal,
     FileDropzone,
     CountrySelect,
     CurrencySelect,
