@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Avatar, createStyles, Group, Menu, Text, UnstyledButton} from '@mantine/core';
+import {Avatar, Group, Menu, Text, UnstyledButton} from '@mantine/core';
 import {
     IconChevronRight,
     IconHeart,
@@ -12,25 +12,10 @@ import {
     IconTrash
 } from '@tabler/icons-react';
 import userData from "../data/User.json"
-
-const useStyles = createStyles((theme) => ({
-    user: {
-        display: 'block',
-        width: '100%',
-        padding: theme.spacing.md,
-        color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
-
-        '&:hover': {
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
-        },
-    },
-    userActive: {
-        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
-    },
-}));
+import clsx from "clsx";
+import classes from "./UserButton.module.css";
 
 const UserButton = () => {
-    const {classes, theme, cx} = useStyles();
     const [userMenuOpened, setUserMenuOpened] = useState(false);
 
     return (
@@ -43,7 +28,7 @@ const UserButton = () => {
             withinPortal
         >
             <Menu.Target>
-                <UnstyledButton className={cx(classes.user, {[classes.userActive]: userMenuOpened})}>
+                <UnstyledButton className={clsx(classes.user, {[classes.userActive]: userMenuOpened})}>
                     <Group>
                         <Avatar src={userData?.avatar} radius="xl"/>
 
@@ -63,17 +48,17 @@ const UserButton = () => {
             </Menu.Target>
             <Menu.Dropdown>
                 <Menu.Item
-                    leftSection={<IconHeart size="0.9rem" color={theme.colors.red[6]} stroke={1.5}/>}
+                    leftSection={<IconHeart size="0.9rem" color="var(--mantine-color-red-6)" stroke={1.5}/>}
                 >
                     Liked posts
                 </Menu.Item>
                 <Menu.Item
-                    leftSection={<IconStar size="0.9rem" color={theme.colors.yellow[6]} stroke={1.5}/>}
+                    leftSection={<IconStar size="0.9rem" color="var(--mantine-color-yellow-6)" stroke={1.5}/>}
                 >
                     Saved posts
                 </Menu.Item>
                 <Menu.Item
-                    leftSection={<IconMessage size="0.9rem" color={theme.colors.blue[6]} stroke={1.5}/>}
+                    leftSection={<IconMessage size="0.9rem" color="var(--mantine-color-blue-6)" stroke={1.5}/>}
                 >
                     Your comments
                 </Menu.Item>

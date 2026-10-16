@@ -6,13 +6,10 @@ import {
     Center,
     Collapse,
     Container,
-    createStyles,
     Divider,
     Drawer,
     Flex,
-    getStylesRef,
     Group,
-    Header,
     HoverCard,
     rem,
     ScrollArea,
@@ -38,95 +35,7 @@ import {
 import {useEffect, useState} from "react";
 import {BrandName, SearchDrawer} from "./index";
 import {Link} from "react-router-dom";
-
-const useStyles = createStyles((theme) => ({
-    link: {
-        display: 'flex',
-        alignItems: 'center',
-        height: '100%',
-        paddingLeft: theme.spacing.md,
-        paddingRight: theme.spacing.md,
-        textDecoration: 'none',
-        color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-        fontWeight: 500,
-        fontSize: theme.fontSizes.sm,
-
-        [theme.fn.smallerThan('md')]: {
-            height: rem(42),
-            display: 'flex',
-            alignItems: 'center',
-            width: '100%',
-        },
-
-        '&:hover': {
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.primary[6],
-            color: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-            fontWeight: 600,
-
-            [`& .${getStylesRef('icon')}`]: {
-                color: theme.colorScheme === 'dark' ? theme.black : theme.white,
-            },
-        },
-    },
-
-    subLink: {
-        width: '100%',
-        padding: `${theme.spacing.xs} ${theme.spacing.md}`,
-        borderRadius: theme.radius.md,
-
-        ...theme.fn.hover({
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.primary[0],
-        }),
-
-        '&:active': theme.activeStyles,
-    },
-
-    dropdownFooter: {
-        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
-        margin: `calc(${theme.spacing.md} * -1)`,
-        marginTop: theme.spacing.sm,
-        padding: `${theme.spacing.md} calc(${theme.spacing.md} * 2)`,
-        paddingBottom: theme.spacing.xl,
-        borderTop: `${rem(1)} solid ${
-            theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1]
-        }`,
-    },
-
-    title: {
-        textAlign: 'center',
-        fontWeight: 800,
-        fontSize: rem(40),
-        letterSpacing: -1,
-        color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-        marginBottom: theme.spacing.xs,
-
-        [theme.fn.smallerThan('sm')]: {
-            fontSize: rem(28),
-            textAlign: 'left',
-        },
-    },
-
-    highlight: {
-        color: theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 4 : 6],
-    },
-
-    linkIcon: {
-        ref: getStylesRef('icon'),
-        color: theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.secondary[6],
-    },
-
-    hiddenMobile: {
-        [theme.fn.smallerThan('md')]: {
-            display: 'none',
-        },
-    },
-
-    hiddenDesktop: {
-        [theme.fn.largerThan('md')]: {
-            display: 'none',
-        },
-    },
-}));
+import classes from "./LandingNavbar.module.css";
 
 const mockdata = [
     {
@@ -175,7 +84,6 @@ const LandingNavbar = ({compressed}: IProps) => {
     const [drawerOpened, {toggle: toggleDrawer, close: closeDrawer}] = useDisclosure(false);
     const [linksOpened, {toggle: toggleLinks}] = useDisclosure(false);
     const [searchOpened, {toggle: toggleSearchDrawer, close: closeSearchDrawer}] = useDisclosure(false);
-    const {classes, theme} = useStyles();
     const [stickyClass, setStickyClass] = useState(false);
     const matchesMobile = useMediaQuery('(max-width: 768px)');
 
@@ -183,7 +91,7 @@ const LandingNavbar = ({compressed}: IProps) => {
         <UnstyledButton className={classes.subLink} key={item.title}>
             <Group wrap="nowrap" align="center">
                 <ThemeIcon size={34} variant="default" radius="md">
-                    <item.icon size={rem(22)} stroke={1.5} color={theme.fn.primaryColor()}/>
+                    <item.icon size={rem(22)} stroke={1.5} color="var(--mantine-primary-color-filled)"/>
                 </ThemeIcon>
                 <div>
                     <Text size="sm" fw={500}>
@@ -226,16 +134,14 @@ const LandingNavbar = ({compressed}: IProps) => {
                 zIndex: 2,
                 margin: "auto",
                 width: compressed ? (stickyClass ? "100%" : "85%") : "100%",
-                boxShadow: theme.shadows.sm,
+                boxShadow: 'var(--mantine-shadow-sm)',
             }}>
-            <Header
-                height={60}
+            <Box
+                h={60}
                 px="md"
-                style={{
-                    backgroundColor: stickyClass ? 'rgba( 255, 255, 255, .9 )' : theme.white,
-                    backdropFilter: 'blur(4px)',
-                    borderRadius: stickyClass ? 0 : theme.radius.sm
-                }}>
+                className={classes.header}
+                data-sticky={stickyClass || undefined}
+            >
                 <Container size="lg" fluid={compressed} style={{height: '100%'}}>
                     <Flex justify="space-between" align="center" style={{height: '100%'}}>
                         <BrandName size={28} asLink/>
@@ -267,7 +173,7 @@ const LandingNavbar = ({compressed}: IProps) => {
                                     <Divider
                                         my="sm"
                                         mx="-md"
-                                        color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'}
+                                        color="gray.1"
                                     />
 
                                     <SimpleGrid cols={3} spacing={0}>
@@ -293,7 +199,7 @@ const LandingNavbar = ({compressed}: IProps) => {
                         <Burger opened={drawerOpened} onClick={toggleDrawer} className={classes.hiddenDesktop}/>
                     </Flex>
                 </Container>
-            </Header>
+            </Box>
 
             <Drawer
                 opened={drawerOpened}
@@ -305,7 +211,7 @@ const LandingNavbar = ({compressed}: IProps) => {
                 zIndex={1000000}
             >
                 <ScrollArea h={`calc(100vh - ${rem(0)})`} mx="-md">
-                    <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'}/>
+                    <Divider my="sm" color="gray.1"/>
 
                     <Button component={Link} to="/" className={classes.link} {...buttonProps}>
                         Home

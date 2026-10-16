@@ -11,7 +11,7 @@
     margin-bottom: calc(var(--mantine-spacing-xl) * 1.5);
     color: var(--mantine-color-gray-2);
 
-    @media (max-width: $mantine-breakpoint-sm) {
+    @mixin smaller-than $mantine-breakpoint-sm {
         font-size: rem(120px);
     }
 }
@@ -22,7 +22,7 @@
     font-size: rem(38px);
     margin-bottom: var(--mantine-spacing-lg);
 
-    @media (max-width: $mantine-breakpoint-sm) {
+    @mixin smaller-than $mantine-breakpoint-sm {
         font-size: rem(32px);
     }
 }
@@ -35,7 +35,7 @@
 }
 
 .control {
-    @media (max-width: $mantine-breakpoint-sm) {
+    @mixin smaller-than $mantine-breakpoint-sm {
         width: 100%;
     }
 }

@@ -1,26 +1,19 @@
-import {AppShell, useMantineTheme} from '@mantine/core';
+import {AppShell} from '@mantine/core';
 import {Outlet} from 'react-router-dom'
 import {AppNavbar} from "../components";
+import classes from "./Dashboard.module.css";
 
 const DashboardLayout = () => {
-    const theme = useMantineTheme();
-
     return (
-        <>
-            <AppShell
-                styles={{
-                    main: {
-                        background: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[1],
-                    },
-                }}
-                navbarOffsetBreakpoint="sm"
-                asideOffsetBreakpoint="sm"
-                navbar={<></>}
-                header={<AppNavbar/>}
-            >
+        <AppShell
+            header={{height: {base: 50, md: 70}}}
+            classNames={{main: classes.main}}
+        >
+            <AppNavbar/>
+            <AppShell.Main>
                 <Outlet/>
-            </AppShell>
-        </>
+            </AppShell.Main>
+        </AppShell>
     );
 }
 
