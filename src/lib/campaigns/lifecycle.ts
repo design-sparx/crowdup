@@ -1,5 +1,6 @@
 /**
- * Campaign lifecycle rules. Stored status is draft | live | closed | suspended. A live
+ * Campaign lifecycle rules. Stored status is draft | pending_approval | rejected | live | closed | suspended
+ * (transitions: ./transitions.ts). A live
  * campaign past its end date is treated as "ended" at read time; the database function
  * `close_expired_campaigns()` additionally persists it as closed. The funding goal is
  * deliberately not a cap: donations continue past 100%.

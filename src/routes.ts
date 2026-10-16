@@ -32,5 +32,6 @@ export default [
         route("admin/reports", "routes/admin-reports.tsx"),
         route("admin/campaigns", "routes/admin-campaigns.tsx"),
         route("admin/users", "routes/admin-users.tsx"),
+        route("admin/approvals", "routes/admin-approvals.tsx"),
     ]),
 ] satisfies RouteConfig;

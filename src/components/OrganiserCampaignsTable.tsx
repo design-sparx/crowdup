@@ -3,9 +3,10 @@ import {IconEdit, IconExternalLink} from "@tabler/icons-react";
 import {Link} from "react-router";
 import {formatMinorAmount} from "../helpers/formatAmount";
 import {campaignSuspensionNotice} from "../lib/moderation/moderation";
+import {statusLabel} from "../lib/campaigns/transitions";
 import type {CampaignStats} from "../lib/dashboard/dashboard";
 
-const STATUS_COLOR: Record<string, string> = {draft: "gray", live: "green", closed: "blue", suspended: "red"};
+const STATUS_COLOR: Record<string, string> = {draft: "gray", pending_approval: "yellow", rejected: "orange", live: "green", closed: "blue", suspended: "red"};
 
 const OrganiserCampaignsTable = ({campaigns}: {campaigns: CampaignStats[]}) => (
     <Table.ScrollContainer minWidth={640}>
@@ -29,7 +30,7 @@ const OrganiserCampaignsTable = ({campaigns}: {campaigns: CampaignStats[]}) => (
                             )}
                         </Table.Td>
                         <Table.Td>
-                            <Badge color={STATUS_COLOR[c.status] ?? "gray"} variant="light">{c.status}</Badge>
+                            <Badge color={STATUS_COLOR[c.status] ?? "gray"} variant="light">{statusLabel(c.status)}</Badge>
                         </Table.Td>
                         <Table.Td>
                             <Stack gap={4}>

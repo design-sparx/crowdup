@@ -43,3 +43,12 @@ describe("effectiveStatus", () => {
         expect(effectiveStatus({status, endDate: past}, now)).toBe(status);
     });
 });
+
+describe("moderation statuses", () => {
+    it("never accept donations and are not rewritten by the end date", () => {
+        for (const status of ["pending_approval", "rejected", "draft", "suspended", "closed"]) {
+            expect(canAcceptDonations({status, endDate: future}, now)).toBe(false);
+            expect(effectiveStatus({status, endDate: past}, now)).toBe(status);
+        }
+    });
+});

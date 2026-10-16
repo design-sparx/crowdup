@@ -10,6 +10,8 @@ export interface DashboardCampaign {
     goalAmount: number;
     /** Moderator's reason while the campaign is suspended. */
     suspendedReason?: string | null;
+    /** Set while status is rejected. */
+    rejectionReason?: string | null;
 }
 
 /** A confirmed donation as the organiser may see it (from the `public_donation` view). */

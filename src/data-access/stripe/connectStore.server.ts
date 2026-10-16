@@ -61,5 +61,16 @@ export function supabaseConnectStore(db: SupabaseClient): ConnectStore {
             if (error) fail(error);
             return (data ?? []).length > 0;
         },
+        async submitForApproval(campaignId, currency) {
+            // Same race-safe shape as publish: only a draft can be submitted.
+            const {data, error} = await db
+                .from("campaign")
+                .update({status: "pending_approval", currency})
+                .eq("id", campaignId)
+                .eq("status", "draft")
+                .select("id");
+            if (error) fail(error);
+            return (data ?? []).length > 0;
+        },
     };
 }

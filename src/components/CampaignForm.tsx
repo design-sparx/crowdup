@@ -41,11 +41,12 @@ interface Props {
     values: CampaignFormValues;
     errors?: CampaignFormErrors & {form?: string; cover?: string};
     status?: string;
+    rejectionReason?: string | null;
     saved?: boolean;
     publish?: string | null;
 }
 
-const CampaignForm = ({mode, values, errors = {}, status, saved, publish}: Props) => {
+const CampaignForm = ({mode, values, errors = {}, status, rejectionReason, saved, publish}: Props) => {
     const navigation = useNavigation();
     const saving = navigation.state !== "idle";
     const [story, setStory] = useState(() => JSON.stringify(values.story ?? {type: "doc", content: []}));
@@ -56,7 +57,7 @@ const CampaignForm = ({mode, values, errors = {}, status, saved, publish}: Props
         onUpdate: ({editor}) => setStory(JSON.stringify(editor.getJSON())),
     });
     const paper = {p: "md", shadow: "sm", mb: "md"} as const;
-    const locked = status === "suspended";
+    const locked = status === "suspended" || status === "pending_approval";
 
     return (
         <Form method="post" encType="multipart/form-data">
@@ -69,8 +70,20 @@ const CampaignForm = ({mode, values, errors = {}, status, saved, publish}: Props
             {publish === "not_connected" && (
                 <Alert color="yellow" mb="md">Connect your Stripe account from the dashboard to publish this campaign.</Alert>
             )}
-            {locked && (
+            {status === "suspended" && (
                 <Alert color="red" mb="md">This campaign is suspended and cannot be edited.</Alert>
+            )}
+            {status === "pending_approval" && (
+                <Alert color="yellow" mb="md" data-testid="pending-alert">
+                    This campaign is waiting for administrator approval and cannot be edited meanwhile.
+                </Alert>
+            )}
+            {status === "rejected" && (
+                <Alert color="orange" mb="md" title="Rejected by an administrator" data-testid="rejected-alert">
+                    {rejectionReason}
+                    <br/>
+                    Saving your edits reopens it as a draft; then publish it again to resubmit.
+                </Alert>
             )}
             {errors.form && <Alert color="red" mb="md">{errors.form}</Alert>}
 

@@ -34,6 +34,8 @@ export interface ConnectStore {
     listDrafts(ownerId: string): Promise<{id: string}[]>;
     /** Moves a draft to live and fixes its currency. Returns false if it was no longer a draft. */
     publish(campaignId: string, currency: string): Promise<boolean>;
+    /** Moves a draft to pending_approval and fixes its currency. Returns false if it was no longer a draft. */
+    submitForApproval(campaignId: string, currency: string): Promise<boolean>;
 }
 
 /** Returns the Stripe-hosted onboarding URL, creating the connected account on first use. */
@@ -68,6 +70,8 @@ export interface SyncResult {
     status: OnboardingStatus;
     currency: string | null;
     published: number;
+    /** Drafts moved to pending_approval (approval mode). */
+    submitted: number;
 }
 
 /**
@@ -81,7 +85,7 @@ export async function syncAccountStatus(p: {
     mode: PublishingMode;
 }): Promise<SyncResult> {
     const profile = await p.store.getProfile(p.userId);
-    if (!profile?.stripeAccountId) return {status: "not_started", currency: null, published: 0};
+    if (!profile?.stripeAccountId) return {status: "not_started", currency: null, published: 0, submitted: 0};
 
     const account = await p.api.retrieveAccount(profile.stripeAccountId);
     const complete = isOnboardingComplete(account);
@@ -89,6 +93,7 @@ export async function syncAccountStatus(p: {
     await p.store.saveStatus(p.userId, {complete, currency});
 
     let published = 0;
+    let submitted = 0;
     if (complete && currency) {
         for (const draft of await p.store.listDrafts(p.userId)) {
             const decision = goLiveDecision({
@@ -98,9 +103,10 @@ export async function syncAccountStatus(p: {
                 ownerSuspended: profile.suspended,
             });
             if (decision === "go_live" && (await p.store.publish(draft.id, currency))) published++;
+            if (decision === "await_approval" && (await p.store.submitForApproval(draft.id, currency))) submitted++;
         }
     }
-    return {status: onboardingStatus({accountId: profile.stripeAccountId, complete}), currency, published};
+    return {status: onboardingStatus({accountId: profile.stripeAccountId, complete}), currency, published, submitted};
 }
 
 export type PublishResult = "live" | "awaiting_approval" | "not_connected" | "not_found";
@@ -127,7 +133,9 @@ export async function publishOwnDraft(p: {
         campaignStatus: "draft",
         ownerSuspended: profile.suspended,
     });
-    if (decision === "await_approval") return "awaiting_approval";
     if (decision === "none") return "not_found";
+    if (decision === "await_approval") {
+        return (await p.store.submitForApproval(p.campaignId, currency)) ? "awaiting_approval" : "not_found";
+    }
     return (await p.store.publish(p.campaignId, currency)) ? "live" : "not_found";
 }

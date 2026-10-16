@@ -19,6 +19,7 @@ interface CampaignRow {
     currency: string | null;
     goal_amount: number;
     suspended_reason: string | null;
+    rejection_reason: string | null;
 }
 
 interface DonationRow {
@@ -41,7 +42,7 @@ export async function getDashboardData(
 ): Promise<{campaigns: DashboardCampaign[]; donations: DashboardDonation[]}> {
     const campaignRes = await client
         .from("campaign")
-        .select("id, slug, title, status, currency, goal_amount, suspended_reason")
+        .select("id, slug, title, status, currency, goal_amount, suspended_reason, rejection_reason")
         .eq("owner_id", userId)
         .order("created_at", {ascending: false});
     if (campaignRes.error) fail(campaignRes.error);
@@ -54,6 +55,7 @@ export async function getDashboardData(
         currency: r.currency,
         goalAmount: Number(r.goal_amount),
         suspendedReason: r.suspended_reason,
+        rejectionReason: r.rejection_reason,
     }));
     if (campaigns.length === 0) return {campaigns, donations: []};
 

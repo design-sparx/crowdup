@@ -17,6 +17,7 @@ import SecurityPage from "./Security";
 import AdminReportsPage from "./AdminReports";
 import AdminCampaignsPage from "./AdminCampaigns";
 import AdminUsersPage from "./AdminUsers";
+import AdminApprovalsPage from "./AdminApprovals";
 
 export {
     HomePage,
@@ -37,5 +38,6 @@ export {
     SecurityPage,
     AdminReportsPage,
     AdminCampaignsPage,
-    AdminUsersPage
+    AdminUsersPage,
+    AdminApprovalsPage
 }

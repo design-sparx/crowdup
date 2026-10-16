@@ -28,6 +28,7 @@ export function goLiveDecision(p: {
 /** Plain-language reason shown to the organiser for a campaign's current state. */
 export function campaignLiveExplanation(p: {
     status: string;
+    rejectionReason?: string | null;
     onboarding: OnboardingStatus;
     mode: PublishingMode;
 }): string {
@@ -38,9 +39,13 @@ export function campaignLiveExplanation(p: {
             return "Closed. It no longer accepts donations.";
         case "suspended":
             return "Suspended by an administrator.";
+        case "pending_approval":
+            return "Waiting for administrator approval. You cannot edit it while it is under review.";
+        case "rejected":
+            return `Rejected by an administrator${p.rejectionReason ? `: ${p.rejectionReason}` : "."} Edit it to resubmit.`;
     }
     if (p.onboarding === "not_started") return "Draft. Connect your Stripe account to publish it.";
-    if (p.onboarding === "incomplete") return "Draft. Finish Stripe onboarding and it goes live automatically.";
-    if (p.mode === "approval") return "Draft. Waiting for administrator approval before it goes live.";
+    if (p.onboarding === "incomplete") return p.mode === "approval" ? "Draft. Finish Stripe onboarding and it is sent for administrator approval." : "Draft. Finish Stripe onboarding and it goes live automatically.";
+    if (p.mode === "approval") return "Draft. Publish it to send it for administrator approval.";
     return "Draft. It goes live automatically; refresh your status if it does not.";
 }

@@ -29,7 +29,7 @@ describe("goLiveDecision", () => {
         expect(goLiveDecision({...base, onboardingComplete: false, mode: "approval"})).toBe("none");
     });
     it("only ever acts on drafts", () => {
-        for (const campaignStatus of ["live", "closed", "suspended"] as const) {
+        for (const campaignStatus of ["pending_approval", "rejected", "live", "closed", "suspended"] as const) {
             expect(goLiveDecision({...base, campaignStatus})).toBe("none");
         }
     });
@@ -43,8 +43,10 @@ describe("campaignLiveExplanation", () => {
         expect(campaignLiveExplanation({status: "live", onboarding: "connected", mode: "auto"})).toMatch(/live/i);
         expect(campaignLiveExplanation({status: "draft", onboarding: "not_started", mode: "auto"})).toMatch(/connect/i);
         expect(campaignLiveExplanation({status: "draft", onboarding: "incomplete", mode: "auto"})).toMatch(/finish/i);
-        expect(campaignLiveExplanation({status: "draft", onboarding: "connected", mode: "approval"})).toMatch(/approval/i);
+        expect(campaignLiveExplanation({status: "draft", onboarding: "connected", mode: "approval"})).toMatch(/send it for administrator approval/i);
         expect(campaignLiveExplanation({status: "draft", onboarding: "connected", mode: "auto"})).toMatch(/automatically/i);
+        expect(campaignLiveExplanation({status: "pending_approval", onboarding: "connected", mode: "approval"})).toMatch(/waiting/i);
+        expect(campaignLiveExplanation({status: "rejected", rejectionReason: "Blurry cover", onboarding: "connected", mode: "approval"})).toMatch(/Blurry cover/);
         expect(campaignLiveExplanation({status: "suspended", onboarding: "connected", mode: "auto"})).toMatch(/suspended/i);
         expect(campaignLiveExplanation({status: "closed", onboarding: "connected", mode: "auto"})).toMatch(/closed/i);
     });
