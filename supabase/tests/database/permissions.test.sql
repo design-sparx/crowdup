@@ -12,7 +12,7 @@
 
 begin;
 
-select plan(94);
+select plan(97);
 
 -- Helpers, scoped to this session.
 
@@ -632,6 +632,29 @@ select is(
     values ('10000000-0000-4000-8000-000000000001', 100, 'KES', 'pending', 'evt_test_live_0001')$$),
   null,
   'a new pending donation on a live campaign is accepted'
+);
+
+-- Donation checkout (ticket 18): donor_user_id and flagged_reason.
+
+select pg_temp.become(null, 'service_role');
+select is(
+  pg_temp.sqlstate_of($$insert into public.donation (campaign_id, amount, currency, status, stripe_event_id, confirmed_at, donor_user_id, flagged_reason)
+    values ('10000000-0000-4000-8000-000000000005', 700, 'KES', 'confirmed', 'evt_test_flag_0001', now(),
+            '00000000-0000-4000-8000-000000000005', 'campaign not live at payment time')$$),
+  null,
+  'service role records a signed-in donor and a flag, even on a closed campaign (money already moved)'
+);
+select pg_temp.become(null, 'anon');
+select is(
+  pg_temp.sqlstate_of('select donor_user_id from public.public_donation'),
+  '42703',
+  'the public donor list does not expose the donor user id'
+);
+select pg_temp.become('00000000-0000-4000-8000-000000000005', 'authenticated');
+select is(
+  pg_temp.sqlstate_of('select donor_user_id, flagged_reason from public.donation'),
+  '42501',
+  'a signed-in donor cannot read the donation table, so donor ids and flags stay private'
 );
 
 select * from finish();

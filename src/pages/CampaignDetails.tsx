@@ -1,8 +1,10 @@
 import type {CampaignDetails} from "../lib/campaigns/types";
-import type {CampaignUpdate} from "../lib/campaigns/repository";
+import type {CampaignUpdate, RecentDonor} from "../lib/campaigns/repository";
 import {formatMinorAmount} from "../helpers";
+import {formatMinor} from "../lib/donations/amount";
 import {
     Accordion,
+    Alert,
     ActionIcon,
     Anchor,
     Avatar,
@@ -39,9 +41,11 @@ interface DetailsProps {
     updates?: CampaignUpdate[];
     ended?: boolean;
     acceptingDonations?: boolean;
+    donors?: RecentDonor[];
+    donationReturn?: "success" | "cancelled" | null;
 }
 
-const CampaignDetailsPage = ({campaign, storyHtml = "", updates = [], ended = false, acceptingDonations = true}: DetailsProps) => {
+const CampaignDetailsPage = ({campaign, storyHtml = "", updates = [], ended = false, acceptingDonations = true, donors = [], donationReturn = null}: DetailsProps) => {
     dayjs.extend(LocalizedFormat)
     const [opened, {open, close}] = useDisclosure(false);
     const [donateOpened, {open: donateOpen, close: donateClose}] = useDisclosure(false);
@@ -84,6 +88,14 @@ const CampaignDetailsPage = ({campaign, storyHtml = "", updates = [], ended = fa
                                     <Stack mt="md">
                                         <Title>{campaign.title}</Title>
                                         {ended && <Text c="red" fw={600}>This campaign has ended.</Text>}
+                                        {donationReturn === "success" && (
+                                            <Alert color="green" title="Thank you for your donation!" role="status">
+                                                Your payment is being confirmed. The total above updates as soon as it is.
+                                            </Alert>
+                                        )}
+                                        {donationReturn === "cancelled" && (
+                                            <Alert color="gray" role="status">Your donation was cancelled. You have not been charged.</Alert>
+                                        )}
                                         {!matchesMobile ?
                                             <Flex gap="xs" align="center">
                                                 <Text size="sm">Fundraise campaign created by</Text>
@@ -135,7 +147,7 @@ const CampaignDetailsPage = ({campaign, storyHtml = "", updates = [], ended = fa
                                                 <Text fw={500}>{campaign.donorCount} Donors</Text>
                                             </Flex>
                                             <Flex align="center" gap="xs">
-                                                <Button onClick={donateOpen} fullWidth disabled={!acceptingDonations}>{acceptingDonations ? "Donate" : "Campaign ended"}</Button>
+                                                <Button onClick={donateOpen} fullWidth disabled={!acceptingDonations}>{acceptingDonations ? "Donate" : "Not accepting donations"}</Button>
                                                 <ActionIcon
                                                     variant="subtle"
                                                     onClick={open}
@@ -197,6 +209,24 @@ const CampaignDetailsPage = ({campaign, storyHtml = "", updates = [], ended = fa
                                         </Stack>
                                     </Paper>
                                 )}
+                                <Paper {...paperProps} aria-label="Recent donors">
+                                    <Text {...subTitleProps} mb="sm">Recent donors</Text>
+                                    {donors.length === 0 ? (
+                                        <Text size="sm" c="dimmed">No donations yet. Be the first.</Text>
+                                    ) : (
+                                        <Stack gap="sm">
+                                            {donors.map((d) => (
+                                                <Box key={d.id}>
+                                                    <Text size="sm" fw={600}>
+                                                        {d.donorName ?? "Anonymous"} · {formatMinor(d.amount, d.currency)}
+                                                    </Text>
+                                                    {d.message && <Text size="sm" style={{whiteSpace: 'pre-wrap'}}>{d.message}</Text>}
+                                                    <Text size="xs" c="dimmed">{dayjs(d.createdAt).format('LL')}</Text>
+                                                </Box>
+                                            ))}
+                                        </Stack>
+                                    )}
+                                </Paper>
                                 <Paper {...paperProps}>
                                     <Text {...subTitleProps} mb="sm">Organizer</Text>
                                     <UserCard name={campaign.organizerName} avatar={campaign.organizerAvatarUrl}/>
@@ -229,7 +259,7 @@ const CampaignDetailsPage = ({campaign, storyHtml = "", updates = [], ended = fa
                                                 <Text fw={500}>{campaign.percentFunded}% Funded</Text>
                                                 <Text fw={500}>{campaign.donorCount} Donors</Text>
                                             </Flex>
-                                            <Button size="xl" onClick={donateOpen} disabled={!acceptingDonations}>{acceptingDonations ? "Donate" : "Campaign ended"}</Button>
+                                            <Button size="xl" onClick={donateOpen} disabled={!acceptingDonations}>{acceptingDonations ? "Donate" : "Not accepting donations"}</Button>
                                             <Button
                                                 leftSection={<IconShare size={iconSize}/>}
                                                 variant="outline"
@@ -307,7 +337,7 @@ const CampaignDetailsPage = ({campaign, storyHtml = "", updates = [], ended = fa
                 </Container>
                 <ReportModal opened={reportOpened} onClose={reportClose}/>
                 <ShareModal opened={opened} onClose={close} campaign={campaign} iconSize={iconSize}/>
-                <DonationDrawer campaign={campaign} opened={donateOpened} onClose={donateClose} iconSize={iconSize}/>
+                <DonationDrawer campaign={campaign} opened={donateOpened} onClose={donateClose} acceptingDonations={acceptingDonations}/>
             </Box>
         </>
     );
