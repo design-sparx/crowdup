@@ -23,4 +23,3 @@ as
 
 revoke all on public.my_donation from anon, authenticated;
 grant select on public.my_donation to authenticated;
-grant select on public.my_donation to service_role;
