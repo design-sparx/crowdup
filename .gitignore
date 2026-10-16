@@ -30,3 +30,6 @@ build
 .playwright-mcp
 test-results
 playwright-report
+
+supabase/.branches
+supabase/.temp
