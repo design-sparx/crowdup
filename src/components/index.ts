@@ -1,3 +1,4 @@
+import ReportModal from "./ReportModal";
 import LandingNavbar from "./LandingNavbar.tsx";
 import SectionTitle from "./SectionTitle.tsx";
 import TitleBadge from "./TitleBadge"
@@ -55,5 +56,6 @@ export {
     AppNavbar,
     LegalDocument,
     SignupConsent,
-    CampaignForm
+    CampaignForm,
+    ReportModal
 };

@@ -27,7 +27,7 @@ import {
 } from "@mantine/core";
 import {IconFlag, IconHeart, IconHeartFilled, IconSeparator, IconShare} from "@tabler/icons-react";
 import {useDisclosure, useMediaQuery, useToggle} from "@mantine/hooks";
-import {BackButton, DonationDrawer, ShareModal, UserCard} from "../components";
+import {BackButton, DonationDrawer, ReportModal, ShareModal, UserCard} from "../components";
 import dayjs from "dayjs";
 import LocalizedFormat from "dayjs/plugin/localizedFormat";
 import {notifications} from "@mantine/notifications";
@@ -36,6 +36,7 @@ const CampaignDetailsPage = ({campaign, storyHtml = ""}: {campaign: CampaignDeta
     dayjs.extend(LocalizedFormat)
     const [opened, {open, close}] = useDisclosure(false);
     const [donateOpened, {open: donateOpen, close: donateClose}] = useDisclosure(false);
+    const [reportOpened, {open: reportOpen, close: reportClose}] = useDisclosure(false);
     const [following, setFollowing] = useToggle();
     const matchesMobile = useMediaQuery('(max-width: 768px)');
 
@@ -184,6 +185,7 @@ const CampaignDetailsPage = ({campaign, storyHtml = ""}: {campaign: CampaignDeta
                                         leftSection={<IconFlag size={iconSize}/>}
                                         variant="subtle"
                                         color="secondary"
+                                        onClick={reportOpen}
                                     >
                                         Report campaign
                                     </Button>
@@ -270,6 +272,7 @@ const CampaignDetailsPage = ({campaign, storyHtml = ""}: {campaign: CampaignDeta
                                         leftSection={<IconFlag size={iconSize}/>}
                                         variant="subtle"
                                         color="secondary"
+                                        onClick={reportOpen}
                                     >
                                         Report campaign
                                     </Button>
@@ -278,6 +281,7 @@ const CampaignDetailsPage = ({campaign, storyHtml = ""}: {campaign: CampaignDeta
                         </Grid.Col>
                     </Grid>
                 </Container>
+                <ReportModal opened={reportOpened} onClose={reportClose}/>
                 <ShareModal opened={opened} onClose={close} campaign={campaign} iconSize={iconSize}/>
                 <DonationDrawer campaign={campaign} opened={donateOpened} onClose={donateClose} iconSize={iconSize}/>
             </Box>

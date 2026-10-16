@@ -21,4 +21,8 @@ export default [
         route("create-campaign", "routes/create-campaign.tsx"),
         route("campaigns/:id/edit", "routes/edit-campaign.tsx"),
     ]),
+    layout("routes/admin-layout.tsx", [
+        route("admin", "routes/admin-index.tsx"),
+        route("admin/reports", "routes/admin-reports.tsx"),
+    ]),
 ] satisfies RouteConfig;

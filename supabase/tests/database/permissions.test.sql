@@ -12,7 +12,7 @@
 
 begin;
 
-select plan(73);
+select plan(80);
 
 -- Helpers, scoped to this session.
 
@@ -490,6 +490,54 @@ select is(
     values ('campaign-covers', 'anon.png')$$),
   '42501',
   'anon cannot upload a cover'
+);
+
+-- Reports: anyone can file one, one open report per signed-in reporter, admin-only triage.
+
+select pg_temp.become(null, 'anon');
+
+select is(
+  pg_temp.sqlstate_of($$insert into public.report (campaign_id, reason)
+    values ('10000000-0000-4000-8000-000000000001', 'Guest report on a live campaign')$$),
+  null,
+  'anon can report a live campaign'
+);
+select is(
+  pg_temp.sqlstate_of($$insert into public.report (campaign_id, reason, status)
+    values ('10000000-0000-4000-8000-000000000001', 'Guest picks the status', 'dismissed')$$),
+  '42501',
+  'anon cannot choose a report status'
+);
+
+select pg_temp.become('00000000-0000-4000-8000-000000000005', 'authenticated');
+
+select is(
+  pg_temp.sqlstate_of($$insert into public.report (campaign_id, reporter_id, reason)
+    values ('10000000-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000005', 'Signed-in report')$$),
+  null,
+  'signed-in user can report a live campaign as themselves'
+);
+select is(
+  pg_temp.sqlstate_of($$insert into public.report (campaign_id, reporter_id, reason)
+    values ('10000000-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000005', 'Second open report')$$),
+  '23505',
+  'a second open report from the same user on the same campaign is rejected'
+);
+select is(
+  pg_temp.sqlstate_of($$insert into public.report (campaign_id, reporter_id, reason)
+    values ('10000000-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000002', 'Impersonated reporter')$$),
+  '42501',
+  'a user cannot file a report as someone else'
+);
+select is(
+  pg_temp.affected($$update public.report set status = 'dismissed'$$),
+  0,
+  'non-admin cannot change report status'
+);
+select is(
+  (select count(*)::int from public.report),
+  0,
+  'a reporter cannot read reports, not even their own'
 );
 
 select * from finish();
