@@ -1,10 +1,10 @@
-import {ComboboxItem, Group, Select, Text} from "@mantine/core";
+import {ComboboxItem, Group, Select, SelectProps, Text} from "@mantine/core";
 import currencyData from "../data/Currencies.json";
 
 const currenciesByCode = new Map(currencyData.data.map(c => [c.cc, c]));
 const options = currencyData.data.map(c => ({value: c.cc, label: c.name}));
 
-const CurrencySelect = () => {
+const CurrencySelect = (props: Omit<SelectProps, "data">) => {
     return (
         <Select
             label="What currency do you want to raise money in?"
@@ -13,6 +13,7 @@ const CurrencySelect = () => {
             clearable
             maxDropdownHeight={300}
             nothingFoundMessage="Nobody here"
+            {...props}
             renderOption={({option}) => {
                 const currency = currenciesByCode.get(option.value);
 

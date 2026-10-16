@@ -12,7 +12,7 @@
 
 begin;
 
-select plan(71);
+select plan(80);
 
 -- Helpers, scoped to this session.
 
@@ -427,6 +427,70 @@ select is(
   'anon sees no totals for draft campaigns'
 );
 
+-- Another organiser (Liam) cannot see or edit Amara's draft (c3).
+
+select pg_temp.become('00000000-0000-4000-8000-000000000003', 'authenticated');
+
+select is(
+  (select count(*)::int from public.campaign where id = '10000000-0000-4000-8000-000000000003'),
+  0,
+  'another organiser cannot read a draft'
+);
+select is(
+  pg_temp.affected($$update public.campaign set title = 'Hijacked draft'
+    where id = '10000000-0000-4000-8000-000000000003'$$),
+  0,
+  'another organiser cannot edit a draft'
+);
+select is(
+  pg_temp.sqlstate_of($$insert into public.campaign (owner_id, title, slug, category, country, goal_amount, currency)
+    values ('00000000-0000-4000-8000-000000000002', 'Forged owner', 'forged-owner', 'Other', 'KE', 100, 'KES')$$),
+  '42501',
+  'a user cannot create a campaign owned by someone else'
+);
+
+-- Cover image storage (campaign-covers bucket, migration 20261016100300).
+
+select is(
+  (select file_size_limit from storage.buckets where id = 'campaign-covers'),
+  3145728::bigint,
+  'the cover bucket enforces a 3 MB size limit'
+);
+select is(
+  (select allowed_mime_types from storage.buckets where id = 'campaign-covers'),
+  array['image/jpeg', 'image/png', 'image/webp'],
+  'the cover bucket allows only jpeg, png and webp'
+);
+select is(
+  pg_temp.sqlstate_of($$insert into storage.objects (bucket_id, name, owner)
+    values ('campaign-covers', '00000000-0000-4000-8000-000000000003/mine.png', '00000000-0000-4000-8000-000000000003')$$),
+  null,
+  'a user can upload a cover into their own folder'
+);
+select is(
+  pg_temp.sqlstate_of($$insert into storage.objects (bucket_id, name, owner)
+    values ('campaign-covers', '00000000-0000-4000-8000-000000000002/theirs.png', '00000000-0000-4000-8000-000000000003')$$),
+  '42501',
+  'a user cannot upload a cover into another user''s folder'
+);
+
+select pg_temp.become('00000000-0000-4000-8000-000000000004', 'authenticated');
+
+select is(
+  pg_temp.sqlstate_of($$insert into storage.objects (bucket_id, name, owner)
+    values ('campaign-covers', '00000000-0000-4000-8000-000000000004/sam.png', '00000000-0000-4000-8000-000000000004')$$),
+  '42501',
+  'a suspended user cannot upload a cover'
+);
+
+select pg_temp.become(null, 'anon');
+
+select is(
+  pg_temp.sqlstate_of($$insert into storage.objects (bucket_id, name)
+    values ('campaign-covers', 'anon.png')$$),
+  '42501',
+  'anon cannot upload a cover'
+);
 
 -- Reports: anyone can file one, one open report per signed-in reporter, admin-only triage.
 

@@ -20,6 +20,7 @@ import {
     Stack,
     Text,
     TextProps,
+    Typography,
     Title,
     TitleProps,
     UnstyledButton
@@ -31,7 +32,7 @@ import dayjs from "dayjs";
 import LocalizedFormat from "dayjs/plugin/localizedFormat";
 import {notifications} from "@mantine/notifications";
 
-const CampaignDetailsPage = ({campaign}: {campaign: CampaignDetails}) => {
+const CampaignDetailsPage = ({campaign, storyHtml = ""}: {campaign: CampaignDetails; storyHtml?: string}) => {
     dayjs.extend(LocalizedFormat)
     const [opened, {open, close}] = useDisclosure(false);
     const [donateOpened, {open: donateOpen, close: donateClose}] = useDisclosure(false);
@@ -108,6 +109,9 @@ const CampaignDetailsPage = ({campaign}: {campaign: CampaignDetails}) => {
                                         }
                                         <Text {...subTitleProps}>Our story</Text>
                                         <Text size="sm">{campaign.description}</Text>
+                                        {storyHtml && <Typography>
+                                            <div dangerouslySetInnerHTML={{__html: storyHtml}}/>
+                                        </Typography>}
                                         {matchesMobile && <>
                                             <Divider/>
                                             <Flex align="flex-end" gap="sm">

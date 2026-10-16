@@ -19,6 +19,7 @@ export default [
     layout("routes/dashboard-layout.tsx", [
         route("dashboard", "routes/dashboard.tsx"),
         route("create-campaign", "routes/create-campaign.tsx"),
+        route("campaigns/:id/edit", "routes/edit-campaign.tsx"),
     ]),
     layout("routes/admin-layout.tsx", [
         route("admin", "routes/admin-index.tsx"),
