@@ -13,6 +13,7 @@ import "./App.css";
 import "./fonts/montserrat.css";
 import {customTheme} from "./theme";
 import {Error404Page} from "./pages";
+import {buildMeta} from "./helpers";
 
 export function Layout({children}: {children: ReactNode}) {
     return (
@@ -21,12 +22,6 @@ export function Layout({children}: {children: ReactNode}) {
             <meta charSet="UTF-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
-            <title>CrowdUp</title>
-            <meta property="og:title"
-                  content="CrowdUp is a crowdfunding platform that helps you get funding for your personal projects, charities, and NGOs. Start a fundraiser and receive donations from individuals who care about your cause."/>
-            <meta property="og:url" content="https://ahrefs.com/blog/open-graph-meta-tags/"/>
-            <meta property="og:image" content="/vite.svg"/>
-            <meta property="og:type" content="website"/>
             <Meta/>
             <Links/>
             <ColorSchemeScript forceColorScheme="light"/>
@@ -41,6 +36,13 @@ export function Layout({children}: {children: ReactNode}) {
         </body>
         </html>
     );
+}
+
+export function meta() {
+    return buildMeta({
+        title: "Crowdfunding",
+        description: "CrowdUp is a crowdfunding platform for personal projects, charities and NGOs.",
+    });
 }
 
 export default function Root() {

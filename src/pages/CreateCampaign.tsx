@@ -85,6 +85,7 @@ const CreateCampaignPage = () => {
             TextAlign.configure({types: ['heading', 'paragraph']}),
         ],
         content: '',
+        immediatelyRender: false,
     });
 
     const socialForm = useForm({
