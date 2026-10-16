@@ -20,4 +20,8 @@ export default [
         route("dashboard", "routes/dashboard.tsx"),
         route("create-campaign", "routes/create-campaign.tsx"),
     ]),
+    layout("routes/admin-layout.tsx", [
+        route("admin", "routes/admin-index.tsx"),
+        route("admin/reports", "routes/admin-reports.tsx"),
+    ]),
 ] satisfies RouteConfig;
