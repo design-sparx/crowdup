@@ -23,6 +23,8 @@ import BackButton from "./BackButton";
 import CategorySelect from "./CategorySelect";
 import SearchDrawer from "./SearchDrawer";
 import AppNavbar from "./AppNavbar";
+import LegalDocument from "./LegalDocument";
+import SignupConsent from "./SignupConsent";
 
 export {
     LandingNavbar,
@@ -49,5 +51,7 @@ export {
     BackButton,
     CategorySelect,
     SearchDrawer,
-    AppNavbar
+    AppNavbar,
+    LegalDocument,
+    SignupConsent
 };

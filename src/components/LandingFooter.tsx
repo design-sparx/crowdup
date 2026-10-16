@@ -6,6 +6,7 @@ import {
     IconBrandLinkedin,
     IconBrandTwitter
 } from '@tabler/icons-react';
+import {Link} from "react-router";
 import {BrandName} from "./index";
 import classes from "./LandingFooter.module.css";
 
@@ -54,9 +55,14 @@ const LandingFooter = ({data}: FooterLinksProps) => {
                 <div className={classes.groups}>{groups}</div>
             </Container>
             <Container className={classes.afterFooter} size="lg">
-                <Text size="sm">
-                    © {new Date().getFullYear()} CrowdUp. All rights reserved.
-                </Text>
+                <Group gap="md">
+                    <Text size="sm">
+                        © {new Date().getFullYear()} CrowdUp. All rights reserved.
+                    </Text>
+                    <Text size="sm" component={Link} to="/terms" className={classes.link}>Terms</Text>
+                    <Text size="sm" component={Link} to="/privacy" className={classes.link}>Privacy</Text>
+                    <Text size="sm" component={Link} to="/security" className={classes.link}>Security</Text>
+                </Group>
 
                 <Group gap={0} className={classes.social} justify="flex-end" wrap="nowrap">
                     <ActionIcon size="lg" component="a" href="https://github.com/kelvink96" target="_blank">

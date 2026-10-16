@@ -12,6 +12,7 @@ import {
     Title,
 } from '@mantine/core';
 import {IconBrandFacebook, IconBrandGoogle} from "@tabler/icons-react";
+import {SignupConsent} from "../components";
 
 const SignupPage = () => {
     return (
@@ -46,6 +47,7 @@ const SignupPage = () => {
                             Forgot password?
                         </Anchor>
                     </Group>
+                    <SignupConsent/>
                     <Button fullWidth mt="xl">
                         Sign Up
                     </Button>

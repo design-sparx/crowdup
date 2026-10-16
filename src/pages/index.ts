@@ -8,6 +8,9 @@ import LoginPage from "./Login";
 import SignupPage from "./Signup";
 import DashboardPage from "./Dashboard";
 import CreateCampaignPage from "./CreateCampaign";
+import TermsPage from "./Terms";
+import PrivacyPage from "./Privacy";
+import SecurityPage from "./Security";
 
 export {
     HomePage,
@@ -19,5 +22,8 @@ export {
     LoginPage,
     SignupPage,
     DashboardPage,
-    CreateCampaignPage
+    CreateCampaignPage,
+    TermsPage,
+    PrivacyPage,
+    SecurityPage
 }
