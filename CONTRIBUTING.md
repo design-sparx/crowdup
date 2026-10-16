@@ -27,6 +27,19 @@ pnpm test      # run the unit tests (vitest)
 
 Before opening a pull request, run `pnpm lint`, `pnpm build` and `pnpm test` and make sure all three pass.
 
+### Browser tests
+
+End-to-end tests live in `e2e/` and use [Playwright](https://playwright.dev). They run against the production build, so build first:
+
+```sh
+pnpm exec playwright install chromium   # once
+supabase start && supabase db reset     # local Supabase with seed data (needs Docker)
+pnpm build
+pnpm test:e2e
+```
+
+Playwright starts the built app itself (`react-router-serve`, port 4173) and reuses a running server outside CI. To use a Chromium you already have, set `PLAYWRIGHT_CHROMIUM_PATH` to its executable. CI runs the same steps in the `End-to-end` workflow. Vitest ignores `e2e/`.
+
 For a map of the codebase (routing, barrels, where shared UI lives), read [AGENTS.md](AGENTS.md).
 
 ## Making a change
