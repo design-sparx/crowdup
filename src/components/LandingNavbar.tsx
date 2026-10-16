@@ -34,7 +34,7 @@ import {
 } from '@tabler/icons-react';
 import {useEffect, useState} from "react";
 import {BrandName, SearchDrawer} from "./index";
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 import classes from "./LandingNavbar.module.css";
 
 const mockdata = [

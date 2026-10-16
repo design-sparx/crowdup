@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {Button, Flex, FlexProps} from '@mantine/core';
 import {IconFileDollar, IconFolderPlus, IconHeart, IconHome,} from '@tabler/icons-react';
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 import clsx from "clsx";
 import classes from "./AppLinks.module.css";
 

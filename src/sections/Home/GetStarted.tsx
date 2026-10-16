@@ -1,7 +1,7 @@
 import {Box, BoxProps, Button, Flex, Image, Stack, TextProps, Title, TitleProps} from "@mantine/core";
 
 import HandFlowerImg from "../../assets/img/lotus-flower.png"
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 import {useMediaQuery} from "@mantine/hooks";
 
 interface IProps {

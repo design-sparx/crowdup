@@ -1,4 +1,4 @@
-import { useRouteError } from "react-router-dom";
+import { useRouteError } from "react-router";
 
 const DetailError404Page = () => {
     const error = useRouteError() as { statusText?: string; message?: string } | undefined;
