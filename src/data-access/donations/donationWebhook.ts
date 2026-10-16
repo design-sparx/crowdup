@@ -56,7 +56,11 @@ export interface DonationWriter {
 
 export type DonationEventResult = {outcome: "recorded" | "duplicate"} | {outcome: "ignored"; reason: string};
 
-const HANDLED = new Set(["checkout.session.completed", "checkout.session.async_payment_succeeded"]);
+/** Stripe event types that record a donation. The webhook route uses this to decide what to pass in. */
+export const DONATION_EVENT_TYPES: ReadonlySet<string> = new Set([
+    "checkout.session.completed",
+    "checkout.session.async_payment_succeeded",
+]);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const ignored = (reason: string): DonationEventResult => ({outcome: "ignored", reason});
 
@@ -64,7 +68,7 @@ export async function handleDonationEvent(
     event: Stripe.Event,
     deps: {db: DonationWriter; now?: Date},
 ): Promise<DonationEventResult> {
-    if (!HANDLED.has(event.type)) return ignored("event type not handled");
+    if (!DONATION_EVENT_TYPES.has(event.type)) return ignored("event type not handled");
     // Donations are direct charges on connected accounts, so real events carry `account`.
     if (!event.account) return ignored("not a connected-account event");
 
