@@ -1,23 +1,23 @@
 # AGENTS.md
 
-CrowdUp: a crowdfunding front-end (Vite 8 + React 19 + TypeScript 6 + Mantine 9 + react-router-dom 7). Client-only, no backend or tests; all content comes from static JSON in `src/data/`.
+CrowdUp: a crowdfunding front-end (React Router 8 framework mode in single-page mode, React 19, TypeScript 6, Mantine 9, Vite 8). Client-only for now; content comes from static JSON in `src/data/`.
 
 ## Commands
 
 pnpm is the package manager (`pnpm-lock.yaml`). Use `pnpm`, not `npm` or `yarn`.
 
-- `pnpm dev` starts the Vite dev server (default http://localhost:5173)
-- `pnpm build` runs `tsc` then `vite build` (type errors fail the build)
+- `pnpm dev` starts `react-router dev` (default http://localhost:5173)
+- `pnpm build` runs `react-router typegen`, `tsc`, then `react-router build` (output in `build/client`; type errors fail the build)
 - `pnpm lint` runs ESLint with `--max-warnings 0`, so any warning fails
-- `pnpm preview` serves the production build
-
-There is no test runner configured.
+- `pnpm preview` serves `build/client`
+- `pnpm test` runs Vitest.
 
 ## Architecture
 
-- `src/main.tsx` imports the Mantine stylesheets and renders `App.tsx`. `App.tsx` wraps everything in `MantineProvider` (custom theme from `src/theme`), `RouterProvider` and `Notifications`. It also imports the Montserrat font from `src/fonts/montserrat.css`.
-- `src/routes/index.tsx` is the single `createBrowserRouter` config (from `react-router-dom`). Each route pairs a layout from `src/layout` (`PublicLayout`, `DashboardLayout`) with a page from `src/pages` as its child, and uses `Error404Page` as the `errorElement`. Login and signup render without `PublicLayout` or `DashboardLayout`.
-- `src/pages`, `src/components`, `src/layout` and `src/helpers` each re-export through an `index.ts` barrel. When adding a file, export it from the barrel. Pages are imported with a `Page` suffix (e.g. `HomePage`).
+- `react-router.config.ts` sets `appDirectory: "src"` and `ssr: false`. `src/root.tsx` is the root: the HTML shell (Mantine `ColorSchemeScript` and `mantineHtmlProps`), `MantineProvider` with the theme from `src/theme`, `Notifications`, the stylesheets and the Montserrat font import.
+- `src/routes.ts` is the route config. Each entry points at a thin route module in `src/routes/` that re-exports a page from `src/pages` as `default` and `Error404Page` (or `DetailError404Page`) as `ErrorBoundary`. Layout routes (`home-layout`, `public-layout`, `dashboard-layout`) wrap `PublicLayout` and `DashboardLayout` from `src/layout`. Login and signup have no layout. To add a page: create the page in `src/pages` and export it from the barrel, add a route module in `src/routes/`, and register it in `src/routes.ts`.
+- `src/pages`, `src/components`, `src/layout` and `src/helpers` each re-export through an `index.ts` barrel. When adding a file there, export it from the barrel. Route modules in `src/routes/` are not barrelled. Pages are imported with a `Page` suffix (e.g. `HomePage`).
+- Netlify deploys via `@netlify/vite-plugin-react-router` and `netlify.toml`, which serves known routes with 200 and any other path with a 404 status. Keep the redirect list in sync with `src/routes.ts`.
 - `src/sections/Home/` holds page-specific sections. Shared UI lives in `src/components`.
 - `src/types/index.ts` holds shared types. `src/data/*.json` provides mock campaigns, countries, currencies, nav links, testimonials and the user.
 - Charts use `react-apexcharts`. The rich text editor uses Tiptap with `@mantine/tiptap`.

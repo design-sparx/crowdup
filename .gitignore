@@ -22,3 +22,9 @@ dist-ssr
 *.sw?
 
 .idea
+
+.react-router
+build
+.netlify
+.lavish
+.playwright-mcp
