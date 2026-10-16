@@ -12,7 +12,7 @@ test("a visitor can browse, search and open a campaign with share metadata", asy
     await expect(page.getByText("Quick cash for a great cause")).toHaveCount(0);
 
     await page.getByLabel("Search campaigns").fill("kitchen");
-    await page.getByRole("button", {name: "Search"}).click();
+    await page.getByRole("search").getByRole("button", {name: "Search"}).click();
     await expect(page).toHaveURL(/q=kitchen/);
     await expect(page.getByText("Community kitchen in Ealing")).toBeVisible();
     await expect(page.getByText("Clean water for Kibera schools")).toHaveCount(0);

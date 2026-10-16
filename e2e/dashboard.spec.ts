@@ -9,7 +9,7 @@ test.skip(!process.env.E2E_ORGANISER_PASSWORD, "set E2E_ORGANISER_PASSWORD (see 
 test("organiser sees only their campaigns, with edit links and anonymous donors masked", async ({page}) => {
     await page.goto("/login");
     await page.getByLabel("Email").fill("amara@crowdup.example");
-    await page.getByLabel("Password").fill(process.env.E2E_ORGANISER_PASSWORD ?? "");
+    await page.getByRole("textbox", {name: "Password"}).fill(process.env.E2E_ORGANISER_PASSWORD ?? "");
     await page.getByRole("button", {name: /log in|sign in/i}).click();
     await page.goto("/dashboard");
 

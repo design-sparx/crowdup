@@ -1,5 +1,3 @@
-// NOT RUN: needs a local Supabase (`supabase start`, migrations applied, email confirmation
-// off) with SUPABASE_URL / SUPABASE_ANON_KEY set, and a production build (`pnpm build`).
 import {expect, test} from "@playwright/test";
 
 test("an organiser creates a draft, edits it, and another user cannot open it", async ({page, browser}) => {
@@ -9,19 +7,19 @@ test("an organiser creates a draft, edits it, and another user cannot open it", 
     await page.goto("/signup");
     await page.getByLabel("Name").fill("E2E Organiser");
     await page.getByLabel("Email").fill(email);
-    await page.getByLabel("Password").fill(password);
+    await page.getByRole("textbox", {name: "Password"}).fill(password);
     await page.getByRole("button", {name: "Sign up"}).click();
     await expect(page).toHaveURL(/\/dashboard/);
 
     await page.goto("/create-campaign");
     await page.getByLabel("Title").fill("E2E clean water");
-    await page.getByLabel("Category").click();
+    await page.getByRole("combobox", {name: "Category"}).click();
     await page.getByRole("option", {name: "Environment"}).click();
-    await page.getByLabel("Country").click();
+    await page.getByRole("combobox", {name: "Country"}).click();
     await page.getByRole("option", {name: "Kenya"}).click();
     await page.getByLabel("Goal amount").fill("2500");
-    await page.getByLabel("Currency").click();
-    await page.getByRole("option", {name: /KES/}).click();
+    // Currency comes from the organiser's Stripe account, so it is not editable here.
+    await expect(page.getByLabel("Currency")).toBeDisabled();
     await page.locator(".tiptap").click();
     await page.keyboard.type("Our story starts here.");
     await page.getByRole("button", {name: "Save draft"}).click();
@@ -44,7 +42,7 @@ test("an organiser creates a draft, edits it, and another user cannot open it", 
     await other.goto("/signup");
     await other.getByLabel("Name").fill("Other User");
     await other.getByLabel("Email").fill(`e2e-other-${Date.now()}@example.com`);
-    await other.getByLabel("Password").fill(password);
+    await other.getByRole("textbox", {name: "Password"}).fill(password);
     await other.getByRole("button", {name: "Sign up"}).click();
     await expect(other).toHaveURL(/\/dashboard/);
     expect((await other.goto(editUrl))?.status()).toBe(404);

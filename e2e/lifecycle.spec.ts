@@ -11,7 +11,7 @@ test.skip(!editUrl, "needs a seeded live campaign");
 test("an organiser posts an update (escaped) and closes the campaign", async ({page}) => {
     await page.goto("/login");
     await page.getByLabel("Email").fill(process.env.E2E_EMAIL ?? "");
-    await page.getByLabel("Password").fill(process.env.E2E_PASSWORD ?? "");
+    await page.getByRole("textbox", {name: "Password"}).fill(process.env.E2E_PASSWORD ?? "");
     await page.getByRole("button", {name: /log in|sign in/i}).click();
     await page.goto(editUrl!);
 
