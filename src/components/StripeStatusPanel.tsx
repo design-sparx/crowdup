@@ -1,6 +1,7 @@
 import {Alert, Badge, Button, Group, Paper, Stack, Text, Title} from "@mantine/core";
 import {Form, Link} from "react-router";
 import {ONBOARDING_LABELS, type OnboardingStatus} from "../lib/stripe/onboarding";
+import type {CampaignStatus} from "../lib/campaigns/transitions";
 import {campaignLiveExplanation, type PublishingMode} from "../lib/stripe/publishing";
 
 export interface StripePanelProps {
@@ -49,7 +50,7 @@ const StripeStatusPanel = ({status, currency, mode, campaigns, notice}: StripePa
                         <Group key={c.id} justify="space-between" wrap="nowrap" align="flex-start">
                             <div>
                                 <Text component={Link} to={`/campaigns/${c.id}/edit`} size="sm" fw={500}>{c.title}</Text>
-                                <Text size="xs" c="dimmed">{campaignLiveExplanation({status: c.status, rejectionReason: c.rejectionReason, onboarding: status, mode})}</Text>
+                                <Text size="xs" c="dimmed">{campaignLiveExplanation({status: c.status as CampaignStatus, rejectionReason: c.rejectionReason, onboarding: status, mode})}</Text>
                             </div>
                             {c.status === "draft" && status === "connected" && (
                                 <Form method="post" action={`/campaigns/${c.id}/publish`}>

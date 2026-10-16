@@ -1,5 +1,6 @@
 import type Stripe from "stripe";
 import {canAcceptDonations} from "../../lib/campaigns/lifecycle";
+import type {CampaignStatus} from "../../lib/campaigns/transitions";
 import {parseDonationMetadata} from "../../lib/donations/metadata";
 
 /**
@@ -26,7 +27,7 @@ import {parseDonationMetadata} from "../../lib/donations/metadata";
 
 export interface CampaignForDonation {
     id: string;
-    status: string;
+    status: CampaignStatus;
     endDate: string | null;
     currency: string;
     ownerStripeAccountId: string | null;
