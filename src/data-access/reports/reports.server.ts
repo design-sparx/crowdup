@@ -4,7 +4,7 @@ import {clientKey, groupOpenReports, parseReason, type ReportGroup, type ReportR
 
 type Supabase = ReturnType<typeof createSupabaseServerClient>["supabase"];
 
-/** 5 reports per hour per user (or per IP for guests). Per server instance (in memory, per server instance, resets on restart; guests keyed by X-Forwarded-For). */
+/** 5 reports per hour per user (or per IP for guests). In memory, per server instance; resets on restart. Guests are keyed by X-Forwarded-For. */
 const limiter = createRateLimiter({limit: 5, windowMs: 60 * 60 * 1000});
 
 export type ReportSubmitResult = {ok?: true; error?: string; status: number};

@@ -1,3 +1,4 @@
+import type {CampaignStatus} from "../campaigns/transitions";
 import type {OnboardingStatus} from "./onboarding";
 
 export type PublishingMode = "auto" | "approval";
@@ -18,7 +19,7 @@ export function parsePublishingMode(raw: string | undefined): PublishingMode {
 export function goLiveDecision(p: {
     onboardingComplete: boolean;
     mode: PublishingMode;
-    campaignStatus: string;
+    campaignStatus: CampaignStatus;
     ownerSuspended: boolean;
 }): GoLiveDecision {
     if (p.campaignStatus !== "draft" || !p.onboardingComplete || p.ownerSuspended) return "none";
@@ -27,7 +28,7 @@ export function goLiveDecision(p: {
 
 /** Plain-language reason shown to the organiser for a campaign's current state. */
 export function campaignLiveExplanation(p: {
-    status: string;
+    status: CampaignStatus;
     rejectionReason?: string | null;
     onboarding: OnboardingStatus;
     mode: PublishingMode;

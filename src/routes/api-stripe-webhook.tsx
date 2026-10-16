@@ -5,7 +5,7 @@ import {supabaseConnectStore} from "../data-access/stripe/connectStore.server";
 import {createServiceRoleClient} from "../data-access/stripe/serviceRole.server";
 import {createStripeConnectApi} from "../data-access/stripe/stripe.server";
 import {verifyStripeWebhook} from "../data-access/stripe/webhook.server";
-import {handleDonationEvent} from "../data-access/donations/donationWebhook";
+import {DONATION_EVENT_TYPES, handleDonationEvent} from "../data-access/donations/donationWebhook";
 import {supabaseDonationWriter} from "../data-access/donations/donationStore.server";
 
 /**
@@ -36,7 +36,7 @@ export async function action({request}: ActionFunctionArgs) {
             await syncAccountStatus({api: createStripeConnectApi(), store, userId, mode: getPublishingMode()});
         }
     }
-    if (event.type === "checkout.session.completed" || event.type === "checkout.session.async_payment_succeeded") {
+    if (DONATION_EVENT_TYPES.has(event.type)) {
         // A database error throws and becomes a 500, so Stripe retries. Everything else is a 200.
         const result = await handleDonationEvent(event, {db: supabaseDonationWriter(createServiceRoleClient())});
         if (result.outcome === "ignored") console.warn(`donation event ${event.id} ignored: ${result.reason}`);

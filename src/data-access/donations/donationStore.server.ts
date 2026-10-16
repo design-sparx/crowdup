@@ -1,6 +1,7 @@
 import type {SupabaseClient} from "@supabase/supabase-js";
 import type {DonationWriter} from "./donationWebhook";
 import type {DonationTarget} from "../../lib/donations/checkout";
+import type {CampaignStatus} from "../../lib/campaigns/transitions";
 
 /**
  * Service-role access for donations. Narrow on purpose: the webhook can only look up a
@@ -44,7 +45,8 @@ export function supabaseDonationWriter(db: SupabaseClient): DonationWriter {
             const owner = await ownerOf(db, row.owner_id);
             return {
                 id: row.id,
-                status: row.status,
+                // The campaign.status check constraint limits rows to CAMPAIGN_STATUSES.
+                status: row.status as CampaignStatus,
                 endDate: row.end_date,
                 currency: row.currency,
                 ownerStripeAccountId: owner.stripeAccountId,
