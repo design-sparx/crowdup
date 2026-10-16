@@ -1,9 +1,10 @@
 import {expect, test} from "@playwright/test";
 
-// NOT RUN: requires a running local Supabase with supabase/seed.sql applied, and
-// SUPABASE_URL / SUPABASE_ANON_KEY set for the server. The seed users have no passwords,
-// so set one first (e.g. through the Supabase admin API) before enabling this spec.
-test.skip(true, "needs local Supabase with a password for amara@crowdup.example");
+// NOT RUN: requires a running Supabase with supabase/seed.sql applied, and SUPABASE_URL /
+// SUPABASE_ANON_KEY set for the server. The default seed users have no passwords. Either
+// apply supabase/demo-seed.sql (public demo password, local use only) and set
+// E2E_ORGANISER_PASSWORD=demo-password-123, or set your own. Skipped unless the variable is set.
+test.skip(!process.env.E2E_ORGANISER_PASSWORD, "set E2E_ORGANISER_PASSWORD (see docs/demo.md)");
 
 test("organiser sees only their campaigns, with edit links and anonymous donors masked", async ({page}) => {
     await page.goto("/login");
