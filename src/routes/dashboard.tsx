@@ -1,31 +1,36 @@
-import {data, useLoaderData} from "react-router";
-import {requireUserClient} from "../data-access/auth/auth.server";
-import {listOwnCampaigns} from "../data-access/campaigns/ownerCampaigns";
-import {getPublishingMode, readConnectSummary} from "../data-access/stripe/connect.server";
+import {data} from "react-router";
 import {DashboardPage} from "../pages";
 import {StripeStatusPanel} from "../components";
+import {requireUserClient} from "../data-access/auth/auth.server";
+import {getDashboardData} from "../data-access/campaigns/dashboard";
+import {getPublishingMode, readConnectSummary} from "../data-access/stripe/connect.server";
 import type {Route} from "./+types/dashboard";
 
 export async function loader({request}: Route.LoaderArgs) {
     const {user, supabase, headers} = await requireUserClient(request);
-    const [connect, campaigns] = await Promise.all([
+    const [{campaigns, donations}, connect] = await Promise.all([
+        getDashboardData(supabase, user.id),
         readConnectSummary(supabase, user.id),
-        listOwnCampaigns(supabase, user.id),
     ]);
+    const name = (user.user_metadata?.full_name as string | undefined) ?? user.email ?? "";
     const notice = new URL(request.url).searchParams.get("stripe");
-    return data({connect, campaigns, mode: getPublishingMode(), notice}, {headers});
+    return data(
+        {campaigns, donations, name, now: new Date().toISOString(), connect, mode: getPublishingMode(), notice},
+        {headers},
+    );
 }
 
-export default function Dashboard() {
-    const {connect, campaigns, mode, notice} = useLoaderData<typeof loader>();
+export default function Dashboard({loaderData}: Route.ComponentProps) {
+    const {connect, mode, notice, ...rest} = loaderData;
     return (
         <DashboardPage
+            {...rest}
             stripePanel={
                 <StripeStatusPanel
                     status={connect.status}
                     currency={connect.currency}
                     mode={mode}
-                    campaigns={campaigns}
+                    campaigns={rest.campaigns}
                     notice={notice}
                 />
             }
