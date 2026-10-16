@@ -36,6 +36,17 @@ jobs:
       - name: Reset database with seed data
         run: supabase db reset
 
+      # The server reads these at runtime; expose the local Supabase keys to later steps.
+      - name: Export local Supabase keys
+        run: |
+          STATUS=$(supabase status -o env)
+          value() { echo "$STATUS" | grep "^$1=" | cut -d= -f2- | tr -d '"'; }
+          {
+            echo "SUPABASE_URL=$(value API_URL)"
+            echo "SUPABASE_ANON_KEY=$(value ANON_KEY)"
+            echo "SUPABASE_SERVICE_ROLE_KEY=$(value SERVICE_ROLE_KEY)"
+          } >> "$GITHUB_ENV"
+
       - name: Build
         run: pnpm build
 
