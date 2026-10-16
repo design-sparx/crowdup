@@ -1,0 +1,35 @@
+import {data, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
+import {getAdminContext} from "../data-access/reports/reports.server";
+import {listAdminUsers, suspendUser, unsuspendUser} from "../data-access/moderation/moderation.server";
+import {parseModerationReason} from "../lib/moderation/moderation";
+
+export async function loader({request}: LoaderFunctionArgs) {
+    const admin = await getAdminContext(request);
+    if (!admin) throw new Response("Not found", {status: 404});
+    return data({users: await listAdminUsers(admin.supabase), selfId: admin.user.id}, {headers: admin.headers});
+}
+
+export async function action({request}: ActionFunctionArgs) {
+    const admin = await getAdminContext(request);
+    if (!admin) throw new Response("Not found", {status: 404});
+    const form = await request.formData();
+    const id = form.get("userId");
+    const intent = form.get("intent");
+    if (typeof id !== "string" || !id) return data({error: "Missing user."}, {status: 400, headers: admin.headers});
+
+    let result;
+    if (intent === "suspend") {
+        const reason = parseModerationReason(form.get("reason"));
+        if (!reason.ok) return data({error: reason.error}, {status: 400, headers: admin.headers});
+        result = await suspendUser(admin.supabase, id, reason.reason);
+    } else if (intent === "unsuspend") {
+        result = await unsuspendUser(admin.supabase, id);
+    } else {
+        return data({error: "Unknown action."}, {status: 400, headers: admin.headers});
+    }
+    if (!result.ok) return data({error: result.error}, {status: result.status, headers: admin.headers});
+    return data({ok: true}, {headers: admin.headers});
+}
+
+export {AdminUsersPage as default} from "../pages";
+export {Error404Page as ErrorBoundary} from "../pages";

@@ -1,4 +1,5 @@
 import {data} from "react-router";
+import {Alert, Container} from "@mantine/core";
 import {CampaignLifecyclePanel} from "../components";
 import {CreateCampaignPage} from "../pages";
 import {requireUserClient} from "../data-access/auth/auth.server";
@@ -9,6 +10,8 @@ import {
     postUpdate,
 } from "../data-access/campaigns/ownerCampaigns";
 import {handleCampaignForm} from "../data-access/campaigns/campaignFormAction.server";
+import {getOwnSuspension} from "../data-access/moderation/moderation.server";
+import {campaignSuspensionNotice, userSuspensionNotice} from "../lib/moderation/moderation";
 import {listUpdates} from "../lib/campaigns/repository";
 import {parseUpdateBody} from "../lib/campaigns/updates";
 import type {Route} from "./+types/edit-campaign";
@@ -21,7 +24,11 @@ export async function loader({request, params}: Route.LoaderArgs) {
     const saved = new URL(request.url).searchParams.get("saved") === "1";
     const publish = new URL(request.url).searchParams.get("publish");
     const updates = await listUpdates(supabase, campaign.id);
-    return data({campaign, saved, publish, updates}, {headers});
+    const own = await getOwnSuspension(supabase, user.id);
+    const notice =
+        campaignSuspensionNotice(campaign.status, campaign.suspendedReason) ??
+        userSuspensionNotice(own.suspended, own.reason);
+    return data({campaign, saved, publish, updates, moderationNotice: notice}, {headers});
 }
 
 export async function action({request, params}: Route.ActionArgs) {
@@ -52,13 +59,18 @@ export async function action({request, params}: Route.ActionArgs) {
 }
 
 export default function EditCampaign({loaderData, actionData}: Route.ComponentProps) {
-    const {campaign, saved, publish, updates} = loaderData;
+    const {campaign, saved, publish, updates, moderationNotice} = loaderData;
     const result = actionData as
         | {errors?: Record<string, string>; lifecycleNotice?: string; lifecycleError?: string}
         | undefined;
     // The loader revalidates after each action, so the status shown is already current.
     return (
         <>
+            {moderationNotice && (
+                <Container size="md" mt={36}>
+                    <Alert color="red" title="Moderation notice">{moderationNotice}</Alert>
+                </Container>
+            )}
             <CreateCampaignPage
                 mode="edit"
                 status={campaign.status}

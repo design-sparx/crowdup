@@ -29,5 +29,7 @@ export default [
     layout("routes/admin-layout.tsx", [
         route("admin", "routes/admin-index.tsx"),
         route("admin/reports", "routes/admin-reports.tsx"),
+        route("admin/campaigns", "routes/admin-campaigns.tsx"),
+        route("admin/users", "routes/admin-users.tsx"),
     ]),
 ] satisfies RouteConfig;

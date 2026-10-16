@@ -12,7 +12,7 @@
 
 begin;
 
-select plan(97);
+select plan(132);
 
 -- Helpers, scoped to this session.
 
@@ -401,16 +401,26 @@ select is(
   'admin can grant the admin role to another user'
 );
 select is(
-  pg_temp.affected($$update public.profile set suspended = false
+  pg_temp.sqlstate_of($$update public.profile set suspended = false
     where id = '00000000-0000-4000-8000-000000000004'$$),
-  1,
-  'admin can unsuspend a user'
+  '42501',
+  'admin cannot change suspension directly, only through the audited function'
 );
 select is(
-  pg_temp.affected($$update public.campaign set status = 'suspended'
+  pg_temp.sqlstate_of($$select public.admin_unsuspend_user('00000000-0000-4000-8000-000000000004')$$),
+  null,
+  'admin can unsuspend a user through the function'
+);
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set status = 'suspended'
     where id = '10000000-0000-4000-8000-000000000004'$$),
-  1,
-  'admin can suspend a live campaign'
+  '42501',
+  'admin cannot suspend a campaign directly, only through the audited function'
+);
+select is(
+  pg_temp.sqlstate_of($$select public.admin_suspend_campaign('10000000-0000-4000-8000-000000000004', 'Test suspension')$$),
+  null,
+  'admin can suspend a live campaign through the function'
 );
 
 -- Server (service role): the only writer of donations and payout fields.
@@ -656,6 +666,143 @@ select is(
   '42501',
   'a signed-in donor cannot read the donation table, so donor ids and flags stay private'
 );
+
+-- Moderation (ticket 21). State at this point: Sam was unsuspended and c4 suspended by
+-- the admin tests above (2 audit rows so far: user_unsuspended, campaign_suspended).
+-- Amara (...0002) is an ordinary organiser, Liam (...0003) owns c4 and c5.
+
+select pg_temp.become('00000000-0000-4000-8000-000000000002', 'authenticated');
+
+select is(
+  pg_temp.sqlstate_of($$select public.admin_suspend_campaign('10000000-0000-4000-8000-000000000001', 'I want this gone')$$),
+  '42501', 'non-admin cannot suspend a campaign');
+select is(
+  pg_temp.sqlstate_of($$select public.admin_restore_campaign('10000000-0000-4000-8000-000000000004')$$),
+  '42501', 'non-admin cannot restore a campaign');
+select is(
+  pg_temp.sqlstate_of($$select public.admin_suspend_user('00000000-0000-4000-8000-000000000003', 'I dislike them')$$),
+  '42501', 'non-admin cannot suspend a user');
+select is(
+  pg_temp.sqlstate_of($$select public.admin_unsuspend_user('00000000-0000-4000-8000-000000000004')$$),
+  '42501', 'non-admin cannot unsuspend a user');
+select is(
+  pg_temp.sqlstate_of($$insert into public.moderation_action (admin_id, action, target_type, target_id, reason)
+    values ('00000000-0000-4000-8000-000000000002', 'user_suspended', 'user', '00000000-0000-4000-8000-000000000003', 'forged')$$),
+  '42501', 'non-admin cannot write the audit table');
+select is(
+  (select count(*)::int from public.moderation_action), 0,
+  'non-admin cannot read the audit table');
+
+select pg_temp.become(null, 'anon');
+select is(
+  pg_temp.sqlstate_of($$select public.admin_suspend_campaign('10000000-0000-4000-8000-000000000002', 'anonymous attempt')$$),
+  '42501', 'anon cannot call the moderation functions');
+
+select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
+
+select is(
+  pg_temp.sqlstate_of($$select public.admin_suspend_campaign('10000000-0000-4000-8000-000000000002', 'ab')$$),
+  '23514', 'a suspension requires a reason of at least 3 characters');
+select is(
+  pg_temp.sqlstate_of($$select public.admin_suspend_campaign('10000000-0000-4000-8000-000000000003', 'Draft suspension')$$),
+  '23514', 'a draft campaign cannot be suspended');
+select is(
+  pg_temp.sqlstate_of($$select public.admin_restore_campaign('10000000-0000-4000-8000-000000000002')$$),
+  '23514', 'a campaign that is not suspended cannot be restored');
+select is(
+  pg_temp.sqlstate_of($$select public.admin_suspend_campaign('10000000-0000-4000-8000-000000000002', 'Misleading claims')$$),
+  null, 'admin can suspend a live campaign with a reason');
+select is(
+  (select status || '/' || suspended_from_status || '/' || suspended_reason
+     from public.campaign where id = '10000000-0000-4000-8000-000000000002'),
+  'suspended/live/Misleading claims', 'suspension stores the prior status and the reason');
+select is(
+  (select count(*)::int from public.moderation_action
+    where action = 'campaign_suspended' and target_type = 'campaign'
+      and target_id = '10000000-0000-4000-8000-000000000002'
+      and admin_id = '00000000-0000-4000-8000-000000000001' and reason = 'Misleading claims'),
+  1, 'the suspension wrote an audit row in the same transaction');
+select is(
+  (select count(*)::int from public.moderation_action), 3,
+  'admin can read the audit table');
+
+select pg_temp.become(null, 'anon');
+select is(
+  (select count(*)::int from public.campaign where id = '10000000-0000-4000-8000-000000000002'), 0,
+  'a suspended campaign is not publicly readable');
+
+select pg_temp.become(null, 'service_role');
+select is(
+  pg_temp.sqlstate_of($$insert into public.donation (campaign_id, amount, currency, status)
+    values ('10000000-0000-4000-8000-000000000002', 500, 'KES', 'pending')$$),
+  '23514', 'a suspended campaign refuses new pending donations');
+
+select pg_temp.become('00000000-0000-4000-8000-000000000002', 'authenticated');
+select is(
+  (select suspended_reason from public.campaign where id = '10000000-0000-4000-8000-000000000002'),
+  'Misleading claims', 'the owner can still read their suspended campaign and its reason');
+select is(
+  pg_temp.affected($$update public.campaign set title = 'Editing while suspended'
+    where id = '10000000-0000-4000-8000-000000000002'$$),
+  0, 'the owner cannot edit their suspended campaign');
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set suspended_reason = null
+    where id = '10000000-0000-4000-8000-000000000002'$$),
+  '42501', 'the owner cannot clear a suspension reason themselves');
+
+select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
+select is(
+  pg_temp.sqlstate_of($$select public.admin_restore_campaign('10000000-0000-4000-8000-000000000002')$$),
+  null, 'admin can restore a campaign');
+select is(
+  (select status || '/' || coalesce(suspended_reason, 'none')
+     from public.campaign where id = '10000000-0000-4000-8000-000000000002'),
+  'live/none', 'restore returns the campaign to its prior status and clears the reason');
+select is(
+  (select count(*)::int from public.moderation_action
+    where action = 'campaign_restored' and target_id = '10000000-0000-4000-8000-000000000002'),
+  1, 'the restore wrote an audit row');
+select is(
+  pg_temp.sqlstate_of($$select public.admin_restore_campaign('10000000-0000-4000-8000-000000000006')$$),
+  null, 'admin can restore a suspended campaign that has no stored prior status');
+select is(
+  (select status from public.campaign where id = '10000000-0000-4000-8000-000000000006'),
+  'closed', 'a campaign with no stored prior status is restored to closed, not live');
+select is(
+  pg_temp.sqlstate_of($$insert into public.moderation_action (admin_id, action, target_type, target_id, reason)
+    values ('00000000-0000-4000-8000-000000000001', 'user_suspended', 'user', '00000000-0000-4000-8000-000000000003', 'forged')$$),
+  '42501', 'even an admin cannot write the audit table directly');
+select is(
+  pg_temp.sqlstate_of($$select public.admin_suspend_user('00000000-0000-4000-8000-000000000001', 'Suspending myself')$$),
+  '23514', 'an admin cannot suspend themselves');
+select is(
+  pg_temp.sqlstate_of($$select public.admin_suspend_user('00000000-0000-4000-8000-000000000003', 'Policy violation')$$),
+  null, 'admin can suspend a user');
+select is(
+  (select suspended::text || '/' || suspended_reason from public.profile where id = '00000000-0000-4000-8000-000000000003'),
+  'true/Policy violation', 'user suspension stores the reason');
+
+select pg_temp.become('00000000-0000-4000-8000-000000000003', 'authenticated');
+select is(
+  pg_temp.sqlstate_of($$insert into public.campaign (owner_id, title, slug, category, country, goal_amount)
+    values ('00000000-0000-4000-8000-000000000003', 'Suspended organiser', 'suspended-organiser', 'Other', 'GB', 100)$$),
+  '42501', 'a user suspended by an admin cannot create campaigns');
+select is(
+  pg_temp.affected($$update public.campaign set title = 'Still editing'
+    where id = '10000000-0000-4000-8000-000000000005'$$),
+  0, 'a user suspended by an admin cannot edit campaigns');
+
+select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
+select is(
+  pg_temp.sqlstate_of($$select public.admin_unsuspend_user('00000000-0000-4000-8000-000000000003')$$),
+  null, 'admin can unsuspend a user');
+select is(
+  pg_temp.sqlstate_of($$select public.admin_unsuspend_user('00000000-0000-4000-8000-000000000003')$$),
+  'P0002', 'unsuspending a user who is not suspended is reported, not silently audited');
+select is(
+  (select count(*)::int from public.moderation_action where target_type = 'user'
+     and target_id = '00000000-0000-4000-8000-000000000003'),
+  2, 'both user actions are in the audit trail');
 
 select * from finish();
 
