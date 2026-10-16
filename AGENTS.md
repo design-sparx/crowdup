@@ -1,6 +1,6 @@
 # AGENTS.md
 
-CrowdUp: a crowdfunding front-end (React Router 8 framework mode with server rendering, React 19, TypeScript 6, Mantine 9, Vite 8). No backend yet; content comes from static JSON in `src/data/`.
+CrowdUp: an open-source, self-hostable donation crowdfunding app (React Router 8 framework mode with server rendering, React 19, TypeScript 6, Mantine 9, Vite 8) backed by Supabase (Postgres, Auth, Storage) and Stripe Connect. Deployed on Netlify. Operator docs are in `docs/` (start at `docs/README.md`).
 
 ## Commands
 
@@ -10,7 +10,9 @@ pnpm is the package manager (`pnpm-lock.yaml`). Use `pnpm`, not `npm` or `yarn`.
 - `pnpm build` runs `react-router typegen`, `tsc`, then `react-router build` (output in `build/client`; type errors fail the build)
 - `pnpm lint` runs ESLint with `--max-warnings 0`, so any warning fails
 - `pnpm preview` serves `build/client`
-- `pnpm test` runs Vitest.
+- `pnpm test` runs Vitest unit tests (`src/**` and `scripts/**`; `e2e/` is excluded)
+- `pnpm test:db` runs `supabase db reset` then `supabase test db` (pgTAP in `supabase/tests/database/`; needs Docker and the Supabase CLI)
+- `pnpm test:e2e` runs Playwright (`e2e/`) against the production build on port 4173; run `pnpm build` first and have local Supabase running
 
 ## Architecture
 
@@ -19,5 +21,8 @@ pnpm is the package manager (`pnpm-lock.yaml`). Use `pnpm`, not `npm` or `yarn`.
 - `src/pages`, `src/components`, `src/layout` and `src/helpers` each re-export through an `index.ts` barrel. When adding a file there, export it from the barrel. Route modules in `src/routes/` are not barrelled. Pages are imported with a `Page` suffix (e.g. `HomePage`).
 - Netlify deploys via `@netlify/vite-plugin-react-router` (generates the SSR handler; `netlify.toml` needs no redirects). Unknown paths render server-side with a real 404. Routes export `meta` built with `buildMeta` from `src/helpers`. Browser-only code (window, Tiptap `useEditor`) must be guarded: use effects or `immediatelyRender: false`. Run the production build locally with `react-router-serve build/server/index.js`.
 - `src/sections/Home/` holds page-specific sections. Shared UI lives in `src/components`.
-- `src/types/index.ts` holds shared types. `src/data/*.json` provides mock campaigns, countries, currencies, nav links, testimonials and the user.
+- Data and server code: `supabase/migrations/` is the schema (RLS, security-definer functions, storage bucket); `supabase/seed.sql` is local sample data and `supabase/demo-seed.sql` is demo only. `src/data-access/<area>/` holds server-only modules (`*.server.ts`) wiring Supabase and Stripe to loaders and actions; `src/lib/<area>/` holds pure, unit-tested logic (status transitions in `src/lib/campaigns/transitions.ts` mirror the SQL). Stripe webhook: `src/routes/api-stripe-webhook.tsx`.
+- Configuration is server-side environment variables only (read via `process.env`, no `VITE_` vars). The full list is in `docs/self-hosting.md` and `.env.example`; add new variables to both and to `netlify.toml` `[template.environment]` if required.
+- `src/types/index.ts` holds shared types. `src/data/*.json` still provides static countries, currencies, nav and footer links, testimonials and a mock user; campaigns come from Supabase. Legal page text is configured in `src/data/legal.ts`.
+- `scripts/` holds the demo reset (guarded, unit tested). CI is in `.github/workflows/` (CI, database permissions, end-to-end, demo reset, release-please); commits follow Conventional Commits.
 - Charts use `react-apexcharts`. The rich text editor uses Tiptap with `@mantine/tiptap`.
