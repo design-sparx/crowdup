@@ -1,7 +1,7 @@
 import type {Config} from "@react-router/dev/config";
 
-// Single-page mode: no server rendering yet (enabled in a later ticket).
+// Server rendering on (Netlify handler via @netlify/vite-plugin-react-router).
 export default {
     appDirectory: "src",
-    ssr: false,
+    ssr: true,
 } satisfies Config;
