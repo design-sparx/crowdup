@@ -1,0 +1,36 @@
+name: Reset demo database
+
+# Resets the PUBLIC DEMO database to supabase/seed.sql + supabase/demo-seed.sql.
+# Safe by design: scripts/demo-reset.mjs refuses to run unless the project ref inside
+# DEMO_DATABASE_URL equals DEMO_RESET_CONFIRM_PROJECT_REF. See docs/demo.md.
+# Forks and instances without these secrets skip the job.
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: demo-reset
+  cancel-in-progress: false
+
+jobs:
+  reset:
+    name: Reset demo data
+    runs-on: ubuntu-latest
+    if: ${{ vars.DEMO_RESET_ENABLED == 'true' }}
+    env:
+      DEMO_DATABASE_URL: ${{ secrets.DEMO_DATABASE_URL }}
+      DEMO_RESET_CONFIRM_PROJECT_REF: ${{ secrets.DEMO_RESET_CONFIRM_PROJECT_REF }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Reset demo database
+        run: node scripts/demo-reset.mjs

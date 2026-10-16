@@ -6,6 +6,8 @@
 
 [Online Demo](https://crowd-up.netlify.app/ "Online Demo")
 
+TODO(ticket 24): replace with the live demo URL once deployed (see docs/demo.md).
+
 ### About
 
 CrowdUp is a crowdfunding platform that helps you get funding for your personal projects, charities, and NGOs. Start a fundraiser and receive donations from individuals who care about your cause.
