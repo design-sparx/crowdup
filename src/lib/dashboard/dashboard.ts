@@ -5,7 +5,8 @@ export interface DashboardCampaign {
     slug: string;
     title: string;
     status: string;
-    currency: string;
+    /** Null for a draft that has not gone live yet (currency is set at go-live). */
+    currency: string | null;
     goalAmount: number;
 }
 

@@ -26,6 +26,7 @@ import {
 import classes from "./Dashboard.module.css";
 
 interface Props {
+    stripePanel?: React.ReactNode;
     campaigns: DashboardCampaign[];
     donations: DashboardDonation[];
     name: string;
@@ -42,7 +43,7 @@ const EmptyState = ({title, children}: {title: string; children?: React.ReactNod
     </Stack>
 );
 
-const DashboardPage = ({campaigns, donations, name, now}: Props) => {
+const DashboardPage = ({campaigns, donations, name, now, stripePanel}: Props) => {
     const {campaigns: stats, totalsByCurrency} = summarize(campaigns, donations);
     const titles = Object.fromEntries(campaigns.map((c) => [c.id, c.title]));
     const hasChartData = bucketDonations(donations, 30, new Date(now)).series.length > 0;
@@ -56,6 +57,7 @@ const DashboardPage = ({campaigns, donations, name, now}: Props) => {
                 <Container fluid my="xl">
                     <Stack gap="xl">
                         <Title order={3}>{name ? `Welcome, ${name}` : "Welcome"}</Title>
+                        {stripePanel}
                         <SimpleGrid cols={{base: 1, sm: 3}} spacing={{base: "sm", sm: "md"}}>
                             <Paper {...paperProps}>
                                 <Group justify="space-between">

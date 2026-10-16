@@ -16,7 +16,7 @@ interface CampaignRow {
     slug: string;
     title: string;
     status: string;
-    currency: string;
+    currency: string | null;
     goal_amount: number;
 }
 

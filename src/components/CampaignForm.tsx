@@ -18,7 +18,6 @@ import {RichTextEditor} from "@mantine/tiptap";
 import {useEditor} from "@tiptap/react";
 import CategorySelect from "./CategorySelect";
 import CountrySelect from "./CountrySelect";
-import CurrencySelect from "./CurrencySelect";
 import {COVER_MAX_BYTES, COVER_TYPES} from "../lib/campaigns/cover";
 import {storyExtensions} from "../lib/campaigns/storyExtensions";
 import type {CampaignFormErrors} from "../lib/campaigns/form";
@@ -30,7 +29,8 @@ export interface CampaignFormValues {
     description: string;
     /** Major units as text, e.g. "5000.50". */
     goal: string;
-    currency: string;
+    /** Account currency once the organiser is connected, else null. */
+    currency: string | null;
     endDate: string;
     story: unknown;
     coverImageUrl: string | null;
@@ -42,9 +42,10 @@ interface Props {
     errors?: CampaignFormErrors & {form?: string; cover?: string};
     status?: string;
     saved?: boolean;
+    publish?: string | null;
 }
 
-const CampaignForm = ({mode, values, errors = {}, status, saved}: Props) => {
+const CampaignForm = ({mode, values, errors = {}, status, saved, publish}: Props) => {
     const navigation = useNavigation();
     const saving = navigation.state !== "idle";
     const [story, setStory] = useState(() => JSON.stringify(values.story ?? {type: "doc", content: []}));
@@ -61,6 +62,13 @@ const CampaignForm = ({mode, values, errors = {}, status, saved}: Props) => {
         <Form method="post" encType="multipart/form-data">
             <Title mb="xl" ta="center">{mode === "create" ? "Create your campaign" : "Edit your campaign"}</Title>
             {saved && <Alert color="green" mb="md">Draft saved.</Alert>}
+            {publish === "live" && <Alert color="green" mb="md">Your campaign is live.</Alert>}
+            {publish === "awaiting_approval" && (
+                <Alert color="yellow" mb="md">Your campaign is waiting for administrator approval before it goes live.</Alert>
+            )}
+            {publish === "not_connected" && (
+                <Alert color="yellow" mb="md">Connect your Stripe account from the dashboard to publish this campaign.</Alert>
+            )}
             {locked && (
                 <Alert color="red" mb="md">This campaign is suspended and cannot be edited.</Alert>
             )}
@@ -99,14 +107,15 @@ const CampaignForm = ({mode, values, errors = {}, status, saved}: Props) => {
                             defaultValue={values.goal}
                             error={errors.goal}
                         />
-                        <CurrencySelect
-                            name="currency"
+                        <TextInput
                             label="Currency"
-                            required
-                            disabled={mode === "edit"}
-                            description={mode === "edit" ? "The currency cannot be changed after creation." : undefined}
-                            defaultValue={values.currency || null}
-                            error={errors.currency}
+                            readOnly
+                            disabled
+                            value={values.currency ?? ""}
+                            placeholder="Set from your Stripe account"
+                            description={values.currency
+                                ? "Taken from your Stripe account and fixed for this campaign."
+                                : "Set from your Stripe account when the campaign goes live, then fixed."}
                         />
                     </SimpleGrid>
                     <TextInput

@@ -55,6 +55,10 @@ The app runs at http://localhost:5173.
 - `pnpm lint` runs ESLint with zero warnings allowed
 - `pnpm preview` serves the production build
 
+### Stripe
+
+Organisers get paid through Stripe Connect. See [docs/stripe.md](docs/stripe.md) for setup and test mode.
+
 ### Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, checks and how to open a pull request. Report security issues privately as described in [SECURITY.md](SECURITY.md).

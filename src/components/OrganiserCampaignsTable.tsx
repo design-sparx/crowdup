@@ -30,7 +30,9 @@ const OrganiserCampaignsTable = ({campaigns}: {campaigns: CampaignStats[]}) => (
                         <Table.Td>
                             <Stack gap={4}>
                                 <Text size="sm">
-                                    {formatMinorAmount(c.raised, c.currency)} of {formatMinorAmount(c.goalAmount, c.currency)}
+                                    {c.currency
+                                        ? `${formatMinorAmount(c.raised, c.currency)} of ${formatMinorAmount(c.goalAmount, c.currency)}`
+                                        : `Goal ${c.goalAmount / 100} (currency set at go-live)`}
                                 </Text>
                                 <Progress value={c.percentFunded} size="sm" aria-label={`${c.percentFunded}% funded`}/>
                             </Stack>

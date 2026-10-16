@@ -12,7 +12,7 @@
 
 begin;
 
-select plan(83);
+select plan(89);
 
 -- Helpers, scoped to this session.
 
@@ -239,6 +239,18 @@ select is(
   'owner cannot change the campaign currency'
 );
 select is(
+  pg_temp.sqlstate_of($$insert into public.campaign (owner_id, title, slug, category, country, goal_amount, currency)
+    values ('00000000-0000-4000-8000-000000000002', 'Chosen currency', 'chosen-currency', 'Other', 'KE', 100, 'USD')$$),
+  '42501',
+  'owner cannot choose a currency when creating a campaign'
+);
+select is(
+  pg_temp.affected($$insert into public.campaign (owner_id, title, slug, category, country, goal_amount)
+    values ('00000000-0000-4000-8000-000000000002', 'No currency yet', 'no-currency-yet', 'Other', 'KE', 100)$$),
+  1,
+  'owner can create a draft without a currency'
+);
+select is(
   pg_temp.sqlstate_of($$insert into public.campaign (owner_id, title, slug, category, country, goal_amount, currency, status)
     values ('00000000-0000-4000-8000-000000000002', 'Pre-live', 'pre-live', 'Other', 'KE', 100, 'KES', 'live')$$),
   '42501',
@@ -318,6 +330,12 @@ select is(
   'a user cannot mark their own Stripe onboarding complete'
 );
 select is(
+  pg_temp.sqlstate_of($$update public.profile set stripe_currency = 'USD'
+    where id = '00000000-0000-4000-8000-000000000005'$$),
+  '42501',
+  'a user cannot set their own Stripe currency'
+);
+select is(
   pg_temp.affected($$update public.profile set display_name = 'Dana D.'
     where id = '00000000-0000-4000-8000-000000000005'$$),
   1,
@@ -335,8 +353,8 @@ select is(
 select pg_temp.become('00000000-0000-4000-8000-000000000004', 'authenticated');
 
 select is(
-  pg_temp.sqlstate_of($$insert into public.campaign (owner_id, title, slug, category, country, goal_amount, currency)
-    values ('00000000-0000-4000-8000-000000000004', 'Sneaky campaign', 'sneaky-campaign', 'Other', 'GB', 100, 'GBP')$$),
+  pg_temp.sqlstate_of($$insert into public.campaign (owner_id, title, slug, category, country, goal_amount)
+    values ('00000000-0000-4000-8000-000000000004', 'Sneaky campaign', 'sneaky-campaign', 'Other', 'GB', 100)$$),
   '42501',
   'suspended users cannot create campaigns'
 );
@@ -357,7 +375,7 @@ select is(
 
 select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
 
-select is((select count(*)::int from public.campaign), 6, 'admin reads every campaign, including drafts and suspended');
+select is((select count(*)::int from public.campaign), 7, 'admin reads every campaign, including drafts and suspended (and the draft created by an owner earlier in this file)');
 select is((select count(*)::int from public.report), 2, 'admin reads every report');
 select is(
   pg_temp.sqlstate_of($$insert into public.donation (campaign_id, amount, currency, status)
@@ -434,6 +452,24 @@ select is(
   1,
   'service role sets payout fields'
 );
+select is(
+  pg_temp.affected($$update public.profile set stripe_currency = 'KES'
+    where id = '00000000-0000-4000-8000-000000000005'$$),
+  1,
+  'service role sets the Stripe currency'
+);
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set currency = 'USD'
+    where id = '10000000-0000-4000-8000-000000000003'$$),
+  '42501',
+  'even the service role cannot change a campaign currency once set'
+);
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set status = 'live', published_at = now(), currency = 'KES'
+    where id = (select id from public.campaign where slug = 'no-currency-yet')$$),
+  null,
+  'service role publishes a currency-less draft and sets its currency'
+);
 
 -- Unauthenticated clients never see another organiser's draft through totals either.
 
@@ -461,8 +497,8 @@ select is(
   'another organiser cannot edit a draft'
 );
 select is(
-  pg_temp.sqlstate_of($$insert into public.campaign (owner_id, title, slug, category, country, goal_amount, currency)
-    values ('00000000-0000-4000-8000-000000000002', 'Forged owner', 'forged-owner', 'Other', 'KE', 100, 'KES')$$),
+  pg_temp.sqlstate_of($$insert into public.campaign (owner_id, title, slug, category, country, goal_amount)
+    values ('00000000-0000-4000-8000-000000000002', 'Forged owner', 'forged-owner', 'Other', 'KE', 100)$$),
   '42501',
   'a user cannot create a campaign owned by someone else'
 );
