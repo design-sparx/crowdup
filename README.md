@@ -1,74 +1,65 @@
 ![image](https://github.com/design-sparx/crowdup/assets/26582923/001cd476-c753-4087-96a6-ee8c99fc3612)
 
-# Crowdfunding website project
+# CrowdUp: crowdfunding website
 
 [Online Demo](https://crowd-up.netlify.app/ "Online Demo")
 
-### About:
+### About
 
 CrowdUp is a crowdfunding platform that helps you get funding for your personal projects, charities, and NGOs. Start a fundraiser and receive donations from individuals who care about your cause.
 
-#### Available Pages
+#### Available pages
 
 1. Home
 2. How it works
 3. Campaigns
 4. Campaign details
-5. Create campaigns
+5. Create campaign
 6. Dashboard
 
-### Tech Stack:
+### Tech stack
 
-- embla-carousel-react v7 - https://www.embla-carousel.com/get-started/
-- mantine v6 - https://mantine.dev/pages/getting-started/
-- react v18 - https://reactjs.org/docs/getting-started.html
-- tabler-icons v2- https://react-icons.github.io/react-icons/
+- [Mantine 9](https://mantine.dev/getting-started/) (UI components, `@mantine/carousel`, `@mantine/dates`, `@mantine/dropzone`, `@mantine/form`, `@mantine/notifications`, `@mantine/tiptap`)
+- [React 19](https://react.dev/)
+- [react-router-dom 7](https://reactrouter.com/)
+- [Tiptap](https://tiptap.dev/) rich text editor
+- [ApexCharts](https://apexcharts.com/) via `react-apexcharts`
+- [Tabler icons](https://tabler.io/icons)
 
-**Dev dependencies**
-
-- eslint v8 - https://eslint.org/docs/latest/user-guide/getting-started- 
-- vite v4 - https://vitejs.dev/
-
-### Software
-
-Before proceeding, please ensure you have the following software installed on your computer.
-
-- Node
-- pnpm 9 (install with `corepack enable`)
-- Git command line tools
-
-### Useful links
-
-- Download Git cli -
-    - Windows: https://git-scm.com/download/windows
-    - Mac: https://git-scm.com/download/mac
-- Download Node - https://nodejs.org/en/
-- Download VSCode - https://code.visualstudio.com/
+**Dev dependencies:** TypeScript 6, Vite 8, ESLint 10.
 
 ### Getting started
 
-Please fork a copy of this repository. Forking a repository allows you to freely experiment with changes without affecting the original project. Alternatively download or clone the master branch.
+**Software**
 
-##### Download & Install Dependencies on your machine
+- Node.js (current LTS)
+- pnpm 9 (install with `corepack enable`)
+- Git
 
-Clone the repo to your machine
-`git clone <CloneURL>`
+**Install and run**
 
-##### Launch the frontend
+```sh
+git clone https://github.com/design-sparx/crowdup.git
+cd crowdup
+pnpm install
+pnpm dev
+```
 
-1. Open a new terminal window and navigate in your root folder
-   `cd <../root>`
-   `pnpm install`
-2. Run the start script
-   `pnpm dev`
+The app runs at http://localhost:5173.
 
-Your app should be running on: http://localhost:3000
+**Other scripts**
+
+- `pnpm build` type-checks with `tsc` and builds with `vite build`
+- `pnpm lint` runs ESLint with zero warnings allowed
+- `pnpm preview` serves the production build
+
+### Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, checks and how to open a pull request. Report security issues privately as described in [SECURITY.md](SECURITY.md).
 
 ### Versions
 
-v1.0
-
-- Default project implementation
+v1.0: default project implementation
 
 ### Authors
 
@@ -76,4 +67,4 @@ v1.0
 
 ### License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/kelvink96ltd/flick-city/blob/master/LICENSE.md) file for details
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

@@ -1,5 +1,6 @@
 {
-  "name": "drove",
+  "name": "crowdup",
+  "license": "MIT",
   "private": true,
   "packageManager": "pnpm@9.15.9",
   "version": "0.0.0",
@@ -11,17 +12,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@floating-ui/dom": "^1.8.0",
     "@mantine/carousel": "^9.7.2",
     "@mantine/core": "^9.7.2",
     "@mantine/dates": "^9.7.2",
     "@mantine/dropzone": "^9.7.2",
     "@mantine/form": "^9.7.2",
     "@mantine/hooks": "^9.7.2",
-    "@mantine/modals": "^9.7.2",
     "@mantine/notifications": "^9.7.2",
-    "@mantine/nprogress": "^9.7.2",
     "@mantine/tiptap": "^9.7.2",
     "@tabler/icons-react": "^3.49.0",
     "@tiptap/core": "^3.32.0",
