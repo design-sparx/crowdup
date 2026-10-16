@@ -1,6 +1,6 @@
 import {Button, Center, Container, Group, Overlay, Stack, Text, Title} from '@mantine/core';
 import {IconRocket} from "@tabler/icons-react";
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 import classes from "./Hero.module.css";
 
 const HeroSection = () => {

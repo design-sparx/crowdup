@@ -13,7 +13,7 @@ import {
     TitleProps
 } from "@mantine/core";
 import {TitleBadge} from "../../components";
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 import clsx from "clsx";
 import classes from "./WaysToFund.module.css";
 
