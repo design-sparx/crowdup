@@ -8,5 +8,8 @@ export const customTheme: MantineThemeOverride = {
     },
     primaryColor: 'primary',
     primaryShade: 6,
-    fontFamily: 'Montserrat, sans-serif'
+    fontFamily: 'Montserrat, sans-serif',
+    // Mantine 9 changed these defaults; keep the v6 values so spacing is unchanged
+    spacing: {xs: '0.625rem', sm: '0.75rem', md: '1rem', lg: '1.25rem', xl: '1.5rem'},
+    lineHeights: {xs: '1.55', sm: '1.55', md: '1.55', lg: '1.55', xl: '1.55'},
 }
