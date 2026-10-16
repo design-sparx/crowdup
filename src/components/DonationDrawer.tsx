@@ -47,7 +47,7 @@ const DonationDrawer = ({campaign, iconSize, ...others}: IProps) => {
     const paperProps: PaperProps = {
         p: "md",
         withBorder: true,
-        sx: {backgroundColor: theme.white}
+        style: {backgroundColor: theme.white}
     }
 
     return (
@@ -95,14 +95,14 @@ const DonationDrawer = ({campaign, iconSize, ...others}: IProps) => {
                             <Group mt="sm">
                                 <Radio
                                     value="gpay"
-                                    label={<Group spacing="xs"><IconBrandGoogle size={iconSize}/><Text>Google Pay</Text></Group>}/>
+                                    label={<Group gap="xs"><IconBrandGoogle size={iconSize}/><Text>Google Pay</Text></Group>}/>
                                 <Radio
                                     value="applepay"
-                                    label={<Group spacing="xs"><IconBrandApple size={iconSize}/><Text>Apple
+                                    label={<Group gap="xs"><IconBrandApple size={iconSize}/><Text>Apple
                                         Pay</Text></Group>}/>
                                 <Radio
                                     value="card"
-                                    label={<Group spacing="xs"><IconCreditCard size={iconSize}/><Text>Credit or
+                                    label={<Group gap="xs"><IconCreditCard size={iconSize}/><Text>Credit or
                                         debit</Text></Group>}/>
                             </Group>
                         </Radio.Group>
@@ -119,7 +119,7 @@ const DonationDrawer = ({campaign, iconSize, ...others}: IProps) => {
                                     mt="sm"
                                     style={styles}
                                 >
-                                    <Stack sx={{width: '100%'}}>
+                                    <Stack style={{width: '100%'}}>
                                         <TextInput label="Email address"/>
                                         <Group grow>
                                             <TextInput label="First name"/>
@@ -144,7 +144,7 @@ const DonationDrawer = ({campaign, iconSize, ...others}: IProps) => {
                     </Paper>
                     <Paper {...paperProps}>
                         <Stack>
-                            <Group spacing={4}>
+                            <Group gap={4}>
                                 <Checkbox label="Don't display my name publicly on the fundraiser."/>
                                 <Popover width={200} position="bottom" withArrow shadow="md">
                                     <Popover.Target>
@@ -165,15 +165,15 @@ const DonationDrawer = ({campaign, iconSize, ...others}: IProps) => {
                     <Paper {...paperProps}>
                         <Stack>
                             <Text fw={700} size="lg">Your donation</Text>
-                            <Group position="apart">
+                            <Group justify="space-between">
                                 <Text>Your donation</Text>
                                 <Text fw={500}>$0.00</Text>
                             </Group>
-                            <Group position="apart">
+                            <Group justify="space-between">
                                 <Text>CrowdUp tip</Text>
                                 <Text fw={500}>$0.00</Text>
                             </Group>
-                            <Group position="apart">
+                            <Group justify="space-between">
                                 <Text>Total due today</Text>
                                 <Text fw={500}>$0.00</Text>
                             </Group>

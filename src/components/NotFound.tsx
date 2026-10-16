@@ -54,7 +54,7 @@ const NotFound = () => {
                 <Image src={image} height={320} fit="contain"/>
                 <div>
                     <Title className={classes.title}>Something is not right...</Title>
-                    <Text color="dimmed" size="lg">
+                    <Text c="dimmed" size="lg">
                         Page you are trying to open does not exist. You may have mistyped the address, or the
                         page has been moved to another URL. If you think this is an error contact support.
                     </Text>

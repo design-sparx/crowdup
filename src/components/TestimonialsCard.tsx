@@ -47,12 +47,12 @@ const CampaignCard = ({data, ...others}: IProps) => {
 
     return (
         <Paper radius="md" className={classes.card} mx={36} {...others}>
-            <Grid sx={{alignItems: 'center'}}>
+            <Grid style={{alignItems: 'center'}}>
                 {matchesMobile && <Grid.Col lg={5}>
                     <Image src={createdByImage} height={360} fit="cover"/>
                 </Grid.Col>}
                 <Grid.Col lg={7} pl={matchesMobile ? 'xl' : 'xl'} pb="xl">
-                    <Stack spacing="sm">
+                    <Stack gap="sm">
                         <Text size="xl">"{testimonial}"</Text>
                         <Text fw={700}>{createdBy}</Text>
                         <Group>

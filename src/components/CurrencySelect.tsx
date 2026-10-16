@@ -6,7 +6,7 @@ import currencyData from "../data/Currencies.json";
 const CurrencySelectItem = forwardRef<HTMLDivElement, ICurrency>(
     ({name, cc, ...others}: ICurrency, ref) => (
         <div ref={ref} {...others}>
-            <Group noWrap>
+            <Group wrap="nowrap">
                 <Text size="sm">{name}</Text>
                 <Text size="sm" opacity={0.65}>
                     {cc}

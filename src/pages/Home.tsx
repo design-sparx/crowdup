@@ -19,17 +19,17 @@ const HomePage = (): JSX.Element => {
 
     const titleProps: TitleProps = {
         size: 32,
-        weight: 800,
+        fw: 800,
         mb: "lg",
-        transform: 'capitalize',
-        sx: {lineHeight: '40px'}
+        tt: 'capitalize',
+        style: {lineHeight: '40px'}
     }
 
     const subTitleProps: TextProps = {
-        size: 20,
-        weight: 700,
+        fz: 20,
+        fw: 700,
         mb: "md",
-        sx: {lineHeight: '28px'}
+        style: {lineHeight: '28px'}
     }
 
     return (

@@ -20,8 +20,8 @@ const FileDropzone = ({label, description, ...others}: IFileInputProps) => {
             {...others}
         >
             <Group
-                position="center"
-                spacing="xl"
+                justify="center"
+                gap="xl"
                 style={{minHeight: rem(120), pointerEvents: 'none'}}
             >
                 <Dropzone.Accept>
@@ -49,7 +49,7 @@ const FileDropzone = ({label, description, ...others}: IFileInputProps) => {
                     <Text size="xl" inline>
                         {label || 'Upload your profile picture'}
                     </Text>
-                    <Text size="sm" color="dimmed" inline mt={7}>
+                    <Text size="sm" c="dimmed" inline mt={7}>
                         {description || 'This picture will be shown next to your name'}
                     </Text>
                 </div>

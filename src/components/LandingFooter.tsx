@@ -172,7 +172,7 @@ const LandingFooter = ({data}: FooterLinksProps) => {
                     © {new Date().getFullYear()} CrowdUp. All rights reserved.
                 </Text>
 
-                <Group spacing={0} className={classes.social} position="right" noWrap>
+                <Group gap={0} className={classes.social} justify="flex-end" wrap="nowrap">
                     <ActionIcon size="lg" component="a" href="https://github.com/kelvink96" target="_blank">
                         <IconBrandGithub size="20" stroke={2}/>
                     </ActionIcon>

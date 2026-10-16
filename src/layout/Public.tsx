@@ -14,7 +14,7 @@ const PublicLayout = ({compressedNav}: IProps) => {
     return (
         <>
             <LandingNavbar compressed={compressedNav}/>
-            <Box sx={{marginTop: compressedNav ? 0 : 96}}>
+            <Box style={{marginTop: compressedNav ? 0 : 96}}>
                 <Outlet/>
             </Box>
             <LandingFooter data={footerLinksData.data}/>

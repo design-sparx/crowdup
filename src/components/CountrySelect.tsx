@@ -6,7 +6,7 @@ import {ICountry} from "../types";
 const CountrySelectItem = forwardRef<HTMLDivElement, ICountry>(
     ({image, name, code, ...others}: ICountry, ref) => (
         <div ref={ref} {...others}>
-            <Group noWrap>
+            <Group wrap="nowrap">
                 <Avatar src={image}/>
 
                 <div>

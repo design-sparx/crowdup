@@ -15,7 +15,7 @@ const TestimonialsSection = ({boxProps, titleProps}: IProps) => {
 
     return (
         <Box {...boxProps}>
-            <Title {...titleProps} align="center">Testimonials</Title>
+            <Title {...titleProps} ta="center">Testimonials</Title>
             <Carousel slideSize="95%" align="center" slideGap="lg">
                 {slides}
             </Carousel>

@@ -15,10 +15,10 @@ const CampaignsPage = (): JSX.Element => {
 
     const titleProps: TitleProps = {
         size: 32,
-        weight: 700,
+        fw: 700,
         mb: "lg",
-        transform: 'capitalize',
-        sx: {lineHeight: '40px'}
+        tt: 'capitalize',
+        style: {lineHeight: '40px'}
     }
 
     const items = campaignsData.data.map(c => (<CampaignCard key={c.id} data={c} showActions={true}/>))
@@ -32,14 +32,14 @@ const CampaignsPage = (): JSX.Element => {
                 <Container size="lg">
                     <Stack>
                         <Box {...boxProps}>
-                            <Title {...titleProps} align="center">Discover campaigns to fund</Title>
+                            <Title {...titleProps} ta="center">Discover campaigns to fund</Title>
                         </Box>
                         <Flex
                             justify="space-between"
                             gap={{base: 'sm', sm: 'lg'}}
                             direction={{base: 'column-reverse', sm: 'row'}}
                         >
-                            <TextInput placeholder="search campaigns..." sx={{width: 500}}/>
+                            <TextInput placeholder="search campaigns..." style={{width: 500}}/>
                             <Flex align="center" gap="sm" justify={{base: 'space-between', sm: 'flex-start'}}>
                                 <Select
                                     label=""
@@ -65,12 +65,8 @@ const CampaignsPage = (): JSX.Element => {
                             </Flex>
                         </Flex>
                         <SimpleGrid
-                            cols={3}
-                            spacing="lg"
-                            breakpoints={[
-                                {maxWidth: 'md', cols: 2, spacing: 'md'},
-                                {maxWidth: 'sm', cols: 1, spacing: 0},
-                            ]}
+                            cols={{base: 1, sm: 2, md: 3}}
+                            spacing={{base: 0, sm: 'md', md: 'lg'}}
                         >
                             {items}
                         </SimpleGrid>

@@ -59,7 +59,7 @@ interface ICategorySelectItemProps extends Omit<React.HTMLAttributes<HTMLDivElem
 const CategorySelectItem = forwardRef<HTMLDivElement, ICategorySelectItemProps>(
     ({title, ...others}, ref) => (
         <div ref={ref} {...others}>
-            <Group noWrap>
+            <Group wrap="nowrap">
                 <others.icon size={18}/>
 
                 <div>

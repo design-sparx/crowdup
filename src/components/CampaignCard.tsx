@@ -76,8 +76,8 @@ const CampaignCard = ({data, showActions}: IProps) => {
                         {title}
                     </Text>
 
-                    <Group position="apart">
-                        <Text size="xs" transform="uppercase" color="dimmed" fw={700}>{country}</Text>
+                    <Group justify="space-between">
+                        <Text size="xs" tt="uppercase" c="dimmed" fw={700}>{country}</Text>
                         <Badge variant="dot" color="secondary">{category}</Badge>
                     </Group>
 

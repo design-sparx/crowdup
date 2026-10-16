@@ -67,9 +67,9 @@ interface ISocialProps {
 const SocialSelectItem = forwardRef<HTMLDivElement, ISocialProps>(
     ({title, icon: Icon, ...others}: ISocialProps, ref) => (
         <div ref={ref} {...others}>
-            <Group noWrap>
+            <Group wrap="nowrap">
                 <Icon size={18} stroke={1.5}/>
-                <Text size="sm" transform="capitalize">{title}</Text>
+                <Text size="sm" tt="capitalize">{title}</Text>
             </Group>
         </div>
     )
@@ -121,7 +121,7 @@ const CreateCampaignPage = () => {
             />
             <TextInput
                 placeholder="https://"
-                sx={{flex: 1}}
+                style={{flex: 1}}
                 {...socialForm.getInputProps(`employees.${index}.name`)}
             />
             <ActionIcon color="red" onClick={() => socialForm.removeListItem('employees', index)}>
@@ -145,7 +145,7 @@ const CreateCampaignPage = () => {
         withBorder: false,
         shadow: 'sm',
         mb: "md",
-        sx: {backgroundColor: theme.white}
+        style: {backgroundColor: theme.white}
     }
 
     return (
@@ -155,7 +155,7 @@ const CreateCampaignPage = () => {
             </Helmet>
             <Box>
                 <Container my={36}>
-                    <Title mb="xl" align="center">Create your campaign</Title>
+                    <Title mb="xl" ta="center">Create your campaign</Title>
                     <Stepper active={active} onStepClick={setActive} breakpoint="sm">
                         <Stepper.Step
                             label="Get started"
@@ -179,7 +179,7 @@ const CreateCampaignPage = () => {
                                 </SimpleGrid>
                             </Paper>
                             <Paper {...paperProps}>
-                                <Stack spacing="sm">
+                                <Stack gap="sm">
                                     <Title {...subTitleProps}>Donation information</Title>
                                     <CurrencySelect/>
                                     <Radio.Group
@@ -194,7 +194,7 @@ const CreateCampaignPage = () => {
                                     </Radio.Group>
                                     <Paper {...paperProps}>
                                         {target === 'deadline' ?
-                                            <Stack spacing="xs">
+                                            <Stack gap="xs">
                                                 <Text size="sm">Fundraiser with a specific end date?</Text>
                                                 <Text size="sm">This creates urgency and should always be used when
                                                     money is needed before a certain time.</Text>
@@ -207,11 +207,11 @@ const CreateCampaignPage = () => {
                                                 />
                                                 <NumberInput
                                                     label="Target amount"
-                                                    icon={<IconCurrencyDollar size={18}/>}/>
+                                                    leftSection={<IconCurrencyDollar size={18}/>}/>
                                                 <Checkbox
                                                     label="Allow your fundraiser to be funded over the needed amount?"/>
                                             </Stack> :
-                                            <Stack spacing="xs">
+                                            <Stack gap="xs">
                                                 <Text size="sm">Ongoing (no deadline) fundraiser?</Text>
                                                 <Text size="sm">This should be used if you are collecting money on a
                                                     regular
@@ -223,7 +223,7 @@ const CreateCampaignPage = () => {
                                                 {minimumCheck &&
                                                     <NumberInput
                                                         label="Target amount"
-                                                        icon={<IconCurrencyDollar size={18}/>}
+                                                        leftSection={<IconCurrencyDollar size={18}/>}
                                                     />}
                                             </Stack>}
                                     </Paper>
@@ -251,7 +251,7 @@ const CreateCampaignPage = () => {
                                 />
                             </Paper>
                             <Paper {...paperProps}>
-                                <Stack spacing="sm">
+                                <Stack gap="sm">
                                     <Title {...subTitleProps}>Fund & Registration details</Title>
                                     <Text size="sm">*Name of the person receiving funds. For organizations, the legal
                                         representative
@@ -282,7 +282,7 @@ const CreateCampaignPage = () => {
                                 Your campaign story
                             </Title>
                             <Paper {...paperProps}>
-                                <Stack spacing="sm">
+                                <Stack gap="sm">
                                     <Text size="sm">Explain why you&apos;re raising money, what the funds will be used
                                         for, and
                                         how much you value the support</Text>
@@ -335,7 +335,7 @@ const CreateCampaignPage = () => {
                                     <TextInput
                                         label="Video URL"
                                         description="The inclusion of a personalized video can help your fundraiser raise more money. We support links from YouTube and Vimeo. Simply copy paste your video link into the field below."
-                                        icon={<IconLink size={18}/>}
+                                        leftSection={<IconLink size={18}/>}
                                     />
                                 </Stack>
                             </Paper>
@@ -346,7 +346,7 @@ const CreateCampaignPage = () => {
                         >
                             <Title {...titleProps}>Final details</Title>
                             <Paper {...paperProps}>
-                                <Stack spacing="sm">
+                                <Stack gap="sm">
                                     <Title {...subTitleProps}>Manage Team</Title>
                                     <Text size="sm">If there&apos;s more than one person that's responsible for this
                                         fundraiser and you'd like them to get public credit and help manage this page,
@@ -366,7 +366,7 @@ const CreateCampaignPage = () => {
                                         />
                                     </SimpleGrid>
                                     <Button
-                                        leftIcon={<IconMail size={18}/>}
+                                        leftSection={<IconMail size={18}/>}
                                         mx="auto"
                                         variant="light"
                                     >
@@ -376,7 +376,7 @@ const CreateCampaignPage = () => {
                             </Paper>
                             <Paper {...paperProps}>
                                 <Title {...subTitleProps}>Visibility</Title>
-                                <Stack spacing="sm">
+                                <Stack gap="sm">
                                     <Checkbox label="Allow your fundraiser to be shown under user created groups."/>
                                     <Checkbox
                                         label="Check this box if you would like to hide your campaign on our site. Only those that you send the URL to will be able to find it and donate."/>
@@ -395,16 +395,16 @@ const CreateCampaignPage = () => {
                                         <Flex mb="xs">
                                         </Flex>
                                     ) : (
-                                        <Text color="dimmed" align="center" my="md">
+                                        <Text c="dimmed" ta="center" my="md">
                                             Add social media link
                                         </Text>
                                     )}
 
                                     {socialFields}
 
-                                    <Group position="center" mt="md">
+                                    <Group justify="center" mt="md">
                                         <Button
-                                            leftIcon={<IconPlus size={18}/>}
+                                            leftSection={<IconPlus size={18}/>}
                                             onClick={() =>
                                                 socialForm.insertListItem('employees', {
                                                     name: '',
@@ -429,7 +429,7 @@ const CreateCampaignPage = () => {
                         <Stepper.Step label="Payment methods" description="Get full access">
                             <Title {...titleProps}>Fundraiser Payment Methods</Title>
                             <Paper {...paperProps}>
-                                <Stack spacing="sm">
+                                <Stack gap="sm">
                                     <Title {...subTitleProps}>Enable payment processors for your fundraising
                                         page</Title>
                                     <Alert icon={<IconCurrency size={18}/>} color="blue">You can enable GGF Card
@@ -437,33 +437,33 @@ const CreateCampaignPage = () => {
                                         USD </Alert>
                                     <Text size="sm">Available payment methods</Text>
                                     <Group>
-                                        <Button variant="light" leftIcon={<IconBrandPaypal size={18}/>}>Connect with
+                                        <Button variant="light" leftSection={<IconBrandPaypal size={18}/>}>Connect with
                                             Paypal</Button>
-                                        <Button variant="light" leftIcon={<IconBrandGoogle size={18}/>}>Connect with
+                                        <Button variant="light" leftSection={<IconBrandGoogle size={18}/>}>Connect with
                                             Google Pay</Button>
-                                        <Button variant="light" leftIcon={<IconBrandApple size={18}/>}>Connect with
+                                        <Button variant="light" leftSection={<IconBrandApple size={18}/>}>Connect with
                                             Apple Pay</Button>
                                     </Group>
                                 </Stack>
                             </Paper>
                         </Stepper.Step>
                         <Stepper.Completed>
-                            <Title {...titleProps} align="center" my="xl">Completed, take a seat while we finish setting
+                            <Title {...titleProps} ta="center" my="xl">Completed, take a seat while we finish setting
                                 up things for you</Title>
                         </Stepper.Completed>
                     </Stepper>
 
-                    <Group position="center" mt="xl">
+                    <Group justify="center" mt="xl">
                         <Button
                             variant="default"
                             onClick={prevStep}
-                            leftIcon={<IconChevronLeft size={18}/>}
+                            leftSection={<IconChevronLeft size={18}/>}
                         >
                             Back
                         </Button>
                         {active < 4 ?
-                            <Button onClick={nextStep} leftIcon={<IconChevronRight size={18}/>}>Next step</Button> :
-                            <Button component="a" href="/dashboard" leftIcon={<IconCheck size={18}/>}>Launch
+                            <Button onClick={nextStep} leftSection={<IconChevronRight size={18}/>}>Next step</Button> :
+                            <Button component="a" href="/dashboard" leftSection={<IconCheck size={18}/>}>Launch
                                 campaign</Button>
                         }
                     </Group>

@@ -70,7 +70,7 @@ function Feature({image, title, description, action}: FeatureProps) {
             <Card.Section>
                 <Image src={image} height={240} fit="cover"/>
             </Card.Section>
-            <Stack spacing="sm" mt="md">
+            <Stack gap="sm" mt="md">
                 <Title order={4}>{title}</Title>
                 <Text size="sm">{description}</Text>
                 <Button variant="subtle" color="secondary">{action}</Button>

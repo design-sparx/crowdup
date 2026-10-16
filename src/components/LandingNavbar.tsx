@@ -181,7 +181,7 @@ const LandingNavbar = ({compressed}: IProps) => {
 
     const links = mockdata.map((item) => (
         <UnstyledButton className={classes.subLink} key={item.title}>
-            <Group noWrap align="center">
+            <Group wrap="nowrap" align="center">
                 <ThemeIcon size={34} variant="default" radius="md">
                     <item.icon size={rem(22)} stroke={1.5} color={theme.fn.primaryColor()}/>
                 </ThemeIcon>
@@ -217,7 +217,7 @@ const LandingNavbar = ({compressed}: IProps) => {
     return (
         <Box
             mt={compressed ? (stickyClass ? 0 : "xl") : 0}
-            sx={{
+            style={{
                 transition: "all ease 150ms",
                 position: "fixed",
                 top: '3%',
@@ -231,15 +231,15 @@ const LandingNavbar = ({compressed}: IProps) => {
             <Header
                 height={60}
                 px="md"
-                sx={{
+                style={{
                     backgroundColor: stickyClass ? 'rgba( 255, 255, 255, .9 )' : theme.white,
                     backdropFilter: 'blur(4px)',
                     borderRadius: stickyClass ? 0 : theme.radius.sm
                 }}>
-                <Container size="lg" fluid={compressed} sx={{height: '100%'}}>
-                    <Flex justify="space-between" align="center" sx={{height: '100%'}}>
+                <Container size="lg" fluid={compressed} style={{height: '100%'}}>
+                    <Flex justify="space-between" align="center" style={{height: '100%'}}>
                         <BrandName size={28} asLink/>
-                        <Flex align="center" gap="xs" sx={{height: '100%'}} className={classes.hiddenMobile}>
+                        <Flex align="center" gap="xs" style={{height: '100%'}} className={classes.hiddenMobile}>
                             <Button component={Link} to="/how-it-works" className={classes.link} {...buttonProps}>
                                 How it works
                             </Button>
@@ -258,9 +258,9 @@ const LandingNavbar = ({compressed}: IProps) => {
                                     </a>
                                 </HoverCard.Target>
 
-                                <HoverCard.Dropdown sx={{overflow: 'hidden'}}>
-                                    <Group position="apart" px="md">
-                                        <Text fw={500} color="dark">Categories</Text>
+                                <HoverCard.Dropdown style={{overflow: 'hidden'}}>
+                                    <Group justify="space-between" px="md">
+                                        <Text fw={500} c="dark">Categories</Text>
                                         <Button variant="default">See all</Button>
                                     </Group>
 
@@ -276,7 +276,7 @@ const LandingNavbar = ({compressed}: IProps) => {
                                 </HoverCard.Dropdown>
                             </HoverCard>
                             <Button
-                                leftIcon={<IconSearch size={18} className={classes.linkIcon}/>}
+                                leftSection={<IconSearch size={18} className={classes.linkIcon}/>}
                                 onClick={toggleSearchDrawer}
                                 className={classes.link}
                                 {...buttonProps}
@@ -333,7 +333,7 @@ const LandingNavbar = ({compressed}: IProps) => {
                         My dashboard
                     </Button>
                     <Button
-                        leftIcon={<IconSearch size={18}/>}
+                        leftSection={<IconSearch size={18}/>}
                         onClick={() => {
                             closeDrawer()
                             toggleSearchDrawer();

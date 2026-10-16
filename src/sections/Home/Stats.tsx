@@ -27,7 +27,7 @@ function Stats({amount, description}: IStatsProps) {
             p="md"
             shadow="md"
             radius="sm"
-            sx={{
+            style={{
                 backdropFilter: `blur(16px) saturate(180%)`,
                 backgroundColor: `rgba(255, 255, 255, 0.75)`,
                 border: `1px solid rgba(209, 213, 219, 0.3)`
