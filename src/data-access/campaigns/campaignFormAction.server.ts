@@ -1,7 +1,7 @@
 import {data, redirect} from "react-router";
 import type {SupabaseClient} from "@supabase/supabase-js";
 import {parseCampaignForm, type CampaignFormErrors} from "../../lib/campaigns/form";
-import {createDraft, INSUFFICIENT_PRIVILEGE, updateCampaign, uploadCover} from "./ownerCampaigns";
+import {createDraft, getOwnCampaign, INSUFFICIENT_PRIVILEGE, updateCampaign, uploadCover} from "./ownerCampaigns";
 
 type ActionErrors = CampaignFormErrors & {form?: string; cover?: string};
 
@@ -28,7 +28,9 @@ export async function handleCampaignForm(args: {
 }) {
     const {request, supabase, userId, headers, campaignId} = args;
     const form = await request.formData();
-    const parsed = parseCampaignForm(form);
+    // The goal is parsed in the campaign's own currency, which is only known once it has gone live.
+    const currency = campaignId ? ((await getOwnCampaign(supabase, userId, campaignId))?.currency ?? null) : null;
+    const parsed = parseCampaignForm(form, {currency});
     if (!parsed.ok) return invalid(parsed.errors, headers);
 
     try {

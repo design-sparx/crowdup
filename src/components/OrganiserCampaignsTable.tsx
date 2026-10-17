@@ -2,6 +2,7 @@ import {Badge, Button, Group, Progress, Stack, Table, Text} from "@mantine/core"
 import {IconEdit, IconExternalLink} from "@tabler/icons-react";
 import {Link} from "react-router";
 import {formatMinorAmount} from "../helpers/formatAmount";
+import {goalToInput} from "../lib/campaigns/goal";
 import {campaignSuspensionNotice} from "../lib/moderation/moderation";
 import {statusLabel} from "../lib/campaigns/transitions";
 import type {CampaignStats} from "../lib/dashboard/dashboard";
@@ -37,7 +38,7 @@ const OrganiserCampaignsTable = ({campaigns}: {campaigns: CampaignStats[]}) => (
                                 <Text size="sm">
                                     {c.currency
                                         ? `${formatMinorAmount(c.raised, c.currency)} of ${formatMinorAmount(c.goalAmount, c.currency)}`
-                                        : `Goal ${c.goalAmount / 100} (currency set at go-live)`}
+                                        : `Goal ${goalToInput(c.goalAmount, null)} (currency set at go-live)`}
                                 </Text>
                                 <Progress value={c.percentFunded} size="sm" aria-label={`${c.percentFunded}% funded`}/>
                             </Stack>

@@ -22,3 +22,12 @@ describe("formatAmount", () => {
         expect(formatAmount(5000, "JPY")).toBe("¥5,000");
     });
 });
+
+describe("formatMinorAmount", () => {
+    it("honours each currency's minor-unit exponent", async () => {
+        const {formatMinorAmount} = await import("./formatAmount");
+        expect(formatMinorAmount(1000, "JPY")).toBe("¥1,000");
+        expect(formatMinorAmount(10125, "KWD").replace(/\s/g, " ")).toBe("KWD 10.125");
+        expect(formatMinorAmount(1234, "USD")).toBe("$12.34");
+    });
+});

@@ -1,6 +1,7 @@
 import {Box} from "@mantine/core";
 import ReactApexChart from "react-apexcharts";
 import type {ApexOptions} from "apexcharts";
+import {minorUnitExponent} from "../lib/donations/amount";
 import {bucketDonations, type DashboardDonation} from "../lib/dashboard/dashboard";
 
 const DAYS = 30;
@@ -26,7 +27,7 @@ const DonationsChart = ({donations, now}: Props) => {
         <Box>
             <ReactApexChart
                 options={options}
-                series={series.map((s) => ({name: s.currency, data: s.data.map((v) => v / 100)}))}
+                series={series.map((s) => ({name: s.currency, data: s.data.map((v) => v / 10 ** minorUnitExponent(s.currency))}))}
                 type="bar"
                 height={320}
             />

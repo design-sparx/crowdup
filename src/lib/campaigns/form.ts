@@ -1,3 +1,4 @@
+import {parseGoal} from "./goal";
 import {sanitizeStory, type StoryDoc} from "./story";
 
 export interface CampaignValues {
@@ -5,7 +6,7 @@ export interface CampaignValues {
     category: string;
     country: string;
     description: string;
-    /** Minor units (cents). */
+    /** Minor units of the campaign currency (hundredths while the campaign is still a draft). */
     goalAmount: number;
     endDate: string | null;
     story: StoryDoc;
@@ -20,18 +21,9 @@ export type ParsedCampaignForm =
     | {ok: true; values: CampaignValues}
     | {ok: false; errors: CampaignFormErrors};
 
-/** Largest goal in minor units; keeps the value inside a safe integer. */
-const MAX_GOAL_MINOR = 10_000_000_000;
-
 function str(form: FormData, name: string): string {
     const v = form.get(name);
     return typeof v === "string" ? v.trim() : "";
-}
-
-function parseGoal(raw: string): number | null {
-    if (!/^\d{1,10}(\.\d{1,2})?$/.test(raw)) return null;
-    const minor = Math.round(Number(raw) * 100);
-    return minor > 0 && minor <= MAX_GOAL_MINOR ? minor : null;
 }
 
 function parseEndDate(raw: string, now: Date): {value: string | null} | {error: string} {
@@ -48,7 +40,7 @@ function parseEndDate(raw: string, now: Date): {value: string | null} | {error: 
 /** Validates the create/edit form. Never trusts the client: story is sanitised here. */
 export function parseCampaignForm(
     form: FormData,
-    {now = new Date()}: {now?: Date} = {},
+    {now = new Date(), currency = null}: {now?: Date; currency?: string | null} = {},
 ): ParsedCampaignForm {
     const errors: CampaignFormErrors = {};
 
@@ -64,8 +56,8 @@ export function parseCampaignForm(
     const description = str(form, "description");
     if (description.length > 300) errors.description = "Keep the summary to 300 characters.";
 
-    const goalAmount = parseGoal(str(form, "goal"));
-    if (goalAmount === null) errors.goal = "Enter a goal greater than zero, with at most 2 decimals.";
+    const goalAmount = parseGoal(str(form, "goal"), currency);
+    if (goalAmount === null) errors.goal = "Enter a goal greater than zero, with a valid number of decimals.";
 
     const end = parseEndDate(str(form, "endDate"), now);
     if ("error" in end) errors.endDate = end.error;

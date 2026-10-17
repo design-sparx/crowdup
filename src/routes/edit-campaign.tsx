@@ -13,6 +13,7 @@ import {handleCampaignForm} from "../data-access/campaigns/campaignFormAction.se
 import {getOwnSuspension} from "../data-access/moderation/moderation.server";
 import {campaignSuspensionNotice, userSuspensionNotice} from "../lib/moderation/moderation";
 import {listUpdates} from "../lib/campaigns/repository";
+import {goalToInput} from "../lib/campaigns/goal";
 import {parseUpdateBody} from "../lib/campaigns/updates";
 import type {Route} from "./+types/edit-campaign";
 
@@ -83,7 +84,7 @@ export default function EditCampaign({loaderData, actionData}: Route.ComponentPr
                     category: campaign.category,
                     country: campaign.country,
                     description: campaign.description,
-                    goal: String(campaign.goalAmount / 100),
+                    goal: goalToInput(campaign.goalAmount, campaign.currency),
                     currency: campaign.currency,
                     endDate: campaign.endDate ? campaign.endDate.slice(0, 10) : "",
                     story: campaign.story,
