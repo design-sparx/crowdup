@@ -18,6 +18,7 @@ import AdminReportsPage from "./AdminReports";
 import AdminCampaignsPage from "./AdminCampaigns";
 import AdminUsersPage from "./AdminUsers";
 import AdminApprovalsPage from "./AdminApprovals";
+import AdminPaymentsPage from "./AdminPayments";
 
 export {
     HomePage,
@@ -39,5 +40,6 @@ export {
     AdminReportsPage,
     AdminCampaignsPage,
     AdminUsersPage,
-    AdminApprovalsPage
+    AdminApprovalsPage,
+    AdminPaymentsPage
 }

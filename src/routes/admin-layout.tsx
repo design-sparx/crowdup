@@ -1,5 +1,6 @@
 import {data, type LoaderFunctionArgs} from "react-router";
 import {countPendingCampaigns} from "../data-access/campaigns/approval.server";
+import {countOpenUnmatched} from "../data-access/payments/unmatched.server";
 import {getAdminContext, listOpenReportGroups} from "../data-access/reports/reports.server";
 
 /**
@@ -9,11 +10,12 @@ import {getAdminContext, listOpenReportGroups} from "../data-access/reports/repo
 export async function loader({request}: LoaderFunctionArgs) {
     const admin = await getAdminContext(request);
     if (!admin) throw new Response("Not found", {status: 404});
-    const [{openCount}, pendingCount] = await Promise.all([
+    const [{openCount}, pendingCount, unmatchedCount] = await Promise.all([
         listOpenReportGroups(admin.supabase),
         countPendingCampaigns(admin.supabase),
+        countOpenUnmatched(admin.supabase),
     ]);
-    return data({openCount, pendingCount}, {headers: admin.headers});
+    return data({openCount, pendingCount, unmatchedCount}, {headers: admin.headers});
 }
 
 export {AdminLayout as default} from "../layout";

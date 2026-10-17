@@ -37,6 +37,13 @@ NOT RUN against real Stripe or a database: everything below is covered by unit t
 - **Campaign not live when the payment completes**: the donation is still recorded and counted (the money already reached the organiser) and `donation.flagged_reason` is set for admin review.
 - **Totals and donors**: only `confirmed` rows count (`campaign_totals`); the recent donors list reads `public_donation`, which hides name and message of anonymous donors. The success redirect writes nothing, so the total updates when the webhook lands.
 
+### Unmatched payments
+
+A paid session that cannot be tied to a campaign (unknown campaign id, the event's Stripe account is not the campaign owner's, or the currency differs) is acknowledged with 200, so Stripe does not retry, and written to `unmatched_payment`. It is never a donation and never in totals. The webhook route also logs it with `console.error`.
+
+- **Review**: admins see open ones at `/admin/payments` (orange count badge in the admin header). Refund or reconcile the payment in the Stripe dashboard, then press Mark reviewed. The rows hold only Stripe ids, an amount, a currency and a reason, no donor personal data. A payment event with no usable currency is stored with `XXX` (ISO 4217 for "no currency").
+- **Retention**: `prune_unmatched_payments()` (service role only) deletes rows reviewed more than a year ago and never touches open ones. Nothing schedules it; run it from a Supabase scheduled job if you want the cleanup, for example `select cron.schedule('prune-unmatched', '0 3 * * 0', 'select public.prune_unmatched_payments()')` with the `pg_cron` extension enabled.
+
 ### Webhook setup
 
 One endpoint serves both onboarding and donations. In the Dashboard create an endpoint at `<SITE_URL>/api/stripe/webhook`, choose **Events from connected accounts**, and subscribe to `account.updated`, `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Its signing secret goes in `STRIPE_WEBHOOK_SECRET`. A Connect endpoint has its own secret, different from any platform ("Your account") endpoint; events from connected accounts are signed with the Connect endpoint's secret, which is the one to use here.

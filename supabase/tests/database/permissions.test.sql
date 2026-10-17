@@ -12,7 +12,7 @@
 
 begin;
 
-select plan(184);
+select plan(193);
 
 -- Helpers, scoped to this session.
 
@@ -1110,9 +1110,9 @@ select is(
 );
 select pg_temp.become('00000000-0000-4000-8000-000000000002', 'authenticated');
 select is(
-  pg_temp.sqlstate_of('select count(*) from public.unmatched_payment'),
-  '42501',
-  'signed-in users cannot read unmatched payments'
+  (select count(*)::int from public.unmatched_payment),
+  0,
+  'signed-in users who are not admins see no unmatched payments (RLS)'
 );
 select pg_temp.become(null, 'service_role');
 select is(
@@ -1182,6 +1182,61 @@ select is(
   pg_temp.sqlstate_of($$select public.admin_suspend_campaign('10000000-0000-4000-8000-0000000000d1', 'Not allowed on a draft')$$),
   '23514',
   'an admin cannot suspend a draft through the moderation function either'
+);
+
+-- Unmatched payments: admins review them, nobody else can see or change them.
+select pg_temp.become(null, 'service_role');
+insert into public.unmatched_payment (stripe_event_id, stripe_account_id, amount, currency, reason)
+  values ('evt_review_1', 'acct_r', 700, 'KES', 'currency mismatch');
+
+select pg_temp.become(null, 'anon');
+select is(
+  pg_temp.sqlstate_of('select count(*) from public.unmatched_payment'),
+  '42501',
+  'anonymous visitors still cannot read unmatched payments'
+);
+select pg_temp.become('00000000-0000-4000-8000-000000000002', 'authenticated');
+select is(
+  (select count(*)::int from public.unmatched_payment),
+  0,
+  'an organiser sees no unmatched payments (RLS)'
+);
+select is(
+  pg_temp.affected($$update public.unmatched_payment set resolved_at = now()$$),
+  0,
+  'an organiser cannot mark an unmatched payment reviewed'
+);
+select is(
+  pg_temp.sqlstate_of($$update public.unmatched_payment set amount = 1$$),
+  '42501',
+  'no client can change the amount of an unmatched payment'
+);
+select is(
+  pg_temp.sqlstate_of($$delete from public.unmatched_payment$$),
+  '42501',
+  'no client can delete unmatched payments'
+);
+select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
+select is(
+  (select count(*)::int from public.unmatched_payment where resolved_at is null),
+  2,
+  'an admin sees the open unmatched payments'
+);
+select is(
+  pg_temp.affected($$update public.unmatched_payment set resolved_at = now() where stripe_event_id = 'evt_review_1'$$),
+  1,
+  'an admin can mark one reviewed'
+);
+select is(
+  pg_temp.sqlstate_of($$update public.unmatched_payment set reason = 'edited'$$),
+  '42501',
+  'an admin cannot rewrite the recorded reason either'
+);
+select pg_temp.become('00000000-0000-4000-8000-000000000002', 'authenticated');
+select is(
+  pg_temp.sqlstate_of($$select public.prune_unmatched_payments()$$),
+  '42501',
+  'clients cannot run the retention prune'
 );
 
 select * from finish();
