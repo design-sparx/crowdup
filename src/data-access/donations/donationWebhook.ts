@@ -103,7 +103,9 @@ export async function handleDonationEvent(
     if (typeof amount !== "number" || !Number.isSafeInteger(amount) || amount <= 0) return ignored("invalid amount");
 
     const paymentIntent = session.payment_intent;
-    const currency = (session.currency ?? "").toUpperCase();
+    // ISO 4217 reserves XXX for "no currency"; the table only accepts three letters.
+    const sessionCurrency = (session.currency ?? "").toUpperCase();
+    const currency = /^[A-Z]{3}$/.test(sessionCurrency) ? sessionCurrency : "XXX";
     const paymentIntentId = typeof paymentIntent === "string" ? paymentIntent : (paymentIntent?.id ?? null);
     // The money has already moved, so a mismatch is recorded for review rather than dropped.
     const unmatched = async (reason: string): Promise<DonationEventResult> => {

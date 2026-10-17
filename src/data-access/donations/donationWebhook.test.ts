@@ -218,6 +218,13 @@ describe("handleDonationEvent", () => {
         expect(unmatched[0]).toMatchObject({currency: "USD", amount: 5000});
     });
 
+    it("still records an unmatched payment whose currency is missing, with a placeholder the table accepts", async () => {
+        const {db, unmatched} = fakeDb(null);
+        const r = await run(sessionEvent({session: {currency: null}}), db);
+        expect(r.outcome).toBe("unmatched");
+        expect(unmatched[0].currency).toBe("XXX");
+    });
+
     it("recording an unmatched payment is idempotent across redeliveries", async () => {
         const {db, unmatched} = fakeDb(null);
         await run(sessionEvent(), db);
