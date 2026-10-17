@@ -4,7 +4,7 @@ import {clientKey, groupOpenReports, parseReason, type ReportGroup, type ReportR
 
 type Supabase = ReturnType<typeof createSupabaseServerClient>["supabase"];
 
-/** 5 reports per hour per user (or per IP for guests). In memory, per server instance; resets on restart. Guests are keyed by X-Forwarded-For. */
+/** 5 reports per hour per user (or per IP for guests). In memory, per server instance; resets on restart. Guests are keyed by the platform client IP header. The limit is spent only when the campaign exists, so mistyped slugs cost nothing. */
 const limiter = createRateLimiter({limit: 5, windowMs: 60 * 60 * 1000});
 
 export type ReportSubmitResult = {ok?: true; error?: string; status: number};
@@ -18,10 +18,6 @@ export async function submitReport(request: Request, campaignSlug: string, form:
 
     const {data} = await supabase.auth.getUser();
     const userId = data.user?.id ?? null;
-    if (!limiter.take(clientKey(userId, request.headers))) {
-        return fail("Too many reports. Please try again later.", 429);
-    }
-
     const {data: campaign} = await supabase
         .from("campaign")
         .select("id")
@@ -29,6 +25,11 @@ export async function submitReport(request: Request, campaignSlug: string, form:
         .eq("status", "live")
         .maybeSingle();
     if (!campaign) return fail("This campaign cannot be reported.", 404);
+
+    if (!limiter.take(clientKey(userId, request.headers))) {
+        return fail("Too many reports. Please try again later.", 429);
+    }
+
 
     // No .select(): reporters have no read access to reports, so RETURNING would be denied.
     const {error} = await supabase

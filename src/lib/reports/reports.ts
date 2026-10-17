@@ -12,14 +12,17 @@ export function parseReason(value: unknown): ReasonResult {
 }
 
 /**
- * Rate-limit bucket for a request: the signed-in user, else the first X-Forwarded-For
- * address. Behind Netlify that header is set by the platform; elsewhere it may be spoofable,
- * which is why the database also enforces one open report per user per campaign.
+ * Rate-limit bucket for a request: the signed-in user, else the client address. The address
+ * comes from the header the platform sets (Netlify), which a client cannot supply; failing
+ * that, the LAST X-Forwarded-For entry, which our own proxy appends (the first entry is
+ * whatever the client sent, so rotating it would bypass the limit). With no address at all
+ * guests share one bucket. The database also enforces one open report per user per campaign.
  */
 export function clientKey(userId: string | null, headers: Headers): string {
     if (userId) return `user:${userId}`;
-    const ip = headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-    return `ip:${ip || "unknown"}`;
+    const platformIp = headers.get("x-nf-client-connection-ip")?.trim();
+    const forwarded = headers.get("x-forwarded-for")?.split(",").at(-1)?.trim();
+    return `ip:${platformIp || forwarded || "unknown"}`;
 }
 
 export interface ReportRow {

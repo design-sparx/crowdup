@@ -17,8 +17,13 @@ describe("clientKey", () => {
     it("prefers the signed-in user id", () => {
         expect(clientKey("user-1", new Headers({"x-forwarded-for": "1.2.3.4"}))).toBe("user:user-1");
     });
-    it("uses the first forwarded address for guests", () => {
-        expect(clientKey(null, new Headers({"x-forwarded-for": "1.2.3.4, 10.0.0.1"}))).toBe("ip:1.2.3.4");
+    it("prefers the address the platform sets over anything the client can send", () => {
+        const headers = new Headers({"x-nf-client-connection-ip": "9.9.9.9", "x-forwarded-for": "1.2.3.4"});
+        expect(clientKey(null, headers)).toBe("ip:9.9.9.9");
+    });
+    it("uses the last forwarded address (added by our proxy), so a client cannot rotate the first", () => {
+        expect(clientKey(null, new Headers({"x-forwarded-for": "6.6.6.6, 1.2.3.4"}))).toBe("ip:1.2.3.4");
+        expect(clientKey(null, new Headers({"x-forwarded-for": "7.7.7.7, 1.2.3.4"}))).toBe("ip:1.2.3.4");
     });
     it("falls back to a shared bucket when no address is known", () => {
         expect(clientKey(null, new Headers())).toBe("ip:unknown");
