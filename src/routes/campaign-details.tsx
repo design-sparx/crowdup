@@ -1,5 +1,5 @@
 import {buildMeta} from "../helpers";
-import {ComingSoonPage, DetailError404Page} from "../pages";
+import {DetailError404Page} from "../pages";
 import {getCampaignBySlug, listRecentDonors, listUpdates} from "../lib/campaigns/repository";
 import {canAcceptDonations, effectiveStatus} from "../lib/campaigns/lifecycle";
 import {renderStoryHtml} from "../lib/campaigns/story";
@@ -8,6 +8,7 @@ import {data, redirect} from "react-router";
 import {startDonation} from "../data-access/donations/checkout.server";
 import {submitReport} from "../data-access/reports/reports.server";
 import type {Route} from "./+types/campaign-details";
+import {CampaignDetailsPage} from "@/features/donate/campaign-details-page";
 
 export async function action({request, params}: Route.ActionArgs) {
     const form = await request.formData();
@@ -59,8 +60,18 @@ export function meta({loaderData}: Route.MetaArgs) {
     });
 }
 
-export default function CampaignDetails() {
-    return <ComingSoonPage title="Campaign"/>;
+export default function CampaignDetails({loaderData}: Route.ComponentProps) {
+    return (
+        <CampaignDetailsPage
+            campaign={loaderData.campaign}
+            storyHtml={loaderData.storyHtml}
+            updates={loaderData.updates}
+            donors={loaderData.donors}
+            ended={loaderData.status === "ended"}
+            acceptingDonations={loaderData.acceptingDonations}
+            donationReturn={loaderData.donationReturn}
+        />
+    );
 }
 
 export {DetailError404Page as ErrorBoundary};
