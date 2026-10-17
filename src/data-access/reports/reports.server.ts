@@ -1,10 +1,21 @@
 import {createSupabaseServerClient} from "../auth/supabase.server";
 import {createRateLimiter} from "../../lib/reports/rateLimit";
-import {clientKey, groupOpenReports, parseReason, type ReportGroup, type ReportRow} from "../../lib/reports/reports";
+import {
+    clientKey,
+    groupOpenReports,
+    parseReason,
+    trustedClientIpHeader,
+    type ReportGroup,
+    type ReportRow,
+} from "../../lib/reports/reports";
 
 type Supabase = ReturnType<typeof createSupabaseServerClient>["supabase"];
 
-/** 5 reports per hour per user (or per IP for guests). In memory, per server instance; resets on restart. Guests are keyed by the platform client IP header. The limit is spent only when the campaign exists, so mistyped slugs cost nothing. */
+/**
+ * 5 reports per hour per user (or per client IP for guests). In memory, per server instance;
+ * resets on restart. Guests are keyed by the header named in CLIENT_IP_HEADER (Netlify's by
+ * default), never X-Forwarded-For. The limit is spent only when the campaign exists.
+ */
 const limiter = createRateLimiter({limit: 5, windowMs: 60 * 60 * 1000});
 
 export type ReportSubmitResult = {ok?: true; error?: string; status: number};
@@ -26,10 +37,9 @@ export async function submitReport(request: Request, campaignSlug: string, form:
         .maybeSingle();
     if (!campaign) return fail("This campaign cannot be reported.", 404);
 
-    if (!limiter.take(clientKey(userId, request.headers))) {
+    if (!limiter.take(clientKey(userId, request.headers, trustedClientIpHeader(process.env)))) {
         return fail("Too many reports. Please try again later.", 429);
     }
-
 
     // No .select(): reporters have no read access to reports, so RETURNING would be denied.
     const {error} = await supabase

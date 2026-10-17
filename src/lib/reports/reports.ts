@@ -12,17 +12,27 @@ export function parseReason(value: unknown): ReasonResult {
 }
 
 /**
- * Rate-limit bucket for a request: the signed-in user, else the client address. The address
- * comes from the header the platform sets (Netlify), which a client cannot supply; failing
- * that, the LAST X-Forwarded-For entry, which our own proxy appends (the first entry is
- * whatever the client sent, so rotating it would bypass the limit). With no address at all
- * guests share one bucket. The database also enforces one open report per user per campaign.
+ * Which request header carries the real client address, or null when none can be trusted.
+ * X-Forwarded-For is never used: its leftmost entry is whatever the client sent, and the
+ * rightmost is just the last proxy, which is wrong behind multi-hop setups. The operator names
+ * the header their own proxy sets and overwrites (`CLIENT_IP_HEADER`, for example `x-real-ip`);
+ * on Netlify the platform header is the default. Anywhere else with no setting, guests share
+ * one bucket (strict, but safe) instead of a spoofable one.
  */
-export function clientKey(userId: string | null, headers: Headers): string {
+export function trustedClientIpHeader(env: Record<string, string | undefined>): string | null {
+    const configured = env.CLIENT_IP_HEADER?.trim().toLowerCase();
+    if (configured) return configured;
+    return env.NETLIFY ? "x-nf-client-connection-ip" : null;
+}
+
+/**
+ * Rate-limit bucket for a request: the signed-in user, else the address in the trusted
+ * header. The database also enforces one open report per user per campaign.
+ */
+export function clientKey(userId: string | null, headers: Headers, trustedHeader: string | null): string {
     if (userId) return `user:${userId}`;
-    const platformIp = headers.get("x-nf-client-connection-ip")?.trim();
-    const forwarded = headers.get("x-forwarded-for")?.split(",").at(-1)?.trim();
-    return `ip:${platformIp || forwarded || "unknown"}`;
+    const ip = trustedHeader ? headers.get(trustedHeader)?.trim() : "";
+    return `ip:${ip || "unknown"}`;
 }
 
 export interface ReportRow {

@@ -1,5 +1,5 @@
 import {describe, expect, it} from "vitest";
-import {clientKey, groupOpenReports, parseReason} from "./reports";
+import {clientKey, groupOpenReports, parseReason, trustedClientIpHeader} from "./reports";
 
 describe("parseReason", () => {
     it("trims and accepts 3 to 1000 characters", () => {
@@ -14,19 +14,36 @@ describe("parseReason", () => {
 });
 
 describe("clientKey", () => {
+    const headers = new Headers({"x-nf-client-connection-ip": "9.9.9.9", "x-real-ip": "5.5.5.5", "x-forwarded-for": "1.2.3.4"});
     it("prefers the signed-in user id", () => {
-        expect(clientKey("user-1", new Headers({"x-forwarded-for": "1.2.3.4"}))).toBe("user:user-1");
+        expect(clientKey("user-1", headers, "x-real-ip")).toBe("user:user-1");
     });
-    it("prefers the address the platform sets over anything the client can send", () => {
-        const headers = new Headers({"x-nf-client-connection-ip": "9.9.9.9", "x-forwarded-for": "1.2.3.4"});
-        expect(clientKey(null, headers)).toBe("ip:9.9.9.9");
+    it("reads the address only from the header the operator trusts", () => {
+        expect(clientKey(null, headers, "x-nf-client-connection-ip")).toBe("ip:9.9.9.9");
+        expect(clientKey(null, headers, "X-Real-IP")).toBe("ip:5.5.5.5");
     });
-    it("uses the last forwarded address (added by our proxy), so a client cannot rotate the first", () => {
-        expect(clientKey(null, new Headers({"x-forwarded-for": "6.6.6.6, 1.2.3.4"}))).toBe("ip:1.2.3.4");
-        expect(clientKey(null, new Headers({"x-forwarded-for": "7.7.7.7, 1.2.3.4"}))).toBe("ip:1.2.3.4");
+    it("never trusts X-Forwarded-For, which a client can set", () => {
+        expect(clientKey(null, headers, null)).toBe("ip:unknown");
+        expect(clientKey(null, new Headers({"x-forwarded-for": "1.2.3.4"}), "x-real-ip")).toBe("ip:unknown");
     });
-    it("falls back to a shared bucket when no address is known", () => {
-        expect(clientKey(null, new Headers())).toBe("ip:unknown");
+    it("uses one shared bucket when no trusted header is configured or present", () => {
+        expect(clientKey(null, new Headers(), null)).toBe("ip:unknown");
+        expect(clientKey(null, new Headers(), "x-real-ip")).toBe("ip:unknown");
+    });
+});
+
+describe("trustedClientIpHeader", () => {
+    it("uses the operator's CLIENT_IP_HEADER", () => {
+        expect(trustedClientIpHeader({CLIENT_IP_HEADER: " X-Real-IP "})).toBe("x-real-ip");
+    });
+    it("defaults to Netlify's header on Netlify", () => {
+        expect(trustedClientIpHeader({NETLIFY: "true"})).toBe("x-nf-client-connection-ip");
+    });
+    it("trusts nothing by default elsewhere", () => {
+        expect(trustedClientIpHeader({})).toBeNull();
+    });
+    it("lets the operator override the Netlify default", () => {
+        expect(trustedClientIpHeader({NETLIFY: "true", CLIENT_IP_HEADER: "x-real-ip"})).toBe("x-real-ip");
     });
 });
 
