@@ -1,3 +1,4 @@
+import {useSyncExternalStore} from "react";
 import {IconLink} from "@tabler/icons-react";
 import {buttonVariants} from "@/components/ui/button";
 import {Button} from "@/components/ui/button";
@@ -5,14 +6,22 @@ import {toast} from "@/components/ui/toast";
 import {cn} from "@/lib/utils";
 import {shareLinks} from "./share-links";
 
+/** The page URL never changes without a navigation (which remounts this), so there is nothing to subscribe to. */
+const subscribeNever = () => () => {};
+
 interface ShareButtonsProps {
     title: string;
-    /** Absolute campaign URL. When omitted the current page URL is read on click. */
+    /** Absolute campaign URL. When omitted the current page URL is used once the page is in the browser. */
     url?: string;
     className?: string;
 }
 
 export function ShareButtons({title, url, className}: ShareButtonsProps) {
+    // The page URL only exists in the browser. useSyncExternalStore renders `null` on the server and
+    // during hydration, then switches to the real URL, so server and browser markup always match.
+    const browserUrl = useSyncExternalStore(subscribeNever, () => window.location.href, () => null);
+    const pageUrl = url ?? browserUrl;
+
     async function copy() {
         const target = url ?? window.location.href;
         try {
@@ -23,8 +32,7 @@ export function ShareButtons({title, url, className}: ShareButtonsProps) {
         }
     }
 
-    // Links need an absolute URL; before hydration there is no window, so build them lazily.
-    const links = url ? shareLinks(title, url) : [];
+    const links = pageUrl ? shareLinks(title, pageUrl) : [];
     return (
         <div className={cn("flex flex-wrap gap-2", className)}>
             <Button type="button" variant="outline" size="sm" onClick={copy}>
