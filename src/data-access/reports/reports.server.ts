@@ -1,5 +1,5 @@
 import {createSupabaseServerClient} from "../auth/supabase.server";
-import {createRateLimiter} from "../../lib/reports/rateLimit";
+import {createReportThrottle} from "../../lib/reports/throttle";
 import {
     clientKey,
     groupOpenReports,
@@ -12,11 +12,12 @@ import {
 type Supabase = ReturnType<typeof createSupabaseServerClient>["supabase"];
 
 /**
- * 5 reports per hour per user (or per client IP for guests). In memory, per server instance;
- * resets on restart. Guests are keyed by the header named in CLIENT_IP_HEADER (Netlify's by
- * default), never X-Forwarded-For. The limit is spent only when the campaign exists.
+ * 5 reports per hour per user (or per client IP for guests), plus a looser 30 submissions per
+ * hour so unknown slugs cannot hammer the database. In memory, per server instance; resets on
+ * restart. Guests are keyed by the header named in CLIENT_IP_HEADER (Netlify's by default),
+ * never X-Forwarded-For.
  */
-const limiter = createRateLimiter({limit: 5, windowMs: 60 * 60 * 1000});
+const throttle = createReportThrottle();
 
 export type ReportSubmitResult = {ok?: true; error?: string; status: number};
 
@@ -29,6 +30,9 @@ export async function submitReport(request: Request, campaignSlug: string, form:
 
     const {data} = await supabase.auth.getUser();
     const userId = data.user?.id ?? null;
+    const key = clientKey(userId, request.headers, trustedClientIpHeader(process.env));
+    if (!throttle.attempt(key)) return fail("Too many reports. Please try again later.", 429);
+
     const {data: campaign} = await supabase
         .from("campaign")
         .select("id")
@@ -37,7 +41,7 @@ export async function submitReport(request: Request, campaignSlug: string, form:
         .maybeSingle();
     if (!campaign) return fail("This campaign cannot be reported.", 404);
 
-    if (!limiter.take(clientKey(userId, request.headers, trustedClientIpHeader(process.env)))) {
+    if (!throttle.report(key)) {
         return fail("Too many reports. Please try again later.", 429);
     }
 
