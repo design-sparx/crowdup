@@ -52,6 +52,8 @@ export async function countPendingCampaigns(client: SupabaseClient): Promise<num
     return count ?? 0;
 }
 
+/** SQLSTATE raised by approve_campaign when the organiser cannot take donations. */
+const APPROVAL_REFUSED = "CR001";
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export type DecisionResult = {ok: true; message: string} | {ok: false; error: string; status: number};
@@ -73,8 +75,8 @@ export async function decideCampaign(client: SupabaseClient, form: FormData): Pr
         return {ok: false, error: "Unknown action.", status: 400};
     }
     if (error?.code === "P0002") return {ok: false, error: "This campaign is no longer pending.", status: 409};
-    // approve_campaign refuses when the organiser cannot take donations; its message is written for admins.
-    if (error?.code === "P0001" && error.message) {
+    // approve_campaign refuses (SQLSTATE CR001, its own code so no other error can reach admins) when the organiser cannot take donations; its message is written for admins.
+    if (error?.code === APPROVAL_REFUSED && error.message) {
         return {ok: false, error: `${error.message.charAt(0).toUpperCase()}${error.message.slice(1)}.`, status: 409};
     }
     if (error?.code === "42501") return {ok: false, error: "Not allowed.", status: 403};

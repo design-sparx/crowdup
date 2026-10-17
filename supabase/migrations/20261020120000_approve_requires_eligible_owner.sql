@@ -4,7 +4,8 @@
 -- onboarding. If the owner lost either state while the campaign waited for review, approval
 -- used to publish a live campaign that rejected every donation. approve_campaign now checks
 -- the owner first and leaves the campaign pending, with a reason the admin sees.
---   P0001 owner is suspended; P0001 owner has not completed Stripe onboarding.
+--   CR001 (a custom SQLSTATE, so no unrelated RAISE EXCEPTION, which defaults to P0001,
+--   can be mistaken for it): owner is suspended, or has not completed Stripe onboarding.
 
 create or replace function public.approve_campaign(p_campaign_id uuid)
 returns void
@@ -29,10 +30,10 @@ begin
     raise exception 'campaign is not pending approval' using errcode = 'P0002';
   end if;
   if v_suspended then
-    raise exception 'the organiser is suspended, so this campaign cannot be approved' using errcode = 'P0001';
+    raise exception 'the organiser is suspended, so this campaign cannot be approved' using errcode = 'CR001';
   end if;
   if not v_onboarded then
-    raise exception 'the organiser has not completed Stripe onboarding, so this campaign cannot take donations' using errcode = 'P0001';
+    raise exception 'the organiser has not completed Stripe onboarding, so this campaign cannot take donations' using errcode = 'CR001';
   end if;
 
   update public.campaign

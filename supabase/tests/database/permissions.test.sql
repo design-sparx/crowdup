@@ -1137,7 +1137,7 @@ update public.profile set stripe_onboarding_complete = false where id = '0000000
 select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
 select is(
   pg_temp.sqlstate_of($$select public.approve_campaign('10000000-0000-4000-8000-000000000001')$$),
-  'P0001',
+  'CR001',
   'approval is refused while the organiser has not completed Stripe onboarding'
 );
 select pg_temp.become(null, 'service_role');
@@ -1146,7 +1146,7 @@ update public.profile set stripe_onboarding_complete = true, suspended = true
 select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
 select is(
   pg_temp.sqlstate_of($$select public.approve_campaign('10000000-0000-4000-8000-000000000001')$$),
-  'P0001',
+  'CR001',
   'approval is refused while the organiser is suspended'
 );
 select pg_temp.become(null, 'service_role');

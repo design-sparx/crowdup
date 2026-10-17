@@ -22,7 +22,7 @@ describe("decideCampaign approve", () => {
     });
     it("tells the admin why an ineligible organiser blocks approval, instead of a generic error", async () => {
         const r = await decideCampaign(
-            clientFailing("P0001", "the organiser is suspended, so this campaign cannot be approved"),
+            clientFailing("CR001", "the organiser is suspended, so this campaign cannot be approved"),
             form({campaignId: ID, intent: "approve"}),
         );
         expect(r).toEqual({
@@ -33,7 +33,7 @@ describe("decideCampaign approve", () => {
     });
     it("explains an organiser who has not finished Stripe onboarding", async () => {
         const r = await decideCampaign(
-            clientFailing("P0001", "the organiser has not completed Stripe onboarding, so this campaign cannot take donations"),
+            clientFailing("CR001", "the organiser has not completed Stripe onboarding, so this campaign cannot take donations"),
             form({campaignId: ID, intent: "approve"}),
         );
         expect(r.ok).toBe(false);
@@ -42,8 +42,10 @@ describe("decideCampaign approve", () => {
             expect(r.error).toMatch(/Stripe onboarding/);
         }
     });
-    it("keeps other database errors generic", async () => {
+    it("keeps other database errors generic, including a plain RAISE EXCEPTION (P0001)", async () => {
         const r = await decideCampaign(clientFailing("XX000", "secret internals"), form({campaignId: ID, intent: "approve"}));
         expect(r).toEqual({ok: false, error: "Could not save the decision.", status: 500});
+        const plain = await decideCampaign(clientFailing("P0001", "internal detail"), form({campaignId: ID, intent: "approve"}));
+        expect(plain).toEqual({ok: false, error: "Could not save the decision.", status: 500});
     });
 });
