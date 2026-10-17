@@ -1,7 +1,5 @@
 import {data} from "react-router";
-import {Alert, Container} from "@mantine/core";
-import {CampaignLifecyclePanel} from "../components";
-import {CreateCampaignPage} from "../pages";
+import {ComingSoonPage} from "../pages";
 import {requireUserClient} from "../data-access/auth/auth.server";
 import {
     closeCampaign,
@@ -13,7 +11,6 @@ import {handleCampaignForm} from "../data-access/campaigns/campaignFormAction.se
 import {getOwnSuspension} from "../data-access/moderation/moderation.server";
 import {campaignSuspensionNotice, userSuspensionNotice} from "../lib/moderation/moderation";
 import {listUpdates} from "../lib/campaigns/repository";
-import {goalToInput} from "../lib/campaigns/goal";
 import {parseUpdateBody} from "../lib/campaigns/updates";
 import type {Route} from "./+types/edit-campaign";
 
@@ -59,48 +56,8 @@ export async function action({request, params}: Route.ActionArgs) {
     return handleCampaignForm({request, supabase, userId: user.id, headers, campaignId: params.id});
 }
 
-export default function EditCampaign({loaderData, actionData}: Route.ComponentProps) {
-    const {campaign, saved, publish, updates, moderationNotice} = loaderData;
-    const result = actionData as
-        | {errors?: Record<string, string>; lifecycleNotice?: string; lifecycleError?: string}
-        | undefined;
-    // The loader revalidates after each action, so the status shown is already current.
-    return (
-        <>
-            {moderationNotice && (
-                <Container size="md" mt={36}>
-                    <Alert color="red" title="Moderation notice">{moderationNotice}</Alert>
-                </Container>
-            )}
-            <CreateCampaignPage
-                mode="edit"
-                status={campaign.status}
-                rejectionReason={campaign.rejectionReason}
-                saved={saved}
-                publish={publish}
-                errors={result?.errors}
-                values={{
-                    title: campaign.title,
-                    category: campaign.category,
-                    country: campaign.country,
-                    description: campaign.description,
-                    goal: goalToInput(campaign.goalAmount, campaign.currency),
-                    currency: campaign.currency,
-                    endDate: campaign.endDate ? campaign.endDate.slice(0, 10) : "",
-                    story: campaign.story,
-                    coverImageUrl: campaign.coverImageUrl,
-                }}
-            />
-            {!["draft", "pending_approval", "rejected"].includes(campaign.status) && (
-                <CampaignLifecyclePanel
-                    status={campaign.status}
-                    updates={updates}
-                    notice={result?.lifecycleNotice}
-                    error={result?.lifecycleError}
-                />
-            )}
-        </>
-    );
+export default function EditCampaign() {
+    return <ComingSoonPage title="Edit campaign"/>;
 }
 
 export {Error404Page as ErrorBoundary} from "../pages";

@@ -1,8 +1,7 @@
 import {data} from "react-router";
-import {Alert, Container} from "@mantine/core";
 import {getOwnSuspension} from "../data-access/moderation/moderation.server";
 import {userSuspensionNotice} from "../lib/moderation/moderation";
-import {CreateCampaignPage} from "../pages";
+import {ComingSoonPage} from "../pages";
 import {requireUserClient} from "../data-access/auth/auth.server";
 import {readConnectSummary} from "../data-access/stripe/connect.server";
 import {handleCampaignForm} from "../data-access/campaigns/campaignFormAction.server";
@@ -20,26 +19,8 @@ export async function action({request}: Route.ActionArgs) {
     return handleCampaignForm({request, supabase, userId: user.id, headers});
 }
 
-const empty = {
-    title: "", category: "", country: "", description: "", goal: "", currency: null as string | null,
-    endDate: "", story: {type: "doc", content: []}, coverImageUrl: null,
-};
-
-export default function CreateCampaign({loaderData, actionData}: Route.ComponentProps) {
-    return (
-        <>
-            {loaderData.moderationNotice && (
-                <Container size="md" mt={36}>
-                    <Alert color="red" title="Account suspended">{loaderData.moderationNotice}</Alert>
-                </Container>
-            )}
-            <CreateCampaignPage
-                mode="create"
-                values={{...empty, currency: loaderData.currency}}
-                errors={actionData?.errors}
-            />
-        </>
-    );
+export default function CreateCampaign() {
+    return <ComingSoonPage title="Create a campaign"/>;
 }
 
 export {Error404Page as ErrorBoundary} from "../pages";

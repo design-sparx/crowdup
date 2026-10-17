@@ -1,5 +1,5 @@
 import {buildMeta} from "../helpers";
-import {CampaignDetailsPage, DetailError404Page} from "../pages";
+import {ComingSoonPage, DetailError404Page} from "../pages";
 import {getCampaignBySlug, listRecentDonors, listUpdates} from "../lib/campaigns/repository";
 import {canAcceptDonations, effectiveStatus} from "../lib/campaigns/lifecycle";
 import {renderStoryHtml} from "../lib/campaigns/story";
@@ -59,16 +59,8 @@ export function meta({loaderData}: Route.MetaArgs) {
     });
 }
 
-export default function CampaignDetails({loaderData}: Route.ComponentProps) {
-    return <CampaignDetailsPage
-            campaign={loaderData.campaign}
-            storyHtml={loaderData.storyHtml}
-            updates={loaderData.updates}
-            ended={loaderData.status === "ended"}
-            acceptingDonations={loaderData.acceptingDonations}
-            donors={loaderData.donors}
-            donationReturn={loaderData.donationReturn}
-        />;
+export default function CampaignDetails() {
+    return <ComingSoonPage title="Campaign"/>;
 }
 
 export {DetailError404Page as ErrorBoundary};

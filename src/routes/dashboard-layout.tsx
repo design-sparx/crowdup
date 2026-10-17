@@ -1,4 +1,4 @@
-import {data, type LoaderFunctionArgs} from "react-router";
+import {data, Outlet, type LoaderFunctionArgs} from "react-router";
 import {requireUser} from "../data-access/auth/auth.server";
 
 export async function loader({request}: LoaderFunctionArgs) {
@@ -10,5 +10,8 @@ export async function loader({request}: LoaderFunctionArgs) {
     );
 }
 
-export {DashboardLayout as default} from "../layout";
 export {Error404Page as ErrorBoundary} from "../pages";
+
+export default function Layout() {
+    return <Outlet/>;
+}

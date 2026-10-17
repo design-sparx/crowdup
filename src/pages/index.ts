@@ -1,45 +1,5 @@
-import HomePage from "./Home.tsx";
-import Error404Page from "./Error404.tsx";
-import HowItWorksPage from "./HowItWorks.tsx";
-import CampaignsPage from "./Campaigns";
-import CampaignDetailsPage from "./CampaignDetails";
+import ComingSoonPage from "./ComingSoon";
+import Error404Page from "./Error404";
 import DetailError404Page from "./DetailError404";
-import LoginPage from "./Login";
-import SignupPage from "./Signup";
-import ForgotPasswordPage from "./ForgotPassword";
-import UpdatePasswordPage from "./UpdatePassword";
-import DashboardPage from "./Dashboard";
-import MyDonationsPage from "./MyDonations";
-import CreateCampaignPage from "./CreateCampaign";
-import TermsPage from "./Terms";
-import PrivacyPage from "./Privacy";
-import SecurityPage from "./Security";
-import AdminReportsPage from "./AdminReports";
-import AdminCampaignsPage from "./AdminCampaigns";
-import AdminUsersPage from "./AdminUsers";
-import AdminApprovalsPage from "./AdminApprovals";
-import AdminPaymentsPage from "./AdminPayments";
 
-export {
-    HomePage,
-    Error404Page,
-    HowItWorksPage,
-    CampaignsPage,
-    CampaignDetailsPage,
-    DetailError404Page,
-    LoginPage,
-    SignupPage,
-    ForgotPasswordPage,
-    UpdatePasswordPage,
-    DashboardPage,
-    MyDonationsPage,
-    CreateCampaignPage,
-    TermsPage,
-    PrivacyPage,
-    SecurityPage,
-    AdminReportsPage,
-    AdminCampaignsPage,
-    AdminUsersPage,
-    AdminApprovalsPage,
-    AdminPaymentsPage
-}
+export {ComingSoonPage, Error404Page, DetailError404Page};

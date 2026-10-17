@@ -1,5 +1,5 @@
 import {data} from "react-router";
-import {MyDonationsPage} from "../pages";
+import {ComingSoonPage} from "../pages";
 import {requireUserClient} from "../data-access/auth/auth.server";
 import {listMyDonations} from "../data-access/donations/history";
 import type {Route} from "./+types/my-donations";
@@ -10,8 +10,8 @@ export async function loader({request}: Route.LoaderArgs) {
     return data({donations: await listMyDonations(supabase)}, {headers});
 }
 
-export default function MyDonations({loaderData}: Route.ComponentProps) {
-    return <MyDonationsPage donations={loaderData.donations}/>;
+export default function MyDonations() {
+    return <ComingSoonPage title="My donations"/>;
 }
 
 export {Error404Page as ErrorBoundary} from "../pages";

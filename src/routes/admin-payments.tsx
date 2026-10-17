@@ -1,3 +1,4 @@
+import {ComingSoonPage} from "../pages";
 import {data, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
 import {getAdminContext} from "../data-access/reports/reports.server";
 import {listOpenUnmatched, resolveUnmatched} from "../data-access/payments/unmatched.server";
@@ -22,5 +23,8 @@ export async function action({request}: ActionFunctionArgs) {
     return data({error: result === "invalid" ? "Unknown payment." : "Already reviewed."}, {status, headers: admin.headers});
 }
 
-export {AdminPaymentsPage as default} from "../pages";
 export {Error404Page as ErrorBoundary} from "../pages";
+
+export default function Page() {
+    return <ComingSoonPage title="Payments"/>;
+}

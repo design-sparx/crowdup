@@ -1,3 +1,4 @@
+import {ComingSoonPage} from "../pages";
 import {data, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
 import {getAdminContext} from "../data-access/reports/reports.server";
 import {listAdminCampaigns, restoreCampaign, suspendCampaign} from "../data-access/moderation/moderation.server";
@@ -31,5 +32,8 @@ export async function action({request}: ActionFunctionArgs) {
     return data({ok: true}, {headers: admin.headers});
 }
 
-export {AdminCampaignsPage as default} from "../pages";
 export {Error404Page as ErrorBoundary} from "../pages";
+
+export default function Page() {
+    return <ComingSoonPage title="Admin campaigns"/>;
+}

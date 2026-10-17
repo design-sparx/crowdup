@@ -1,5 +1,5 @@
 import {buildMeta} from "../helpers";
-import {CampaignsPage} from "../pages";
+import {ComingSoonPage} from "../pages";
 import {DEFAULT_PAGE_SIZE, listCampaigns, listCategories} from "../lib/campaigns/repository";
 import {parseCampaignSearch} from "../lib/campaigns/params";
 import {createPublicClient} from "../lib/supabase/server-public";
@@ -23,6 +23,6 @@ export function meta() {
     });
 }
 
-export default function Campaigns({loaderData}: Route.ComponentProps) {
-    return <CampaignsPage {...loaderData}/>;
+export default function Campaigns() {
+    return <ComingSoonPage title="Campaigns"/>;
 }

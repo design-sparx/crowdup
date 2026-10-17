@@ -18,7 +18,10 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* Paths */
+    "paths": {"@/*": ["./src/*"]}
   },
   "include": ["src", ".react-router/types/**/*", "react-router.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]

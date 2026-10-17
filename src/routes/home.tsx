@@ -1,8 +1,7 @@
 import {buildMeta} from "../helpers";
-import {HomePage} from "../pages";
+import {ComingSoonPage} from "../pages";
 import {listCampaigns} from "../lib/campaigns/repository";
 import {createPublicClient} from "../lib/supabase/server-public";
-import type {Route} from "./+types/home";
 
 export async function loader() {
     const {items} = await listCampaigns(createPublicClient(), {page: 1}, {pageSize: 8});
@@ -18,6 +17,6 @@ export function meta() {
     });
 }
 
-export default function Home({loaderData}: Route.ComponentProps) {
-    return <HomePage campaigns={loaderData.campaigns}/>;
+export default function Home() {
+    return <ComingSoonPage title="CrowdUp"/>;
 }

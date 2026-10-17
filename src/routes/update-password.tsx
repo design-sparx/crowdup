@@ -1,3 +1,4 @@
+import {ComingSoonPage} from "../pages";
 import {data, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
 import {requireUser, updatePassword} from "../data-access/auth/auth.server";
 
@@ -12,4 +13,8 @@ export async function action({request}: ActionFunctionArgs) {
     return data(result, {headers});
 }
 
-export {UpdatePasswordPage as default, Error404Page as ErrorBoundary} from "../pages";
+export {Error404Page as ErrorBoundary} from "../pages";
+
+export default function Page() {
+    return <ComingSoonPage title="Update password"/>;
+}

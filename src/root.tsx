@@ -1,20 +1,9 @@
 import type {ReactNode} from "react";
-import {Links, Meta, Outlet, Scripts, ScrollRestoration, useRouteLoaderData} from "react-router";
-import {ColorSchemeScript, MantineProvider, mantineHtmlProps} from "@mantine/core";
-import {Notifications} from "@mantine/notifications";
-import "@mantine/core/styles.css";
-import "@mantine/carousel/styles.css";
-import "@mantine/dates/styles.css";
-import "@mantine/dropzone/styles.css";
-import "@mantine/notifications/styles.css";
-import "@mantine/tiptap/styles.css";
-import "./index.css";
-import "./App.css";
+import {Links, Meta, Outlet, Scripts, ScrollRestoration} from "react-router";
+import "./styles/globals.css";
 import "./fonts/montserrat.css";
-import {customTheme} from "./theme";
 import {Error404Page} from "./pages";
 import {buildMeta} from "./helpers";
-import {DemoBanner} from "./components/DemoBanner";
 import {demoBannerState} from "./lib/demo/demo";
 
 export function loader() {
@@ -27,23 +16,17 @@ export function loader() {
 }
 
 export function Layout({children}: {children: ReactNode}) {
-    const data = useRouteLoaderData<typeof loader>("root");
     return (
-        <html lang="en" {...mantineHtmlProps}>
+        <html lang="en">
         <head>
             <meta charSet="UTF-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
             <Meta/>
             <Links/>
-            <ColorSchemeScript forceColorScheme="light"/>
         </head>
         <body>
-        <MantineProvider theme={customTheme} forceColorScheme="light">
-            <DemoBanner state={data?.demo}/>
-            {children}
-            <Notifications/>
-        </MantineProvider>
+        {children}
         <ScrollRestoration/>
         <Scripts/>
         </body>

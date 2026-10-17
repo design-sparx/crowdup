@@ -1,9 +1,7 @@
 import {data} from "react-router";
-import {Alert} from "@mantine/core";
 import {getOwnSuspension} from "../data-access/moderation/moderation.server";
 import {userSuspensionNotice} from "../lib/moderation/moderation";
-import {DashboardPage} from "../pages";
-import {StripeStatusPanel} from "../components";
+import {ComingSoonPage} from "../pages";
 import {requireUserClient} from "../data-access/auth/auth.server";
 import {getDashboardData} from "../data-access/campaigns/dashboard";
 import {getPublishingMode, readConnectSummary} from "../data-access/stripe/connect.server";
@@ -25,25 +23,8 @@ export async function loader({request}: Route.LoaderArgs) {
     );
 }
 
-export default function Dashboard({loaderData}: Route.ComponentProps) {
-    const {connect, mode, notice, moderationNotice, ...rest} = loaderData;
-    return (
-        <DashboardPage
-            {...rest}
-            stripePanel={
-                <>
-                    {moderationNotice && <Alert color="red" title="Account suspended">{moderationNotice}</Alert>}
-                    <StripeStatusPanel
-                        status={connect.status}
-                        currency={connect.currency}
-                        mode={mode}
-                        campaigns={rest.campaigns}
-                        notice={notice}
-                    />
-                </>
-            }
-        />
-    );
+export default function Dashboard() {
+    return <ComingSoonPage title="Dashboard"/>;
 }
 
 export {Error404Page as ErrorBoundary} from "../pages";

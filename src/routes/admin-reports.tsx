@@ -1,3 +1,4 @@
+import {ComingSoonPage} from "../pages";
 import {data, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
 import {dismissReports, getAdminContext, listOpenReportGroups} from "../data-access/reports/reports.server";
 
@@ -23,5 +24,8 @@ export async function action({request}: ActionFunctionArgs) {
     });
 }
 
-export {AdminReportsPage as default} from "../pages";
 export {Error404Page as ErrorBoundary} from "../pages";
+
+export default function Page() {
+    return <ComingSoonPage title="Reports"/>;
+}

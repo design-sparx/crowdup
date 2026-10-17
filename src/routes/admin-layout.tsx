@@ -1,4 +1,4 @@
-import {data, type LoaderFunctionArgs} from "react-router";
+import {data, Outlet, type LoaderFunctionArgs} from "react-router";
 import {countPendingCampaigns} from "../data-access/campaigns/approval.server";
 import {countOpenUnmatched} from "../data-access/payments/unmatched.server";
 import {getAdminContext, listOpenReportGroups} from "../data-access/reports/reports.server";
@@ -18,5 +18,8 @@ export async function loader({request}: LoaderFunctionArgs) {
     return data({openCount, pendingCount, unmatchedCount}, {headers: admin.headers});
 }
 
-export {AdminLayout as default} from "../layout";
 export {Error404Page as ErrorBoundary} from "../pages";
+
+export default function Layout() {
+    return <Outlet/>;
+}
