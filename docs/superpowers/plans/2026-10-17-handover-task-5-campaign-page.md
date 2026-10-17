@@ -1045,7 +1045,8 @@ test("the campaign page shows the story, the money summary and a donate form on 
 
 test("choosing a preset fills the amount, and an invalid amount shows the server's error", async ({page}) => {
     await page.goto(SLUG);
-    await page.getByRole("button", {name: "$50.00"}).or(page.getByRole("button", {name: /50\.00/})).first().click();
+    // The seeded campaign is in GBP, so the preset is labelled with a pound sign.
+    await page.getByRole("button", {name: /50\.00/}).first().click();
     await expect(page.getByLabel(/^Amount/)).toHaveValue("50");
     await page.getByLabel(/^Amount/).fill("0.10");
     await page.getByRole("button", {name: "Donate now"}).click();
