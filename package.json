@@ -21,6 +21,7 @@
     "@shadcn/react": "^0.3.1",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.118.0",
+    "@tabler/icons": "^3.49.0",
     "@tabler/icons-react": "^3.49.0",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/react-table": "^9.3.1",

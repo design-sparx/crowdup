@@ -33,3 +33,5 @@ playwright-report
 
 supabase/.branches
 supabase/.temp
+
+.claude
