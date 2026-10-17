@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 import {describe, expect, it} from "vitest";
 import {verifyStripeWebhook} from "../stripe/webhook.server";
-import {handleDonationEvent, type CampaignForDonation, type DonationRow, type DonationWriter} from "./donationWebhook";
+import {handleDonationEvent, type CampaignForDonation, type DonationRow, type DonationWriter, type UnmatchedPaymentRow} from "./donationWebhook";
 
 const SECRET = "whsec_test_fixture_secret";
 const CAMPAIGN_ID = "10000000-0000-4000-8000-000000000001";
@@ -69,6 +69,7 @@ const liveCampaign: CampaignForDonation = {
 
 function fakeDb(campaign: CampaignForDonation | null = liveCampaign) {
     const rows: DonationRow[] = [];
+    const unmatched: UnmatchedPaymentRow[] = [];
     const seen = new Set<string>();
     const db: DonationWriter = {
         async findCampaign(id) {
@@ -80,8 +81,11 @@ function fakeDb(campaign: CampaignForDonation | null = liveCampaign) {
             rows.push(row);
             return "inserted";
         },
+        async recordUnmatched(row) {
+            if (!unmatched.some((u) => u.eventId === row.eventId)) unmatched.push(row);
+        },
     };
-    return {db, rows};
+    return {db, rows, unmatched};
 }
 
 async function run(payload: unknown, db: DonationWriter) {
@@ -180,22 +184,45 @@ describe("handleDonationEvent", () => {
         expect(rows).toHaveLength(0);
     });
 
-    it("ignores an unknown campaign", async () => {
-        const {db, rows} = fakeDb(null);
-        expect((await run(sessionEvent(), db)).outcome).toBe("ignored");
+    it("records money for an unknown campaign as an unmatched payment, never a donation", async () => {
+        const {db, rows, unmatched} = fakeDb(null);
+        expect(await run(sessionEvent(), db)).toEqual({outcome: "unmatched", reason: "unknown campaign"});
         expect(rows).toHaveLength(0);
+        expect(unmatched).toEqual([
+            {
+                eventId: "evt_1",
+                sessionId: "cs_test_1",
+                paymentIntentId: "pi_test_1",
+                accountId: "acct_1",
+                campaignId: CAMPAIGN_ID,
+                amount: 5000,
+                currency: "KES",
+                reason: "unknown campaign",
+            },
+        ]);
     });
 
-    it("ignores an event from a Stripe account that does not own the campaign", async () => {
-        const {db, rows} = fakeDb();
-        expect((await run(sessionEvent({account: "acct_evil"}), db)).outcome).toBe("ignored");
+    it("records an event from an account that does not own the campaign as unmatched", async () => {
+        const {db, rows, unmatched} = fakeDb();
+        const r = await run(sessionEvent({account: "acct_evil"}), db);
+        expect(r).toEqual({outcome: "unmatched", reason: "account does not own the campaign"});
         expect(rows).toHaveLength(0);
+        expect(unmatched[0]).toMatchObject({accountId: "acct_evil", campaignId: CAMPAIGN_ID});
     });
 
-    it("ignores a currency that differs from the campaign currency", async () => {
-        const {db, rows} = fakeDb();
-        expect((await run(sessionEvent({session: {currency: "usd"}}), db)).outcome).toBe("ignored");
+    it("records a currency that differs from the campaign currency as unmatched", async () => {
+        const {db, rows, unmatched} = fakeDb();
+        const r = await run(sessionEvent({session: {currency: "usd"}}), db);
+        expect(r).toEqual({outcome: "unmatched", reason: "currency mismatch"});
         expect(rows).toHaveLength(0);
+        expect(unmatched[0]).toMatchObject({currency: "USD", amount: 5000});
+    });
+
+    it("recording an unmatched payment is idempotent across redeliveries", async () => {
+        const {db, unmatched} = fakeDb(null);
+        await run(sessionEvent(), db);
+        await run(sessionEvent(), db);
+        expect(unmatched).toHaveLength(1);
     });
 
     it("ignores a missing or non-positive amount", async () => {
@@ -245,6 +272,24 @@ describe("handleDonationEvent", () => {
                 return liveCampaign;
             },
             async insertDonation() {
+                throw new Error("db down");
+            },
+            async recordUnmatched() {
+                throw new Error("db down");
+            },
+        };
+        await expect(run(sessionEvent(), db)).rejects.toThrow("db down");
+    });
+
+    it("lets a database error while recording an unmatched payment propagate so Stripe retries", async () => {
+        const db: DonationWriter = {
+            async findCampaign() {
+                return null;
+            },
+            async insertDonation() {
+                throw new Error("unused");
+            },
+            async recordUnmatched() {
                 throw new Error("db down");
             },
         };

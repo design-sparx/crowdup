@@ -40,6 +40,7 @@ export async function action({request}: ActionFunctionArgs) {
         // A database error throws and becomes a 500, so Stripe retries. Everything else is a 200.
         const result = await handleDonationEvent(event, {db: supabaseDonationWriter(createServiceRoleClient())});
         if (result.outcome === "ignored") console.warn(`donation event ${event.id} ignored: ${result.reason}`);
+        if (result.outcome === "unmatched") console.error(`donation event ${event.id} unmatched, review needed: ${result.reason}`);
     }
     // Unhandled event types are acknowledged so Stripe does not retry them.
     return new Response(null, {status: 200});

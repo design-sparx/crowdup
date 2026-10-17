@@ -10,8 +10,11 @@ import {parseDonationMetadata} from "../../lib/donations/metadata";
  * Trust model: the event itself is trusted only because verifyStripeWebhook checked the
  * signature on the raw body. Its metadata is still validated: the campaign must exist, the
  * event's connected account must be the campaign owner's Stripe account, and the currency
- * must match the campaign. Anything that does not fit is acknowledged (200) and not
- * written, so Stripe does not retry forever. Only database errors throw (Stripe retries).
+ * must match the campaign. A paid session that does not fit is acknowledged (200) so Stripe
+ * does not retry forever, and is recorded in `unmatched_payment` for an operator to review
+ * (the money has already moved, so it must not vanish). It is never a donation and never in
+ * totals. Events that are not paid CrowdUp sessions are ignored. Only database errors throw
+ * (Stripe retries).
  *
  * Idempotency: the donation table has UNIQUE stripe_event_id and stripe_checkout_session_id.
  * A duplicate delivery, or a second event type for the same session, hits the constraint
@@ -49,13 +52,30 @@ export interface DonationRow {
     flaggedReason: string | null;
 }
 
+/** A paid session that could not be attached to a campaign. Kept for operator review only. */
+export interface UnmatchedPaymentRow {
+    eventId: string;
+    sessionId: string;
+    paymentIntentId: string | null;
+    accountId: string;
+    campaignId: string;
+    amount: number;
+    currency: string;
+    reason: string;
+}
+
 export interface DonationWriter {
     findCampaign(id: string): Promise<CampaignForDonation | null>;
     /** Inserts a CONFIRMED donation. Returns "duplicate" on a unique violation. */
     insertDonation(row: DonationRow): Promise<"inserted" | "duplicate">;
+    /** Records a payment that matched no campaign. Idempotent on the event id. */
+    recordUnmatched(row: UnmatchedPaymentRow): Promise<void>;
 }
 
-export type DonationEventResult = {outcome: "recorded" | "duplicate"} | {outcome: "ignored"; reason: string};
+export type DonationEventResult =
+    | {outcome: "recorded" | "duplicate"}
+    | {outcome: "ignored"; reason: string}
+    | {outcome: "unmatched"; reason: string};
 
 /** Stripe event types that record a donation. The webhook route uses this to decide what to pass in. */
 export const DONATION_EVENT_TYPES: ReadonlySet<string> = new Set([
@@ -82,14 +102,30 @@ export async function handleDonationEvent(
     const amount = session.amount_total;
     if (typeof amount !== "number" || !Number.isSafeInteger(amount) || amount <= 0) return ignored("invalid amount");
 
-    const campaign = await deps.db.findCampaign(meta.campaignId);
-    if (!campaign) return ignored("unknown campaign");
-    if (campaign.ownerStripeAccountId !== event.account) return ignored("account does not own the campaign");
+    const paymentIntent = session.payment_intent;
     const currency = (session.currency ?? "").toUpperCase();
-    if (currency !== campaign.currency.toUpperCase()) return ignored("currency mismatch");
+    const paymentIntentId = typeof paymentIntent === "string" ? paymentIntent : (paymentIntent?.id ?? null);
+    // The money has already moved, so a mismatch is recorded for review rather than dropped.
+    const unmatched = async (reason: string): Promise<DonationEventResult> => {
+        await deps.db.recordUnmatched({
+            eventId: event.id,
+            sessionId: session.id,
+            paymentIntentId,
+            accountId: event.account as string,
+            campaignId: meta.campaignId,
+            amount,
+            currency,
+            reason,
+        });
+        return {outcome: "unmatched", reason};
+    };
+
+    const campaign = await deps.db.findCampaign(meta.campaignId);
+    if (!campaign) return unmatched("unknown campaign");
+    if (campaign.ownerStripeAccountId !== event.account) return unmatched("account does not own the campaign");
+    if (currency !== campaign.currency.toUpperCase()) return unmatched("currency mismatch");
 
     const live = canAcceptDonations({status: campaign.status, endDate: campaign.endDate}, deps.now ?? new Date());
-    const paymentIntent = session.payment_intent;
     const result = await deps.db.insertDonation({
         campaignId: campaign.id,
         amount,
@@ -102,7 +138,7 @@ export async function handleDonationEvent(
         message: meta.message,
         donorUserId: meta.userId && UUID.test(meta.userId) ? meta.userId : null,
         sessionId: session.id,
-        paymentIntentId: typeof paymentIntent === "string" ? paymentIntent : (paymentIntent?.id ?? null),
+        paymentIntentId,
         eventId: event.id,
         flaggedReason: live ? null : "campaign not live at payment time",
     });

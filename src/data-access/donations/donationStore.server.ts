@@ -75,6 +75,20 @@ export function supabaseDonationWriter(db: SupabaseClient): DonationWriter {
             if (error) throw new Error(error.message);
             return "inserted";
         },
+        async recordUnmatched(row) {
+            const {error} = await db.from("unmatched_payment").insert({
+                stripe_event_id: row.eventId,
+                stripe_checkout_session_id: row.sessionId,
+                stripe_payment_intent_id: row.paymentIntentId,
+                stripe_account_id: row.accountId,
+                campaign_id: row.campaignId,
+                amount: row.amount,
+                currency: row.currency,
+                reason: row.reason,
+            });
+            // 23505 = this event was already recorded (a redelivery).
+            if (error && error.code !== "23505") throw new Error(error.message);
+        },
     };
 }
 
