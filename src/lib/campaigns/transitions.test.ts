@@ -42,6 +42,11 @@ describe("canTransition", () => {
             expect(canTransition("server", from, "rejected")).toBe(false);
         }
     });
+    it("only suspends live or closed campaigns, like admin_suspend_campaign", () => {
+        for (const from of CAMPAIGN_STATUSES.filter((s) => s !== "suspended")) {
+            expect(canTransition("server", from, "suspended"), from).toBe(from === "live" || from === "closed");
+        }
+    });
     it("treats staying in the same status as allowed", () => {
         expect(canTransition("owner", "pending_approval", "pending_approval")).toBe(true);
     });

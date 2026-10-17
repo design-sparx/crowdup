@@ -10,7 +10,7 @@
  *   pending_approval --(admin reject, reason)--> rejected
  *   rejected --(owner edit)--> draft, then resubmitted like any draft
  *   live --(owner or server)--> closed
- *   any --(admin)--> suspended
+ *   live or closed --(admin)--> suspended; restore returns to the prior status
  *
  * "owner" is a signed-in client; "server" is the service role, a SECURITY DEFINER function
  * (approve/reject) or an admin session.
@@ -32,6 +32,7 @@ export function canTransition(actor: CampaignActor, from: string, to: string): b
     // Server: entry into the moderation statuses is constrained, everything else is open.
     if (to === "pending_approval") return from === "draft" || from === "live";
     if (to === "rejected") return from === "pending_approval";
+    if (to === "suspended") return from === "live" || from === "closed";
     return true;
 }
 

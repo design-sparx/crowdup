@@ -12,7 +12,7 @@
 
 begin;
 
-select plan(181);
+select plan(184);
 
 -- Helpers, scoped to this session.
 
@@ -1156,6 +1156,32 @@ select is(
   pg_temp.sqlstate_of($$select public.approve_campaign('10000000-0000-4000-8000-000000000001')$$),
   null,
   'approval succeeds once the organiser is active and onboarded'
+);
+
+-- Only live or closed campaigns can be suspended, for every role.
+select ok(
+  public.campaign_status_transition_allowed('server', 'live', 'suspended')
+  and public.campaign_status_transition_allowed('server', 'closed', 'suspended')
+  and not public.campaign_status_transition_allowed('server', 'draft', 'suspended')
+  and not public.campaign_status_transition_allowed('server', 'pending_approval', 'suspended')
+  and not public.campaign_status_transition_allowed('server', 'rejected', 'suspended'),
+  'the transition table only suspends live or closed campaigns'
+);
+select pg_temp.become(null, 'service_role');
+insert into public.campaign (id, owner_id, title, slug, category, country, goal_amount)
+  values ('10000000-0000-4000-8000-0000000000d1', '00000000-0000-4000-8000-000000000002',
+          'Suspend test draft', 'suspend-test-draft', 'Other', 'GB', 100);
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set status = 'suspended'
+    where id = '10000000-0000-4000-8000-0000000000d1'$$),
+  '42501',
+  'even the server cannot suspend a draft directly'
+);
+select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
+select is(
+  pg_temp.sqlstate_of($$select public.admin_suspend_campaign('10000000-0000-4000-8000-0000000000d1', 'Not allowed on a draft')$$),
+  '23514',
+  'an admin cannot suspend a draft through the moderation function either'
 );
 
 select * from finish();
