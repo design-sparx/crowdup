@@ -9,7 +9,7 @@ export function DemoBanner({state}: {state: DemoBannerState | undefined}) {
             role={warning ? "alert" : "status"}
             className={
                 warning
-                    ? "flex items-center justify-center gap-2 bg-destructive px-4 py-2 text-sm text-white"
+                    ? "flex items-center justify-center gap-2 border-b border-destructive/30 bg-destructive/10 px-4 py-2 text-sm font-medium text-destructive"
                     : "flex items-center justify-center gap-2 bg-primary px-4 py-2 text-sm text-primary-foreground"
             }
         >

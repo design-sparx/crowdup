@@ -8,7 +8,7 @@ export async function loader({request}: LoaderFunctionArgs) {
     return data({account}, {headers});
 }
 
-export default function PublicLayout() {
+export default function SiteLayout() {
     const {account} = useLoaderData<typeof loader>();
     return (
         <SitePage account={account}>

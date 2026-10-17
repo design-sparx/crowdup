@@ -1,7 +1,6 @@
 import {index, layout, route, type RouteConfig} from "@react-router/dev/routes";
 
 export default [
-    layout("routes/home-layout.tsx", [index("routes/home.tsx")]),
     route("login", "routes/login.tsx"),
     route("signup", "routes/signup.tsx"),
     route("forgot-password", "routes/forgot-password.tsx"),
@@ -13,7 +12,8 @@ export default [
     route("stripe/refresh", "routes/stripe-refresh.tsx"),
     route("campaigns/:id/publish", "routes/stripe-publish.tsx"),
     route("api/stripe/webhook", "routes/api-stripe-webhook.tsx"),
-    layout("routes/public-layout.tsx", [
+    layout("routes/site-layout.tsx", [
+        index("routes/home.tsx"),
         route("how-it-works", "routes/how-it-works.tsx"),
         route("campaigns", "routes/campaigns.tsx"),
         route("campaigns/:slug", "routes/campaign-details.tsx"),

@@ -3,9 +3,7 @@ import {buttonVariants} from "@/components/ui/button";
 
 export function ErrorPage() {
     const error = useRouteError();
-    const notFound =
-        (isRouteErrorResponse(error) && error.status === 404) ||
-        (error instanceof Response && error.status === 404);
+    const notFound = isRouteErrorResponse(error) && error.status === 404;
     if (!notFound) console.error(error);
     return (
         <main className="mx-auto flex min-h-[60vh] max-w-xl flex-col items-center justify-center gap-4 px-4 text-center">
