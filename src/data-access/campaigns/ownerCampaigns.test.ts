@@ -66,6 +66,18 @@ describe("updateCampaign", () => {
         expect(Object.keys(patches[0])).not.toContain("owner_id");
         expect(Object.keys(patches[0])).not.toContain("cover_image_url");
     });
+    it("reopens a rejected campaign in the same single update as the edit", async () => {
+        const {client, patches} = updateClient([{id: "c"}]);
+        await updateCampaign(client, "u1", "c", values, undefined, {reopenRejected: true});
+        expect(patches).toHaveLength(1);
+        expect(patches[0]).toMatchObject({status: "draft", title: "Clean water"});
+    });
+    it("does not touch the status of any other campaign", async () => {
+        const {client, patches} = updateClient([{id: "c"}]);
+        await updateCampaign(client, "u1", "c", values, undefined);
+        expect(patches).toHaveLength(1);
+        expect(Object.keys(patches[0])).not.toContain("status");
+    });
     it("reports false when no row was updated (RLS filtered it out)", async () => {
         const {client} = updateClient([]);
         expect(await updateCampaign(client, "u1", "c", values, undefined)).toBe(false);

@@ -149,6 +149,7 @@ export async function updateCampaign(
     id: string,
     values: CampaignValues,
     coverImageUrl: string | undefined,
+    {reopenRejected = false}: {reopenRejected?: boolean} = {},
 ): Promise<boolean> {
     const patch: Record<string, unknown> = {
         title: values.title,
@@ -160,26 +161,16 @@ export async function updateCampaign(
         story: values.story,
     };
     if (coverImageUrl !== undefined) patch.cover_image_url = coverImageUrl;
+    // Editing a rejected campaign reopens it as a draft (the guard trigger allows only
+    // rejected -> draft for owners); the organiser then resubmits it with Publish. It is the
+    // same single update as the edit, so the two can never be applied apart.
+    if (reopenRejected) patch.status = "draft";
 
-    const {data, error} = await client
-        .from("campaign")
-        .update(patch)
-        .eq("id", id)
-        .eq("owner_id", userId)
-        .select("id");
+    let query = client.from("campaign").update(patch).eq("id", id).eq("owner_id", userId);
+    if (reopenRejected) query = query.eq("status", "rejected");
+    const {data, error} = await query.select("id");
     if (error) fail(error);
-    if ((data ?? []).length === 0) return false;
-    // Editing a rejected campaign reopens it as a draft; the organiser then resubmits it
-    // with Publish. The status filter makes this a no-op for every other status, and the
-    // guard trigger allows only rejected -> draft for owners.
-    const {error: reopenError} = await client
-        .from("campaign")
-        .update({status: "draft"})
-        .eq("id", id)
-        .eq("owner_id", userId)
-        .eq("status", "rejected");
-    if (reopenError) fail(reopenError);
-    return true;
+    return (data ?? []).length > 0;
 }
 
 /**

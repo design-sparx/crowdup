@@ -72,7 +72,9 @@ export async function handleCampaignForm(args: {
             return redirect(`/campaigns/${campaignId}/edit?saved=1`, {headers});
         }
 
-        const updated = await updateCampaign(supabase, userId, campaignId, parsed.values, coverUrl);
+        const updated = await updateCampaign(supabase, userId, campaignId, parsed.values, coverUrl, {
+            reopenRejected: existing?.status === "rejected",
+        });
         if (!updated) return invalid({form: "This campaign cannot be edited."}, headers, 403);
         return redirect(`/campaigns/${campaignId}/edit?saved=1`, {headers});
     } catch (e) {
