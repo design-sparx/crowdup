@@ -1,7 +1,6 @@
 import type {ReactNode} from "react";
 import {Links, Meta, Outlet, Scripts, ScrollRestoration} from "react-router";
 import "./styles/globals.css";
-import "./fonts/montserrat.css";
 import {Error404Page} from "./pages";
 import {buildMeta} from "./helpers";
 import {demoBannerState} from "./lib/demo/demo";

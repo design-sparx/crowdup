@@ -22,4 +22,9 @@ export default tseslint.config(
       'react-refresh/only-export-components': ['warn', {allowExportNames: ['meta', 'loader', 'action']}],
     },
   },
+  {
+    // shadcn components export their variants (e.g. buttonVariants) next to the component.
+    files: ['src/components/ui/**/*.{ts,tsx}'],
+    rules: {'react-refresh/only-export-components': 'off'},
+  },
 )
