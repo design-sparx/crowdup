@@ -19,6 +19,12 @@ describe("parseGoal", () => {
 });
 
 describe("rescaleProvisionalGoal", () => {
+    it("refuses a goal the currency cannot represent exactly instead of altering it", () => {
+        expect(rescaleProvisionalGoal(100, "JPY")).toBe(1);
+        expect(rescaleProvisionalGoal(1050, "JPY")).toBeNull();
+        expect(rescaleProvisionalGoal(40, "JPY")).toBeNull();
+        expect(rescaleProvisionalGoal(1050, "KWD")).toBe(10500);
+    });
     it("converts the draft's hundredths into the currency's minor units", () => {
         expect(rescaleProvisionalGoal(100000, "JPY")).toBe(1000);
         expect(rescaleProvisionalGoal(100000, "KWD")).toBe(1000000);
@@ -37,6 +43,7 @@ describe("goalToInput", () => {
 describe("goalAtGoLive", () => {
     it("rescales a draft that never had a currency (goal stored in hundredths)", () => {
         expect(goalAtGoLive({goal: 100000, currentCurrency: null}, "JPY")).toBe(1000);
+        expect(goalAtGoLive({goal: 1050, currentCurrency: null}, "JPY")).toBeNull();
     });
     it("keeps the goal of a draft that already has a currency (a reopened rejected campaign)", () => {
         expect(goalAtGoLive({goal: 1000, currentCurrency: "JPY"}, "JPY")).toBe(1000);

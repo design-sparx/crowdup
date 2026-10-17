@@ -81,6 +81,12 @@ describe("syncAccountStatus", () => {
             expect(f.submitted).toEqual([]);
         }
     });
+    it("does not count a draft whose goal cannot be converted as published", async () => {
+        const f = fakes({accountId: "acct_1", drafts: ["c1"]});
+        f.store.publish = async () => "bad_goal";
+        const r = await syncAccountStatus({api: f.api, store: f.store, userId: "u1", mode: "auto"});
+        expect(r.published).toBe(0);
+    });
     it("does not publish for a suspended owner", async () => {
         const f = fakes({accountId: "acct_1", drafts: ["c1"], suspended: true});
         expect((await syncAccountStatus({api: f.api, store: f.store, userId: "u1", mode: "auto"})).published).toBe(0);
@@ -105,6 +111,11 @@ describe("publishOwnDraft", () => {
         expect(await run(f, "approval")).toBe("awaiting_approval");
         expect(f.published).toEqual([]);
         expect(f.submitted).toEqual([{id: "c1", currency: "KES"}]);
+    });
+    it("reports a goal that cannot be converted to the account currency instead of publishing", async () => {
+        const f = fakes({stored: true, drafts: ["c1"]});
+        f.store.publish = async () => "bad_goal";
+        expect(await run(f)).toBe("bad_goal");
     });
     it("cannot publish a campaign that is not one of the owner's drafts", async () => {
         const f = fakes({stored: true, drafts: ["c1"]});

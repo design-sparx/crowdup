@@ -70,6 +70,12 @@ const CampaignForm = ({mode, values, errors = {}, status, rejectionReason, saved
             {publish === "not_connected" && (
                 <Alert color="yellow" mb="md">Connect your Stripe account from the dashboard to publish this campaign.</Alert>
             )}
+            {publish === "bad_goal" && (
+                <Alert color="red" mb="md">
+                    Your goal cannot be expressed in your Stripe account's currency (it has no cents). Edit it to a whole
+                    amount of at least one unit, then publish again.
+                </Alert>
+            )}
             {status === "suspended" && (
                 <Alert color="red" mb="md">This campaign is suspended and cannot be edited.</Alert>
             )}

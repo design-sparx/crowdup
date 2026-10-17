@@ -1,6 +1,6 @@
 import type {SupabaseClient} from "@supabase/supabase-js";
 import {goalAtGoLive} from "../../lib/campaigns/goal";
-import type {ConnectStore} from "./connect";
+import type {ConnectStore, MoveResult} from "./connect";
 
 function fail(error: {message: string}): never {
     throw new Error(error.message);
@@ -14,7 +14,7 @@ export function supabaseConnectStore(db: SupabaseClient): ConnectStore {
      * already has a currency, so its goal is kept. The goal filter makes a concurrent edit
      * lose the race instead of the goal being rescaled twice.
      */
-    async function moveDraft(campaignId: string, currency: string, patch: Record<string, unknown>) {
+    async function moveDraft(campaignId: string, currency: string, patch: Record<string, unknown>): Promise<MoveResult> {
         const {data: draft, error: readError} = await db
             .from("campaign")
             .select("goal_amount, currency")
@@ -22,18 +22,20 @@ export function supabaseConnectStore(db: SupabaseClient): ConnectStore {
             .eq("status", "draft")
             .maybeSingle();
         if (readError) fail(readError);
-        if (!draft) return false;
+        if (!draft) return "gone";
         const row = draft as {goal_amount: number; currency: string | null};
         const goal = Number(row.goal_amount);
+        const nextGoal = goalAtGoLive({goal, currentCurrency: row.currency}, currency);
+        if (nextGoal === null) return "bad_goal";
         const {data, error} = await db
             .from("campaign")
-            .update({...patch, currency, goal_amount: goalAtGoLive({goal, currentCurrency: row.currency}, currency)})
+            .update({...patch, currency, goal_amount: nextGoal})
             .eq("id", campaignId)
             .eq("status", "draft")
             .eq("goal_amount", goal)
             .select("id");
         if (error) fail(error);
-        return (data ?? []).length > 0;
+        return (data ?? []).length > 0 ? true : "gone";
     }
 
     return {
