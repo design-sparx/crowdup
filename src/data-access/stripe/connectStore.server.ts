@@ -1,5 +1,5 @@
 import type {SupabaseClient} from "@supabase/supabase-js";
-import {rescaleProvisionalGoal} from "../../lib/campaigns/goal";
+import {goalAtGoLive} from "../../lib/campaigns/goal";
 import type {ConnectStore} from "./connect";
 
 function fail(error: {message: string}): never {
@@ -9,23 +9,25 @@ function fail(error: {message: string}): never {
 /** ConnectStore backed by the service-role client. Every query is scoped to one owner. */
 export function supabaseConnectStore(db: SupabaseClient): ConnectStore {
     /**
-     * Fixes the currency and converts the draft's provisional goal (hundredths) into that
-     * currency's minor units in the same update. The goal filter makes a concurrent edit
+     * Fixes the currency and converts a never-priced draft's provisional goal (hundredths)
+     * into that currency's minor units in the same update. A reopened rejected campaign
+     * already has a currency, so its goal is kept. The goal filter makes a concurrent edit
      * lose the race instead of the goal being rescaled twice.
      */
     async function moveDraft(campaignId: string, currency: string, patch: Record<string, unknown>) {
         const {data: draft, error: readError} = await db
             .from("campaign")
-            .select("goal_amount")
+            .select("goal_amount, currency")
             .eq("id", campaignId)
             .eq("status", "draft")
             .maybeSingle();
         if (readError) fail(readError);
         if (!draft) return false;
-        const goal = Number((draft as {goal_amount: number}).goal_amount);
+        const row = draft as {goal_amount: number; currency: string | null};
+        const goal = Number(row.goal_amount);
         const {data, error} = await db
             .from("campaign")
-            .update({...patch, currency, goal_amount: rescaleProvisionalGoal(goal, currency)})
+            .update({...patch, currency, goal_amount: goalAtGoLive({goal, currentCurrency: row.currency}, currency)})
             .eq("id", campaignId)
             .eq("status", "draft")
             .eq("goal_amount", goal)

@@ -32,3 +32,12 @@ export function goalToInput(minor: number, currency: string | null): string {
     const exp = exponentFor(currency);
     return String(minor / 10 ** exp);
 }
+
+/**
+ * The goal a draft carries into go-live. A draft that never had a currency holds its goal in
+ * hundredths and is rescaled. A reopened rejected campaign already has its currency, so its
+ * goal is already in that currency's minor units and must be kept as is.
+ */
+export function goalAtGoLive(draft: {goal: number; currentCurrency: string | null}, currency: string): number {
+    return draft.currentCurrency ? draft.goal : rescaleProvisionalGoal(draft.goal, currency);
+}

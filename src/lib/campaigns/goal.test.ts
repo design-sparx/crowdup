@@ -1,5 +1,5 @@
 import {describe, expect, it} from "vitest";
-import {goalToInput, parseGoal, rescaleProvisionalGoal} from "./goal";
+import {goalAtGoLive, goalToInput, parseGoal, rescaleProvisionalGoal} from "./goal";
 
 describe("parseGoal", () => {
     it("uses two decimals while the currency is not set yet", () => {
@@ -31,5 +31,15 @@ describe("goalToInput", () => {
         expect(goalToInput(500050, null)).toBe("5000.5");
         expect(goalToInput(1000, "JPY")).toBe("1000");
         expect(goalToInput(10125, "KWD")).toBe("10.125");
+    });
+});
+
+describe("goalAtGoLive", () => {
+    it("rescales a draft that never had a currency (goal stored in hundredths)", () => {
+        expect(goalAtGoLive({goal: 100000, currentCurrency: null}, "JPY")).toBe(1000);
+    });
+    it("keeps the goal of a draft that already has a currency (a reopened rejected campaign)", () => {
+        expect(goalAtGoLive({goal: 1000, currentCurrency: "JPY"}, "JPY")).toBe(1000);
+        expect(goalAtGoLive({goal: 10125, currentCurrency: "KWD"}, "KWD")).toBe(10125);
     });
 });
