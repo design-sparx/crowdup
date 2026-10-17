@@ -1,8 +1,9 @@
 import {createElement, type ReactElement} from "react";
 import {render} from "@testing-library/react";
-import {MemoryRouter} from "react-router";
+import {createMemoryRouter, RouterProvider} from "react-router";
 
-/** Renders UI inside a router so `Link` and `Form` work in tests. */
+/** Renders UI inside a data router so `Link` and `Form` work in tests. */
 export function renderWithRouter(ui: ReactElement, route = "/") {
-    return render(createElement(MemoryRouter, {initialEntries: [route]}, ui));
+    const router = createMemoryRouter([{path: "*", element: ui}], {initialEntries: [route]});
+    return render(createElement(RouterProvider, {router}));
 }
