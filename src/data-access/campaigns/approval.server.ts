@@ -62,7 +62,7 @@ export async function decideCampaign(client: SupabaseClient, form: FormData): Pr
     if (typeof id !== "string" || !UUID.test(id)) return {ok: false, error: "Unknown campaign.", status: 400};
     const intent = form.get("intent");
 
-    let error: {code?: string} | null;
+    let error: {code?: string; message?: string} | null;
     if (intent === "approve") {
         ({error} = await client.rpc("approve_campaign", {p_campaign_id: id}));
     } else if (intent === "reject") {
@@ -73,6 +73,10 @@ export async function decideCampaign(client: SupabaseClient, form: FormData): Pr
         return {ok: false, error: "Unknown action.", status: 400};
     }
     if (error?.code === "P0002") return {ok: false, error: "This campaign is no longer pending.", status: 409};
+    // approve_campaign refuses when the organiser cannot take donations; its message is written for admins.
+    if (error?.code === "P0001" && error.message) {
+        return {ok: false, error: `${error.message.charAt(0).toUpperCase()}${error.message.slice(1)}.`, status: 409};
+    }
     if (error?.code === "42501") return {ok: false, error: "Not allowed.", status: 403};
     if (error) return {ok: false, error: "Could not save the decision.", status: 500};
     return {ok: true, message: intent === "approve" ? "Campaign approved and live." : "Campaign rejected."};

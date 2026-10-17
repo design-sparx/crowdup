@@ -12,7 +12,7 @@
 
 begin;
 
-select plan(167);
+select plan(181);
 
 -- Helpers, scoped to this session.
 
@@ -203,10 +203,10 @@ select is(
   'owner cannot read another organiser''s suspended campaign'
 );
 select is(
-  pg_temp.affected($$update public.campaign set title = 'Clean water for Kibera schools (updated)'
+  pg_temp.affected($$update public.campaign set goal_amount = goal_amount
     where id = '10000000-0000-4000-8000-000000000001'$$),
   1,
-  'owner can edit their own campaign'
+  'owner can edit the goal of their own live campaign'
 );
 select is(
   pg_temp.affected($$update public.campaign set title = 'Hijacked'
@@ -831,7 +831,9 @@ select ok(
   and not public.campaign_status_transition_allowed('owner', 'draft', 'pending_approval')
   and public.campaign_status_transition_allowed('owner', 'rejected', 'draft')
   and public.campaign_status_transition_allowed('server', 'draft', 'pending_approval')
-  and not public.campaign_status_transition_allowed('server', 'live', 'pending_approval')
+  and public.campaign_status_transition_allowed('server', 'live', 'pending_approval')
+  and not public.campaign_status_transition_allowed('owner', 'live', 'pending_approval')
+  and not public.campaign_status_transition_allowed('server', 'closed', 'pending_approval')
   and not public.campaign_status_transition_allowed('server', 'live', 'rejected'),
   'the transition table matches the documented rules'
 );
@@ -976,8 +978,17 @@ select is(
 select is(
   pg_temp.sqlstate_of($$update public.campaign set status = 'pending_approval'
     where id = '10000000-0000-4000-8000-000000000001'$$),
+  null,
+  'the server can send a live campaign back to review (edited content)'
+);
+-- Put c1 back: later tests rely on it being live.
+update public.campaign set status = 'live', published_at = coalesce(published_at, now())
+  where id = '10000000-0000-4000-8000-000000000001';
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set status = 'pending_approval'
+    where id = (select id from public.campaign where status = 'closed' limit 1)$$),
   '42501',
-  'even the server cannot move a live campaign to pending_approval'
+  'even the server cannot move a closed campaign to pending_approval'
 );
 
 select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
@@ -1047,6 +1058,104 @@ select is(
   pg_temp.sqlstate_of('select * from public.my_donation'),
   '42501',
   'anonymous visitors cannot read my_donation'
+);
+
+-- Review follow-ups: live content edits, unmatched payments, approval eligibility.
+-- c1 is Amara's live campaign.
+select pg_temp.become('00000000-0000-4000-8000-000000000002', 'authenticated');
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set title = 'Swapped for a scam'
+    where id = '10000000-0000-4000-8000-000000000001'$$),
+  '42501',
+  'an owner cannot change the title of a live campaign directly'
+);
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set description = 'x'
+    where id = '10000000-0000-4000-8000-000000000001'$$),
+  '42501',
+  'an owner cannot change the summary of a live campaign directly'
+);
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set story = '{"type":"doc","content":[]}'::jsonb
+    where id = '10000000-0000-4000-8000-000000000001'$$),
+  '42501',
+  'an owner cannot change the story of a live campaign directly'
+);
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set cover_image_url = 'https://evil.example/x.png'
+    where id = '10000000-0000-4000-8000-000000000001'$$),
+  '42501',
+  'an owner cannot change the cover of a live campaign directly'
+);
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set goal_amount = goal_amount + 100, end_date = null
+    where id = '10000000-0000-4000-8000-000000000001'$$),
+  null,
+  'an owner can still change the goal and end date of a live campaign'
+);
+
+select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
+select is(
+  pg_temp.sqlstate_of($$update public.campaign set title = title
+    where id = '10000000-0000-4000-8000-000000000001'$$),
+  null,
+  'an admin can still edit a live campaign'
+);
+
+select pg_temp.become(null, 'anon');
+select is(
+  pg_temp.sqlstate_of('select count(*) from public.unmatched_payment'),
+  '42501',
+  'anonymous visitors cannot read unmatched payments'
+);
+select pg_temp.become('00000000-0000-4000-8000-000000000002', 'authenticated');
+select is(
+  pg_temp.sqlstate_of('select count(*) from public.unmatched_payment'),
+  '42501',
+  'signed-in users cannot read unmatched payments'
+);
+select pg_temp.become(null, 'service_role');
+select is(
+  pg_temp.sqlstate_of($$insert into public.unmatched_payment
+    (stripe_event_id, stripe_account_id, amount, currency, reason)
+    values ('evt_unmatched_1', 'acct_x', 500, 'KES', 'unknown campaign')$$),
+  null,
+  'the server records an unmatched payment'
+);
+select is(
+  pg_temp.sqlstate_of($$insert into public.unmatched_payment
+    (stripe_event_id, stripe_account_id, amount, currency, reason)
+    values ('evt_unmatched_1', 'acct_x', 500, 'KES', 'unknown campaign')$$),
+  '23505',
+  'a redelivered event is recorded once'
+);
+
+-- approve_campaign refuses an organiser who cannot take donations.
+update public.campaign set status = 'pending_approval'
+  where id = '10000000-0000-4000-8000-000000000001';
+update public.profile set stripe_onboarding_complete = false where id = '00000000-0000-4000-8000-000000000002';
+select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
+select is(
+  pg_temp.sqlstate_of($$select public.approve_campaign('10000000-0000-4000-8000-000000000001')$$),
+  'P0001',
+  'approval is refused while the organiser has not completed Stripe onboarding'
+);
+select pg_temp.become(null, 'service_role');
+update public.profile set stripe_onboarding_complete = true, suspended = true
+  where id = '00000000-0000-4000-8000-000000000002';
+select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
+select is(
+  pg_temp.sqlstate_of($$select public.approve_campaign('10000000-0000-4000-8000-000000000001')$$),
+  'P0001',
+  'approval is refused while the organiser is suspended'
+);
+select pg_temp.become(null, 'service_role');
+update public.profile set suspended = false where id = '00000000-0000-4000-8000-000000000002';
+select pg_temp.become('00000000-0000-4000-8000-000000000001', 'authenticated');
+select is(
+  pg_temp.sqlstate_of($$select public.approve_campaign('10000000-0000-4000-8000-000000000001')$$),
+  null,
+  'approval succeeds once the organiser is active and onboarded'
 );
 
 select * from finish();
