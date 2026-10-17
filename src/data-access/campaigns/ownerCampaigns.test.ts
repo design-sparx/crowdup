@@ -1,5 +1,5 @@
 import {describe, expect, it} from "vitest";
-import {createDraft, updateCampaign, uploadCover} from "./ownerCampaigns";
+import {createDraft, updateCampaign, updateLiveCampaign, uploadCover} from "./ownerCampaigns";
 import type {CampaignValues} from "../../lib/campaigns/form";
 import type {SupabaseClient} from "@supabase/supabase-js";
 
@@ -92,5 +92,34 @@ describe("uploadCover", () => {
         const r = await uploadCover(client, "u1", file);
         expect("error" in r).toBe(true);
         expect(called).toBe(false);
+    });
+});
+
+describe("updateLiveCampaign", () => {
+    function liveClient(rows: unknown[]) {
+        const filters: [string, unknown][] = [];
+        const client = {
+            from: () => ({
+                update: () => {
+                    const b = {
+                        eq: (col: string, val: unknown) => { filters.push([col, val]); return b; },
+                        select: () => Promise.resolve({data: rows, error: null}),
+                    };
+                    return b;
+                },
+            }),
+        } as unknown as SupabaseClient;
+        return {client, filters};
+    }
+    it("only applies if the campaign is unchanged since it was read (no lost updates between tabs)", async () => {
+        const {client, filters} = liveClient([{id: "c"}]);
+        await updateLiveCampaign(client, "u1", "c", values, undefined, "live", "2026-10-17T10:00:00.123456+00:00");
+        expect(filters).toContainEqual(["updated_at", "2026-10-17T10:00:00.123456+00:00"]);
+        expect(filters).toContainEqual(["status", "live"]);
+        expect(filters).toContainEqual(["owner_id", "u1"]);
+    });
+    it("reports false when another edit got there first", async () => {
+        const {client} = liveClient([]);
+        expect(await updateLiveCampaign(client, "u1", "c", values, undefined, "live", "t")).toBe(false);
     });
 });

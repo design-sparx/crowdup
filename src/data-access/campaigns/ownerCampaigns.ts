@@ -16,6 +16,8 @@ export interface OwnCampaign extends CampaignValues {
     currency: string | null;
     slug: string;
     status: string;
+    /** Version stamp of the row as read; live edits apply only if it is unchanged. */
+    updatedAt: string;
     coverImageUrl: string | null;
     /** Moderator's reason while status is suspended. */
     suspendedReason: string | null;
@@ -27,6 +29,7 @@ interface Row {
     owner_id: string;
     slug: string;
     status: string;
+    updated_at: string;
     title: string;
     category: string;
     country: string;
@@ -41,7 +44,7 @@ interface Row {
 }
 
 const COLUMNS =
-    "id, owner_id, slug, status, title, category, country, description, goal_amount, currency, end_date, cover_image_url, story, suspended_reason, rejection_reason";
+    "id, owner_id, slug, status, updated_at, title, category, country, description, goal_amount, currency, end_date, cover_image_url, story, suspended_reason, rejection_reason";
 
 const UNIQUE_VIOLATION = "23505";
 
@@ -70,6 +73,7 @@ export async function getOwnCampaign(
         id: r.id,
         slug: r.slug,
         status: r.status,
+        updatedAt: r.updated_at,
         title: r.title,
         category: r.category,
         country: r.country,
@@ -178,8 +182,11 @@ export async function updateCampaign(
  * content (what an admin approved), so this runs with the service-role client. Ownership is
  * enforced here, not by RLS: `userId` must come from the verified session, and the update is
  * filtered on owner and on `status = live`, so it cannot touch another campaign or race a
- * status change. The patch and the status change are ONE update, so a failure leaves the
- * campaign exactly as it was. Returns false when nothing matched.
+ * status change. `expectedUpdatedAt` is the version the review decision was made against:
+ * if another edit landed since, nothing is written (the caller asks the organiser to retry),
+ * so a concurrent edit can neither skip review nor be silently overwritten. The patch and the
+ * status change are ONE update, so a failure leaves the campaign exactly as it was. Returns
+ * false when nothing matched.
  */
 export async function updateLiveCampaign(
     db: SupabaseClient,
@@ -188,6 +195,7 @@ export async function updateLiveCampaign(
     values: CampaignValues,
     coverImageUrl: string | undefined,
     nextStatus: "live" | "pending_approval",
+    expectedUpdatedAt: string,
 ): Promise<boolean> {
     const patch: Record<string, unknown> = {
         title: values.title,
@@ -206,6 +214,7 @@ export async function updateLiveCampaign(
         .eq("id", id)
         .eq("owner_id", userId)
         .eq("status", "live")
+        .eq("updated_at", expectedUpdatedAt)
         .select("id");
     if (error) fail(error);
     return (data ?? []).length > 0;

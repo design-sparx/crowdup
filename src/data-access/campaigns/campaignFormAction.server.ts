@@ -67,8 +67,11 @@ export async function handleCampaignForm(args: {
             const plan = liveEditPlan(existing, {...parsed.values, coverImageUrl: coverUrl}, getPublishingMode());
             const ok = await updateLiveCampaign(
                 createServiceRoleClient(), userId, campaignId as string, parsed.values, coverUrl, plan.nextStatus,
+                existing.updatedAt,
             );
-            if (!ok) return invalid({form: "This campaign cannot be edited."}, headers, 403);
+            if (!ok) {
+                return invalid({form: "This campaign changed while you were editing. Reload the page and try again."}, headers, 409);
+            }
             return redirect(`/campaigns/${campaignId}/edit?saved=1`, {headers});
         }
 
