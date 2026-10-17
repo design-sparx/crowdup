@@ -4,7 +4,7 @@ import {expect, test} from "@playwright/test";
 
 test("a guest can report a live campaign", async ({page}) => {
     await page.goto("/campaigns/community-kitchen-ealing");
-    await page.getByRole("button", {name: "Report campaign"}).first().click();
+    await page.getByRole("button", {name: "Report campaign"}).click();
     await page.getByLabel("What is wrong with this campaign?").fill("This looks like a scam to me.");
     await page.getByRole("button", {name: "Send report"}).click();
     await expect(page.getByText("Our moderators will review your report")).toBeVisible();

@@ -20,7 +20,7 @@ test("a visitor can browse, search and open a campaign", async ({page}) => {
 
     await page.getByText("Community kitchen in Ealing").click();
     await expect(page).toHaveURL(/\/campaigns\/community-kitchen-ealing$/);
-    // The campaign page itself is rebuilt in Task 5, which restores its heading assertion.
+    await expect(page.getByRole("heading", {name: "Community kitchen in Ealing", level: 1})).toBeVisible();
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", /Community kitchen in Ealing/);
     await expect(page.locator('meta[property="og:description"]')).toHaveAttribute("content", /Hot meals/);
 });
