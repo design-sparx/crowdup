@@ -1,10 +1,25 @@
-import {Box, BoxProps, Container, Flex, Select, SimpleGrid, Stack, TextInput, Title, TitleProps} from "@mantine/core";
-import campaignsData from "../data/Campaigns.json";
+import {Box, BoxProps, Button, Container, Flex, Group, Pagination, Select, SimpleGrid, Stack, Text, TextInput, Title, TitleProps} from "@mantine/core";
+import {Form, useNavigate, useSearchParams} from "react-router";
 import {CampaignCard} from "../components";
 import {useMediaQuery} from "@mantine/hooks";
+import countriesData from "../data/Countries.json";
+import type {Campaign} from "../lib/campaigns/types";
+import type {CampaignSearch} from "../lib/campaigns/params";
 
-const CampaignsPage = () => {
+interface IProps {
+    items: Campaign[]
+    total: number
+    categories: string[]
+    search: CampaignSearch
+    pageSize: number
+}
+
+const countryOptions = countriesData.data.map(c => ({value: c.code, label: c.name}));
+
+const CampaignsPage = ({items, total, categories, search, pageSize}: IProps) => {
     const matchesMobile = useMediaQuery('(max-width: 768px)');
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
 
     const boxProps: BoxProps = {
         mt: matchesMobile ? 4 : 24,
@@ -20,57 +35,82 @@ const CampaignsPage = () => {
         style: {lineHeight: '40px'}
     }
 
-    const items = campaignsData.data.map(c => (<CampaignCard key={c.id} data={c} showActions={true}/>))
+    const goTo = (changes: Record<string, string | null>) => {
+        const next = new URLSearchParams(searchParams);
+        for (const [key, value] of Object.entries(changes)) {
+            if (value) next.set(key, value); else next.delete(key);
+        }
+        navigate(`/campaigns?${next.toString()}`);
+    };
+
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
     return (
-        <>
-            <title>Discover campaigns to fund</title>
-            <Box>
-                <Container size="lg">
-                    <Stack>
-                        <Box {...boxProps}>
-                            <Title {...titleProps} ta="center">Discover campaigns to fund</Title>
-                        </Box>
-                        <Flex
-                            justify="space-between"
-                            gap={{base: 'sm', sm: 'lg'}}
-                            direction={{base: 'column-reverse', sm: 'row'}}
-                        >
-                            <TextInput placeholder="search campaigns..." style={{width: 500}}/>
-                            <Flex align="center" gap="sm" justify={{base: 'space-between', sm: 'flex-start'}}>
-                                <Select
-                                    label=""
-                                    placeholder="campaigns in"
-                                    defaultValue=""
-                                    data={[
-                                        {value: '10', label: 'show: 10'},
-                                        {value: '25', label: 'show: 25'},
-                                        {value: '50', label: 'show: 50'},
-                                        {value: '100', label: 'show: 100'},
-                                    ]}
+        <Box>
+            <Container size="lg">
+                <Stack>
+                    <Box {...boxProps}>
+                        <Title {...titleProps} ta="center">Discover campaigns to fund</Title>
+                    </Box>
+                    <Flex
+                        justify="space-between"
+                        gap={{base: 'sm', sm: 'lg'}}
+                        direction={{base: 'column', sm: 'row'}}
+                    >
+                        <Form method="get" role="search" style={{flex: 1}}>
+                            <Group wrap="nowrap">
+                                <TextInput
+                                    name="q"
+                                    aria-label="Search campaigns"
+                                    placeholder="search campaigns..."
+                                    defaultValue={search.q ?? ""}
+                                    style={{flex: 1}}
                                 />
-                                <Select
-                                    label=""
-                                    placeholder="Explore"
-                                    defaultValue="featured"
-                                    data={[
-                                        {value: 'featured', label: 'sort by: featured'},
-                                        {value: 'popular', label: 'sort by: popular'},
-                                        {value: 'latest', label: 'sorty by: latest'},
-                                    ]}
-                                />
-                            </Flex>
+                                {search.category && <input type="hidden" name="category" value={search.category}/>}
+                                {search.country && <input type="hidden" name="country" value={search.country}/>}
+                                <Button type="submit">Search</Button>
+                            </Group>
+                        </Form>
+                        <Flex align="center" gap="sm" justify={{base: 'space-between', sm: 'flex-start'}}>
+                            <Select
+                                aria-label="Category"
+                                placeholder="All categories"
+                                clearable
+                                data={categories}
+                                value={search.category ?? null}
+                                onChange={(v) => goTo({category: v, page: null})}
+                            />
+                            <Select
+                                aria-label="Country"
+                                placeholder="All countries"
+                                clearable
+                                searchable
+                                data={countryOptions}
+                                value={search.country ?? null}
+                                onChange={(v) => goTo({country: v, page: null})}
+                            />
                         </Flex>
+                    </Flex>
+                    {items.length === 0 ?
+                        <Text ta="center" c="dimmed" py="xl">No campaigns match your search.</Text> :
                         <SimpleGrid
                             cols={{base: 1, sm: 2, md: 3}}
                             spacing={{base: 0, sm: 'md', md: 'lg'}}
                         >
-                            {items}
+                            {items.map(c => (<CampaignCard key={c.id} data={c} showActions={true}/>))}
                         </SimpleGrid>
-                    </Stack>
-                </Container>
-            </Box>
-        </>
+                    }
+                    {totalPages > 1 &&
+                        <Pagination
+                            total={totalPages}
+                            value={search.page}
+                            onChange={(p) => goTo({page: String(p)})}
+                            mx="auto"
+                        />
+                    }
+                </Stack>
+            </Container>
+        </Box>
     );
 };
 

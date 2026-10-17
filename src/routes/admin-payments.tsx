@@ -1,0 +1,26 @@
+import {data, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
+import {getAdminContext} from "../data-access/reports/reports.server";
+import {listOpenUnmatched, resolveUnmatched} from "../data-access/payments/unmatched.server";
+
+export async function loader({request}: LoaderFunctionArgs) {
+    const admin = await getAdminContext(request);
+    if (!admin) throw new Response("Not found", {status: 404});
+    return data({payments: await listOpenUnmatched(admin.supabase)}, {headers: admin.headers});
+}
+
+export async function action({request}: ActionFunctionArgs) {
+    const admin = await getAdminContext(request);
+    if (!admin) throw new Response("Not found", {status: 404});
+    const form = await request.formData();
+    const id = form.get("paymentId");
+    if (form.get("intent") !== "resolve" || typeof id !== "string") {
+        return data({error: "Unknown action."}, {status: 400, headers: admin.headers});
+    }
+    const result = await resolveUnmatched(admin.supabase, id);
+    if (result === "resolved") return data({ok: true}, {headers: admin.headers});
+    const status = result === "invalid" ? 400 : 404;
+    return data({error: result === "invalid" ? "Unknown payment." : "Already reviewed."}, {status, headers: admin.headers});
+}
+
+export {AdminPaymentsPage as default} from "../pages";
+export {Error404Page as ErrorBoundary} from "../pages";

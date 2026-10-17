@@ -3,7 +3,7 @@ import {ReactNode} from "react";
 import {Box} from "@mantine/core";
 
 import footerLinksData from "../data/Footer.json"
-import {Outlet} from "react-router-dom";
+import {Outlet} from "react-router";
 
 interface IProps {
     children?: ReactNode

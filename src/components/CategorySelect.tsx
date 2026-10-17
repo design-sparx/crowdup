@@ -1,4 +1,4 @@
-import {Group, Select, Text} from "@mantine/core";
+import {Group, Select, SelectProps, Text} from "@mantine/core";
 import {
     IconAugmentedReality,
     IconCat,
@@ -53,7 +53,7 @@ const mockdata = [
 const categoriesByTitle = new Map(mockdata.map(c => [c.title, c]));
 const options = mockdata.map(c => ({value: c.title, label: c.title}));
 
-const CategorySelect = () => {
+const CategorySelect = (props: Omit<SelectProps, "data">) => {
     return (
         <Select
             label="Category"
@@ -62,6 +62,7 @@ const CategorySelect = () => {
             clearable
             maxDropdownHeight={300}
             nothingFoundMessage="Nothing found"
+            {...props}
             renderOption={({option}) => {
                 const Icon = categoriesByTitle.get(option.value)?.icon;
 

@@ -2,16 +2,17 @@ import {Box, BoxProps, TextProps, Title, TitleProps} from '@mantine/core'
 import {CampaignCard, TitleBadge} from "../../components";
 import {Carousel} from "@mantine/carousel";
 
-import campaignsData from "../../data/Campaigns.json";
+import type {Campaign} from "../../lib/campaigns/types";
 
 interface IProps {
     boxProps: BoxProps
     titleProps?: TitleProps,
     subtitleProps?: TextProps
+    campaigns: Campaign[]
 }
 
-const CampaignsSection = ({boxProps, titleProps}: IProps) => {
-    const slides = campaignsData.data.map(c => (<Carousel.Slide key={c.id}><CampaignCard data={c}/></Carousel.Slide>))
+const CampaignsSection = ({boxProps, titleProps, campaigns}: IProps) => {
+    const slides = campaigns.map(c => (<Carousel.Slide key={c.id}><CampaignCard data={c}/></Carousel.Slide>))
 
     return (
         <Box {...boxProps}>

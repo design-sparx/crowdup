@@ -1,20 +1,3 @@
-export interface ICampaign {
-    id: string
-    title: string
-    description: string
-    createdAt: string
-    mainImage: string
-    createdBy: string
-    daysLeft: number
-    amountRaised: string
-    goal: string
-    contributors: number
-    createdByImage: string
-    category: string
-    country: string
-    type: string | null
-}
-
 export interface ITestimonial {
     id: string
     testimonial: string

@@ -1,0 +1,17 @@
+[build]
+  command = "pnpm build"
+  publish = "build/client"
+
+# Server rendering: @netlify/vite-plugin-react-router generates the SSR handler
+# and its routing, so no redirect rules are needed here. Unknown paths are
+# rendered by the server with a real 404 status.
+
+# Used only by the "Deploy to Netlify" button: Netlify prompts for these names. The strings are
+# prompt labels, not values. Never put secrets here. See docs/self-hosting.md.
+[template.environment]
+  SUPABASE_URL = "Supabase project URL (https://<ref>.supabase.co)"
+  SUPABASE_ANON_KEY = "Supabase anon (publishable) key"
+  SUPABASE_SERVICE_ROLE_KEY = "Supabase service role key (server only, keep secret)"
+  SITE_URL = "Public origin of your site, e.g. https://your-site.netlify.app"
+  STRIPE_SECRET_KEY = "Stripe secret key (sk_test_... until you are ready for real money)"
+  STRIPE_WEBHOOK_SECRET = "Signing secret (whsec_...) of the Connect webhook endpoint"

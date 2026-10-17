@@ -1,0 +1,35 @@
+name: Database permissions
+
+on:
+  pull_request:
+
+jobs:
+  permissions:
+    name: Database permission tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start local Supabase
+        run: supabase start
+
+      - name: Run permission tests
+        run: pnpm test:db
+
+      - name: Stop local Supabase
+        if: always()
+        run: supabase stop --no-backup

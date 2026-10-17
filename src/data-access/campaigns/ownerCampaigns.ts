@@ -1,0 +1,263 @@
+import type {SupabaseClient} from "@supabase/supabase-js";
+import {COVER_BUCKET, coverPath, validateCover} from "../../lib/campaigns/cover";
+import type {CampaignValues} from "../../lib/campaigns/form";
+import {slugify, withSuffix} from "../../lib/campaigns/slug";
+
+/**
+ * Owner-side campaign access. Always called with the cookie-bound client from
+ * `createSupabaseServerClient`, so row-level security applies as the signed-in user.
+ * Ownership is enforced by RLS, not by checks here; `getOwnCampaign` only ever returns
+ * rows the policies allow (own campaigns, plus live campaigns of others, which we filter out).
+ */
+
+export interface OwnCampaign extends CampaignValues {
+    id: string;
+    /** Null for a draft created before Stripe onboarding; set (and fixed) at go-live. */
+    currency: string | null;
+    slug: string;
+    status: string;
+    /** Version stamp of the row as read; live edits apply only if it is unchanged. */
+    updatedAt: string;
+    coverImageUrl: string | null;
+    /** Moderator's reason while status is suspended. */
+    suspendedReason: string | null;
+    rejectionReason: string | null;
+}
+
+interface Row {
+    id: string;
+    owner_id: string;
+    slug: string;
+    status: string;
+    updated_at: string;
+    title: string;
+    category: string;
+    country: string;
+    description: string;
+    goal_amount: number;
+    currency: string | null;
+    end_date: string | null;
+    cover_image_url: string | null;
+    story: unknown;
+    suspended_reason: string | null;
+    rejection_reason: string | null;
+}
+
+const COLUMNS =
+    "id, owner_id, slug, status, updated_at, title, category, country, description, goal_amount, currency, end_date, cover_image_url, story, suspended_reason, rejection_reason";
+
+const UNIQUE_VIOLATION = "23505";
+
+/** Postgres code for insufficient privilege (RLS rejection, e.g. a suspended user). */
+export const INSUFFICIENT_PRIVILEGE = "42501";
+
+function fail(error: {message: string; code?: string}): never {
+    throw Object.assign(new Error(error.message), {code: error.code});
+}
+
+export async function getOwnCampaign(
+    client: SupabaseClient,
+    userId: string,
+    id: string,
+): Promise<OwnCampaign | null> {
+    const {data, error} = await client
+        .from("campaign")
+        .select(COLUMNS)
+        .eq("id", id)
+        .eq("owner_id", userId)
+        .maybeSingle();
+    if (error) fail(error);
+    if (!data) return null;
+    const r = data as Row;
+    return {
+        id: r.id,
+        slug: r.slug,
+        status: r.status,
+        updatedAt: r.updated_at,
+        title: r.title,
+        category: r.category,
+        country: r.country,
+        description: r.description,
+        goalAmount: Number(r.goal_amount),
+        currency: r.currency,
+        endDate: r.end_date,
+        coverImageUrl: r.cover_image_url,
+        story: r.story as OwnCampaign["story"],
+        suspendedReason: r.suspended_reason,
+        rejectionReason: r.rejection_reason,
+    };
+}
+
+/** Uploads a validated cover image under the user's folder and returns its public URL. */
+export async function uploadCover(
+    client: SupabaseClient,
+    userId: string,
+    file: File,
+): Promise<{url: string} | {error: string}> {
+    const head = new Uint8Array(await file.slice(0, 16).arrayBuffer());
+    const check = validateCover({declaredType: file.type, size: file.size, head});
+    if (!check.ok) return {error: check.error};
+
+    const path = coverPath(userId, check.extension, crypto.randomUUID());
+    const {error} = await client.storage
+        .from(COVER_BUCKET)
+        .upload(path, file, {contentType: check.type, upsert: false});
+    if (error) return {error: "The cover image could not be uploaded."};
+    return {url: client.storage.from(COVER_BUCKET).getPublicUrl(path).data.publicUrl};
+}
+
+function randomSuffix(): string {
+    return crypto.randomUUID().slice(0, 6);
+}
+
+/** Creates a draft. Retries with a random suffix when the slug is taken. */
+export async function createDraft(
+    client: SupabaseClient,
+    userId: string,
+    values: CampaignValues,
+    coverImageUrl: string | null,
+): Promise<{id: string}> {
+    const base = slugify(values.title);
+    for (let attempt = 0; attempt < 4; attempt++) {
+        const slug = attempt === 0 ? base : withSuffix(base, randomSuffix());
+        const {data, error} = await client
+            .from("campaign")
+            .insert({
+                owner_id: userId,
+                title: values.title,
+                slug,
+                category: values.category,
+                country: values.country,
+                description: values.description,
+                goal_amount: values.goalAmount,
+                end_date: values.endDate,
+                story: values.story,
+                cover_image_url: coverImageUrl,
+            })
+            .select("id")
+            .single();
+        if (!error) return {id: (data as {id: string}).id};
+        if (error.code !== UNIQUE_VIOLATION) fail(error);
+    }
+    throw new Error("Could not generate a unique campaign address. Try a different title.");
+}
+
+/**
+ * Updates the editable fields. Slug and currency are deliberately untouched: the slug is
+ * the public address and the currency comes from the Stripe account at go-live. Returns false when RLS
+ * filtered the row out (not the owner, suspended user, suspended campaign).
+ */
+export async function updateCampaign(
+    client: SupabaseClient,
+    userId: string,
+    id: string,
+    values: CampaignValues,
+    coverImageUrl: string | undefined,
+    {reopenRejected = false, expectedStatus}: {reopenRejected?: boolean; expectedStatus?: string} = {},
+): Promise<boolean> {
+    const patch: Record<string, unknown> = {
+        title: values.title,
+        category: values.category,
+        country: values.country,
+        description: values.description,
+        goal_amount: values.goalAmount,
+        end_date: values.endDate,
+        story: values.story,
+    };
+    if (coverImageUrl !== undefined) patch.cover_image_url = coverImageUrl;
+    // Editing a rejected campaign reopens it as a draft (the guard trigger allows only
+    // rejected -> draft for owners); the organiser then resubmits it with Publish. It is the
+    // same single update as the edit, so the two can never be applied apart.
+    if (reopenRejected) patch.status = "draft";
+
+    let query = client.from("campaign").update(patch).eq("id", id).eq("owner_id", userId);
+    // The edit was authorised against the status it was read with; if that changed since (for
+    // example an admin suspended it), nothing is written.
+    if (reopenRejected) query = query.eq("status", "rejected");
+    else if (expectedStatus) query = query.eq("status", expectedStatus);
+    const {data, error} = await query.select("id");
+    if (error) fail(error);
+    return (data ?? []).length > 0;
+}
+
+/**
+ * Edits a LIVE campaign. The database refuses client edits of a live campaign's public
+ * content (what an admin approved), so this runs with the service-role client. Ownership is
+ * enforced here, not by RLS: `userId` must come from the verified session, and the update is
+ * filtered on owner and on `status = live`, so it cannot touch another campaign or race a
+ * status change. `expectedUpdatedAt` is the version the review decision was made against:
+ * if another edit landed since, nothing is written (the caller asks the organiser to retry),
+ * so a concurrent edit can neither skip review nor be silently overwritten. The patch and the
+ * status change are ONE update, so a failure leaves the campaign exactly as it was. Returns
+ * false when nothing matched.
+ */
+export async function updateLiveCampaign(
+    db: SupabaseClient,
+    userId: string,
+    id: string,
+    values: CampaignValues,
+    coverImageUrl: string | undefined,
+    nextStatus: "live" | "pending_approval",
+    expectedUpdatedAt: string,
+): Promise<boolean> {
+    const patch: Record<string, unknown> = {
+        title: values.title,
+        category: values.category,
+        country: values.country,
+        description: values.description,
+        goal_amount: values.goalAmount,
+        end_date: values.endDate,
+        story: values.story,
+        status: nextStatus,
+    };
+    if (coverImageUrl !== undefined) patch.cover_image_url = coverImageUrl;
+    const {data, error} = await db
+        .from("campaign")
+        .update(patch)
+        .eq("id", id)
+        .eq("owner_id", userId)
+        .eq("status", "live")
+        .eq("updated_at", expectedUpdatedAt)
+        .select("id");
+    if (error) fail(error);
+    return (data ?? []).length > 0;
+}
+
+/**
+ * Closes a live campaign. The filters are a courtesy; RLS and the write guard trigger are
+ * the enforcement (owner only, live -> closed only). Returns false when nothing matched.
+ */
+export async function closeCampaign(client: SupabaseClient, userId: string, id: string): Promise<boolean> {
+    const {data, error} = await client
+        .from("campaign")
+        .update({status: "closed"})
+        .eq("id", id)
+        .eq("owner_id", userId)
+        .eq("status", "live")
+        .select("id");
+    if (error) fail(error);
+    return (data ?? []).length > 0;
+}
+
+/** Posts a plain-text update. RLS requires the owner of a live or closed campaign. */
+export async function postUpdate(
+    client: SupabaseClient,
+    userId: string,
+    campaignId: string,
+    body: string,
+): Promise<void> {
+    const {error} = await client
+        .from("campaign_update")
+        .insert({campaign_id: campaignId, author_id: userId, body});
+    if (error) fail(error);
+}
+
+export async function listOwnCampaigns(client: SupabaseClient, userId: string) {
+    const {data, error} = await client
+        .from("campaign")
+        .select("id, slug, title, status")
+        .eq("owner_id", userId)
+        .order("created_at", {ascending: false});
+    if (error) fail(error);
+    return data as {id: string; slug: string; title: string; status: string}[];
+}

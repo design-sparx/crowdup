@@ -22,3 +22,14 @@ dist-ssr
 *.sw?
 
 .idea
+
+.react-router
+build
+.netlify
+.lavish
+.playwright-mcp
+test-results
+playwright-report
+
+supabase/.branches
+supabase/.temp

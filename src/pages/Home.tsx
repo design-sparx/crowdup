@@ -7,9 +7,10 @@ import JoinUsSection from "../sections/Home/JoinUs";
 import WaysToFundSection from "../sections/Home/WaysToFund";
 import CampaignsSection from "../sections/Home/Campaigns";
 import GetStartedSection from "../sections/Home/GetStarted";
+import type {Campaign} from "../lib/campaigns/types";
 import TestimonialsSection from "../sections/Home/Testimonials";
 
-const HomePage = () => {
+const HomePage = ({campaigns}: {campaigns: Campaign[]}) => {
     const boxProps: BoxProps = {
         mt: 96,
         mb: 136,
@@ -33,7 +34,6 @@ const HomePage = () => {
 
     return (
         <>
-            <title>Home</title>
             <Box>
                 <HeroSection/>
                 <Container>
@@ -51,7 +51,7 @@ const HomePage = () => {
                 <WaysToFundSection boxProps={boxProps} titleProps={titleProps} subtitleProps={subTitleProps}/>
                 <Container>
                     <TestimonialsSection boxProps={boxProps} titleProps={titleProps}/>
-                    <CampaignsSection boxProps={boxProps} titleProps={titleProps} subtitleProps={subTitleProps}/>
+                    <CampaignsSection campaigns={campaigns} boxProps={boxProps} titleProps={titleProps} subtitleProps={subTitleProps}/>
                     <GetStartedSection boxProps={boxProps} titleProps={titleProps}/>
                 </Container>
             </Box>

@@ -1,28 +1,31 @@
 {
-  "name": "drove",
+  "name": "crowdup",
+  "license": "MIT",
   "private": true,
   "packageManager": "pnpm@9.15.9",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "react-router dev",
+    "build": "react-router typegen && tsc && react-router build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:db": "supabase db reset && supabase test db",
+    "preview": "vite preview --outDir build/client"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@floating-ui/dom": "^1.8.0",
     "@mantine/carousel": "^9.7.2",
     "@mantine/core": "^9.7.2",
     "@mantine/dates": "^9.7.2",
     "@mantine/dropzone": "^9.7.2",
     "@mantine/form": "^9.7.2",
     "@mantine/hooks": "^9.7.2",
-    "@mantine/modals": "^9.7.2",
     "@mantine/notifications": "^9.7.2",
-    "@mantine/nprogress": "^9.7.2",
     "@mantine/tiptap": "^9.7.2",
+    "@react-router/node": "8.4.0",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.118.0",
     "@tabler/icons-react": "^3.49.0",
     "@tiptap/core": "^3.32.0",
     "@tiptap/extension-highlight": "^3.32.0",
@@ -30,7 +33,7 @@
     "@tiptap/extension-subscript": "^3.32.0",
     "@tiptap/extension-superscript": "^3.32.0",
     "@tiptap/extension-text-align": "^3.32.0",
-    "@tiptap/extension-underline": "^3.32.0",
+    "@tiptap/html": "^3.32.0",
     "@tiptap/pm": "^3.32.0",
     "@tiptap/react": "^3.32.0",
     "@tiptap/starter-kit": "^3.32.0",
@@ -39,14 +42,20 @@
     "dayjs": "^1.11.23",
     "embla-carousel": "^8.6.0",
     "embla-carousel-react": "8.6.0",
-    "mantine-datatable": "^9.4.0",
     "react": "^19.3.1",
     "react-apexcharts": "^2.1.1",
     "react-dom": "^19.3.1",
-    "react-router-dom": "^7.18.4"
+    "react-router": "^8.4.0",
+    "stripe": "23.0.0",
+    "isbot": "^5"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@netlify/vite-plugin-react-router": "^4.0.0",
+    "@playwright/test": "^1.64.1",
+    "@react-router/dev": "8.4.0",
+    "@react-router/serve": "8.4.0",
+    "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
@@ -59,6 +68,7 @@
     "postcss-simple-vars": "^7.0.1",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.71.2",
-    "vite": "^8.3.4"
+    "vite": "^8.3.4",
+    "vitest": "^5.0.5"
   }
 }

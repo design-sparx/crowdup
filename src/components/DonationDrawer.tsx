@@ -1,7 +1,6 @@
-import {useState} from 'react';
+import {useState} from "react";
 import {
-    ActionIcon,
-    Anchor,
+    Alert,
     Button,
     Checkbox,
     Container,
@@ -10,192 +9,82 @@ import {
     Flex,
     Group,
     Image,
-    NumberInput,
-    Paper,
-    PaperProps,
-    Popover,
-    Radio,
-    ScrollArea,
-    Slider,
     Stack,
     Text,
+    Textarea,
     TextInput,
-    ThemeIcon,
-    Transition,
-    useMantineTheme
 } from "@mantine/core";
-import {
-    IconBrandApple,
-    IconBrandGoogle,
-    IconCreditCard,
-    IconCurrencyDollar,
-    IconInfoCircleFilled,
-    IconShieldCheckFilled
-} from "@tabler/icons-react";
-import {CountrySelect} from "./index";
-import {ICampaign} from "../types";
+import {Form, useActionData, useNavigation} from "react-router";
+import type {Campaign} from "../lib/campaigns/types";
+import {formatMinor, minorUnitExponent, presetsMinor} from "../lib/donations/amount";
+import {MAX_MESSAGE, MAX_NAME} from "../lib/donations/donor";
 
-interface IProps extends Pick<DrawerProps, 'opened' | 'onClose' | 'size'> {
-    campaign?: ICampaign
-    iconSize: number
+interface IProps extends Pick<DrawerProps, "opened" | "onClose" | "size"> {
+    campaign?: Campaign;
+    acceptingDonations?: boolean;
 }
 
-const DonationDrawer = ({campaign, iconSize, ...others}: IProps) => {
-    const [payment, setPayment] = useState('');
-    const theme = useMantineTheme()
-
-    const paperProps: PaperProps = {
-        p: "md",
-        withBorder: true,
-        style: {backgroundColor: theme.white}
-    }
+/**
+ * Donation form. Posts `intent=donate` to the campaign route's action, which re-validates
+ * everything on the server and redirects to Stripe Checkout. The disabled state here is
+ * only a convenience: the server refuses donations to campaigns that cannot accept them.
+ */
+const DonationDrawer = ({campaign, acceptingDonations = true, ...others}: IProps) => {
+    const actionData = useActionData() as {error?: string} | undefined;
+    const navigation = useNavigation();
+    const submitting = navigation.state !== "idle" && navigation.formData?.get("intent") === "donate";
+    const currency = campaign?.currency ?? "USD";
+    const exp = minorUnitExponent(currency);
+    const presets = presetsMinor(currency);
+    const [amount, setAmount] = useState(String(presets[1] / 10 ** exp));
 
     return (
-        <Drawer
-            position="bottom"
-            title="Make a Donation"
-            size="100%"
-            scrollAreaComponent={ScrollArea.Autosize}
-            {...others}
-        >
+        <Drawer position="bottom" title="Make a Donation" size="100%" {...others}>
             <Container>
-                <Stack>
-                    <Flex gap="xs" align="center">
-                        <Image src={campaign?.mainImage} height={96} width={120} fit="contain" radius="sm"/>
-                        <Text>You&apos;re supporting <b>{campaign?.title}</b></Text>
-                    </Flex>
-                    <NumberInput
-                        size="md"
-                        label="Enter your donation"
-                        decimalScale={2}
-                        rightSection={<IconCurrencyDollar size={iconSize}/>}
-                    />
-                    <Paper {...paperProps}>
-                        <Text fw={500}>Tip CrowdUp services</Text>
-                        <Text size="sm" my="xs">CrowdUp has a 0% platform fee for organizers. CrowdUp will continue
-                            offering its services
-                            thanks to donors who will leave an optional amount here:</Text>
-                        <Slider
-                            marks={[
-                                {value: 20, label: '20%'},
-                                {value: 50, label: '50%'},
-                                {value: 80, label: '80%'},
-                            ]}
-                            mb="lg"
-                        />
-                    </Paper>
-                    <Paper {...paperProps}>
-                        <Radio.Group
-                            name="paymentMethod"
-                            label="Payment method"
-                            value={payment}
-                            onChange={setPayment}
-                            mb="md"
-                        >
-                            <Group mt="sm">
-                                <Radio
-                                    value="gpay"
-                                    label={<Group gap="xs"><IconBrandGoogle size={iconSize}/><Text>Google Pay</Text></Group>}/>
-                                <Radio
-                                    value="applepay"
-                                    label={<Group gap="xs"><IconBrandApple size={iconSize}/><Text>Apple
-                                        Pay</Text></Group>}/>
-                                <Radio
-                                    value="card"
-                                    label={<Group gap="xs"><IconCreditCard size={iconSize}/><Text>Credit or
-                                        debit</Text></Group>}/>
-                            </Group>
-                        </Radio.Group>
-                        <Transition
-                            mounted={payment === 'card'}
-                            transition="scale-y"
-                            duration={400}
-                            timingFunction="ease"
-                        >
-                            {(styles) =>
-                                <Paper
-                                    p="md"
-                                    radius="sm"
-                                    mt="sm"
-                                    style={styles}
+                <Form method="post">
+                    <input type="hidden" name="intent" value="donate"/>
+                    <Stack>
+                        <Flex gap="xs" align="center">
+                            <Image src={campaign?.imageUrl} height={96} width={120} fit="contain" radius="sm"/>
+                            <Text>You&apos;re supporting <b>{campaign?.title}</b></Text>
+                        </Flex>
+                        <Group gap="xs" role="group" aria-label="Preset amounts">
+                            {presets.map((p) => (
+                                <Button
+                                    key={p}
+                                    type="button"
+                                    variant={amount === String(p / 10 ** exp) ? "filled" : "outline"}
+                                    onClick={() => setAmount(String(p / 10 ** exp))}
                                 >
-                                    <Stack style={{width: '100%'}}>
-                                        <TextInput label="Email address"/>
-                                        <Group grow>
-                                            <TextInput label="First name"/>
-                                            <TextInput label="Last name"/>
-                                        </Group>
-                                        <Checkbox label="Use as billing name"/>
-                                        <NumberInput label="Card number"/>
-                                        <Group grow>
-                                            <NumberInput label="MM/YY"/>
-                                            <NumberInput label="CVV"/>
-                                        </Group>
-                                        <TextInput label="Name on card"/>
-                                        <Group grow>
-                                            <CountrySelect/>
-                                            <TextInput label="Postal code"/>
-                                        </Group>
-                                        <Checkbox label="Save card for future donations"/>
-                                    </Stack>
-                                </Paper>
-                            }
-                        </Transition>
-                    </Paper>
-                    <Paper {...paperProps}>
-                        <Stack>
-                            <Group gap={4}>
-                                <Checkbox label="Don't display my name publicly on the fundraiser."/>
-                                <Popover width={200} position="bottom" withArrow shadow="md">
-                                    <Popover.Target>
-                                        <ActionIcon color="primary" variant="subtle">
-                                            <IconInfoCircleFilled size={iconSize}/>
-                                        </ActionIcon>
-                                    </Popover.Target>
-                                    <Popover.Dropdown>
-                                        <Text size="sm">Your name will only be visible to the organizer, any team
-                                            members and the beneficiary</Text>
-                                    </Popover.Dropdown>
-                                </Popover>
-                            </Group>
-                            <Checkbox
-                                label="Get occasional marketing updates from GoFundMe. You may unsubscribe at any time."/>
-                        </Stack>
-                    </Paper>
-                    <Paper {...paperProps}>
-                        <Stack>
-                            <Text fw={700} size="lg">Your donation</Text>
-                            <Group justify="space-between">
-                                <Text>Your donation</Text>
-                                <Text fw={500}>$0.00</Text>
-                            </Group>
-                            <Group justify="space-between">
-                                <Text>CrowdUp tip</Text>
-                                <Text fw={500}>$0.00</Text>
-                            </Group>
-                            <Group justify="space-between">
-                                <Text>Total due today</Text>
-                                <Text fw={500}>$0.00</Text>
-                            </Group>
-                            <Button size="lg">Donate Now</Button>
-                        </Stack>
-                    </Paper>
-                    <Paper {...paperProps}>
-                        <Stack>
-                            <Text size="sm">By continuing, you agree with <Anchor>CrowdUp terms</Anchor> and <Anchor>privacy
-                                notice.</Anchor></Text>
-                            <Text size="sm">Learn more about <Anchor>pricing and fees.</Anchor></Text>
-                            <Flex gap="sm">
-                                <ThemeIcon size="lg" variant="light" color="blue">
-                                    <IconShieldCheckFilled size={18}/>
-                                </ThemeIcon>
-                                <Text size="sm">We guarantee you a full refund for up to a year in the rare case that
-                                    fraud occurs.&nbsp;<Anchor>See our CrowdUp Giving Guarantee.</Anchor>
-                                </Text>
-                            </Flex>
-                        </Stack>
-                    </Paper>
-                </Stack>
+                                    {formatMinor(p, currency)}
+                                </Button>
+                            ))}
+                        </Group>
+                        <TextInput
+                            name="amount"
+                            label={`Amount (${currency})`}
+                            description="Or enter your own amount."
+                            inputMode="decimal"
+                            required
+                            value={amount}
+                            onChange={(e) => setAmount(e.currentTarget.value)}
+                        />
+                        <TextInput name="name" label="Your name (optional)" maxLength={MAX_NAME}/>
+                        <TextInput name="email" type="email" label="Email for your receipt (optional)"/>
+                        <Textarea name="message" label="Message (optional)" autosize minRows={2} maxLength={MAX_MESSAGE}/>
+                        <Checkbox name="anonymous" label="Don't display my name publicly on the fundraiser."/>
+                        {actionData?.error && <Alert color="red" role="alert">{actionData.error}</Alert>}
+                        {!acceptingDonations && (
+                            <Alert color="gray">This campaign is not accepting donations.</Alert>
+                        )}
+                        <Button type="submit" size="lg" disabled={!acceptingDonations} loading={submitting}>
+                            {acceptingDonations ? "Donate now" : "Donations closed"}
+                        </Button>
+                        <Text size="xs" c="dimmed">
+                            You will be redirected to Stripe to pay securely. Your payment goes directly to the organiser.
+                        </Text>
+                    </Stack>
+                </Form>
             </Container>
         </Drawer>
     );

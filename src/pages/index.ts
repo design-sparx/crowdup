@@ -6,8 +6,19 @@ import CampaignDetailsPage from "./CampaignDetails";
 import DetailError404Page from "./DetailError404";
 import LoginPage from "./Login";
 import SignupPage from "./Signup";
+import ForgotPasswordPage from "./ForgotPassword";
+import UpdatePasswordPage from "./UpdatePassword";
 import DashboardPage from "./Dashboard";
+import MyDonationsPage from "./MyDonations";
 import CreateCampaignPage from "./CreateCampaign";
+import TermsPage from "./Terms";
+import PrivacyPage from "./Privacy";
+import SecurityPage from "./Security";
+import AdminReportsPage from "./AdminReports";
+import AdminCampaignsPage from "./AdminCampaigns";
+import AdminUsersPage from "./AdminUsers";
+import AdminApprovalsPage from "./AdminApprovals";
+import AdminPaymentsPage from "./AdminPayments";
 
 export {
     HomePage,
@@ -18,6 +29,17 @@ export {
     DetailError404Page,
     LoginPage,
     SignupPage,
+    ForgotPasswordPage,
+    UpdatePasswordPage,
     DashboardPage,
-    CreateCampaignPage
+    MyDonationsPage,
+    CreateCampaignPage,
+    TermsPage,
+    PrivacyPage,
+    SecurityPage,
+    AdminReportsPage,
+    AdminCampaignsPage,
+    AdminUsersPage,
+    AdminApprovalsPage,
+    AdminPaymentsPage
 }

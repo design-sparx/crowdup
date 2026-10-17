@@ -1,4 +1,5 @@
 import {useState} from "react";
+import {useFetcher} from "react-router";
 import {Avatar, Group, Menu, Text, UnstyledButton} from '@mantine/core';
 import {
     IconChevronRight,
@@ -17,6 +18,7 @@ import classes from "./UserButton.module.css";
 
 const UserButton = () => {
     const [userMenuOpened, setUserMenuOpened] = useState(false);
+    const fetcher = useFetcher();
 
     return (
         <Menu
@@ -70,7 +72,12 @@ const UserButton = () => {
                 <Menu.Item leftSection={<IconSwitchHorizontal size="0.9rem" stroke={1.5}/>}>
                     Change account
                 </Menu.Item>
-                <Menu.Item leftSection={<IconLogout size="0.9rem" stroke={1.5}/>}>Logout</Menu.Item>
+                <Menu.Item
+                    leftSection={<IconLogout size="0.9rem" stroke={1.5}/>}
+                    onClick={() => fetcher.submit(null, {method: "post", action: "/logout"})}
+                >
+                    Logout
+                </Menu.Item>
 
                 <Menu.Divider/>
 

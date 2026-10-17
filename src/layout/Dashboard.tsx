@@ -1,5 +1,5 @@
 import {AppShell} from '@mantine/core';
-import {Outlet} from 'react-router-dom'
+import {Outlet} from 'react-router'
 import {AppNavbar} from "../components";
 import classes from "./Dashboard.module.css";
 
