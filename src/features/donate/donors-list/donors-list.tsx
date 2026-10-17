@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import {formatDate} from "@/helpers/formatDate";
 import {IconHeart} from "@tabler/icons-react";
 import {formatMinor} from "@/lib/donations/amount";
 import type {RecentDonor} from "@/lib/campaigns/repository";
@@ -20,7 +20,7 @@ export function DonorsList({donors}: {donors: RecentDonor[]}) {
                         </p>
                         {donor.message ? <p className="whitespace-pre-wrap text-sm">{donor.message}</p> : null}
                         <time dateTime={donor.createdAt} className="text-xs text-muted-foreground">
-                            {dayjs(donor.createdAt).format("D MMM YYYY")}
+                            {formatDate(donor.createdAt)}
                         </time>
                     </div>
                 </li>

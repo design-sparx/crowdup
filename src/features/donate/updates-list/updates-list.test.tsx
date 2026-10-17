@@ -20,4 +20,8 @@ describe("UpdatesList", () => {
         expect(container.querySelector("img")).toBeNull();
         expect(screen.getByText("<img src=x onerror=alert(1)>hi")).toBeInTheDocument();
     });
+    it("shows the UTC day even late in the evening, so server and browser agree", () => {
+        render(<UpdatesList updates={[{id: "u1", body: "Late", createdAt: "2026-03-05T23:30:00Z"}]}/>);
+        expect(screen.getByText("5 Mar 2026")).toBeInTheDocument();
+    });
 });

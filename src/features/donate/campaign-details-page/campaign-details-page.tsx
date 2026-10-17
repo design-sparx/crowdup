@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import {formatDate} from "@/helpers/formatDate";
 import {Badge} from "@/components/ui/badge";
 import {Card, CardContent} from "@/components/ui/card";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
@@ -49,7 +49,7 @@ export function CampaignDetailsPage({
                         </div>
                         <h1 className="text-3xl font-semibold leading-tight">{campaign.title}</h1>
                         <p className="text-sm text-muted-foreground">
-                            Created by {campaign.organizerName} on {dayjs(campaign.createdAt).format("D MMM YYYY")}
+                            Created by {campaign.organizerName} on {formatDate(campaign.createdAt)}
                         </p>
                         <p className="text-muted-foreground">{campaign.description}</p>
                     </header>

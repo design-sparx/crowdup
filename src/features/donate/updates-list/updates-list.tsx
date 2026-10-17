@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import {formatDate} from "@/helpers/formatDate";
 import type {CampaignUpdate} from "@/lib/campaigns/repository";
 
 export function UpdatesList({updates}: {updates: CampaignUpdate[]}) {
@@ -10,7 +10,7 @@ export function UpdatesList({updates}: {updates: CampaignUpdate[]}) {
             {updates.map((update) => (
                 <li key={update.id} className="space-y-1">
                     <time dateTime={update.createdAt} className="text-xs text-muted-foreground">
-                        {dayjs(update.createdAt).format("D MMM YYYY")}
+                        {formatDate(update.createdAt)}
                     </time>
                     <p className="whitespace-pre-wrap text-sm">{update.body}</p>
                 </li>
