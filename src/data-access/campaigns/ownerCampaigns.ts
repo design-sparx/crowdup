@@ -183,6 +183,44 @@ export async function updateCampaign(
 }
 
 /**
+ * Edits a LIVE campaign. The database refuses client edits of a live campaign's public
+ * content (what an admin approved), so this runs with the service-role client. Ownership is
+ * enforced here, not by RLS: `userId` must come from the verified session, and the update is
+ * filtered on owner and on `status = live`, so it cannot touch another campaign or race a
+ * status change. The patch and the status change are ONE update, so a failure leaves the
+ * campaign exactly as it was. Returns false when nothing matched.
+ */
+export async function updateLiveCampaign(
+    db: SupabaseClient,
+    userId: string,
+    id: string,
+    values: CampaignValues,
+    coverImageUrl: string | undefined,
+    nextStatus: "live" | "pending_approval",
+): Promise<boolean> {
+    const patch: Record<string, unknown> = {
+        title: values.title,
+        category: values.category,
+        country: values.country,
+        description: values.description,
+        goal_amount: values.goalAmount,
+        end_date: values.endDate,
+        story: values.story,
+        status: nextStatus,
+    };
+    if (coverImageUrl !== undefined) patch.cover_image_url = coverImageUrl;
+    const {data, error} = await db
+        .from("campaign")
+        .update(patch)
+        .eq("id", id)
+        .eq("owner_id", userId)
+        .eq("status", "live")
+        .select("id");
+    if (error) fail(error);
+    return (data ?? []).length > 0;
+}
+
+/**
  * Closes a live campaign. The filters are a courtesy; RLS and the write guard trigger are
  * the enforcement (owner only, live -> closed only). Returns false when nothing matched.
  */

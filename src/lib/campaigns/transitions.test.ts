@@ -30,8 +30,12 @@ describe("canTransition", () => {
         expect(canTransition("server", "pending_approval", "rejected")).toBe(true);
         expect(canTransition("server", "draft", "live")).toBe(true);
     });
-    it("only enters pending_approval from draft and rejected from pending_approval", () => {
-        for (const from of CAMPAIGN_STATUSES.filter((s) => s !== "draft" && s !== "pending_approval")) {
+    it("sends edited live content back to review, but nothing else re-enters pending_approval", () => {
+        expect(canTransition("server", "live", "pending_approval")).toBe(true);
+        expect(canTransition("owner", "live", "pending_approval")).toBe(false);
+    });
+    it("only enters pending_approval from draft or live and rejected from pending_approval", () => {
+        for (const from of CAMPAIGN_STATUSES.filter((s) => !["draft", "live", "pending_approval"].includes(s))) {
             expect(canTransition("server", from, "pending_approval")).toBe(false);
         }
         for (const from of CAMPAIGN_STATUSES.filter((s) => s !== "pending_approval" && s !== "rejected")) {

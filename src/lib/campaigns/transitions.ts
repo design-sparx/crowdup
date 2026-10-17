@@ -5,6 +5,7 @@
  *
  *   draft --(server: Stripe ready)--> live                  (auto mode)
  *   draft --(server: Stripe ready)--> pending_approval      (approval mode)
+ *   live --(server: public content edited, approval mode)--> pending_approval
  *   pending_approval --(admin approve)--> live
  *   pending_approval --(admin reject, reason)--> rejected
  *   rejected --(owner edit)--> draft, then resubmitted like any draft
@@ -29,7 +30,7 @@ export function canTransition(actor: CampaignActor, from: string, to: string): b
     if (from === to) return true;
     if (actor === "owner") return OWNER_TRANSITIONS.has(`${from}>${to}`);
     // Server: entry into the moderation statuses is constrained, everything else is open.
-    if (to === "pending_approval") return from === "draft";
+    if (to === "pending_approval") return from === "draft" || from === "live";
     if (to === "rejected") return from === "pending_approval";
     return true;
 }

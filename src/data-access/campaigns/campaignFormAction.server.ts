@@ -1,7 +1,18 @@
 import {data, redirect} from "react-router";
 import type {SupabaseClient} from "@supabase/supabase-js";
 import {parseCampaignForm, type CampaignFormErrors} from "../../lib/campaigns/form";
-import {createDraft, getOwnCampaign, INSUFFICIENT_PRIVILEGE, updateCampaign, uploadCover} from "./ownerCampaigns";
+import {liveEditPlan} from "../../lib/campaigns/liveEdit";
+import {getOwnSuspension} from "../moderation/moderation.server";
+import {getPublishingMode} from "../stripe/connect.server";
+import {createServiceRoleClient} from "../stripe/serviceRole.server";
+import {
+    createDraft,
+    getOwnCampaign,
+    INSUFFICIENT_PRIVILEGE,
+    updateCampaign,
+    updateLiveCampaign,
+    uploadCover,
+} from "./ownerCampaigns";
 
 type ActionErrors = CampaignFormErrors & {form?: string; cover?: string};
 
@@ -29,8 +40,8 @@ export async function handleCampaignForm(args: {
     const {request, supabase, userId, headers, campaignId} = args;
     const form = await request.formData();
     // The goal is parsed in the campaign's own currency, which is only known once it has gone live.
-    const currency = campaignId ? ((await getOwnCampaign(supabase, userId, campaignId))?.currency ?? null) : null;
-    const parsed = parseCampaignForm(form, {currency});
+    const existing = campaignId ? await getOwnCampaign(supabase, userId, campaignId) : null;
+    const parsed = parseCampaignForm(form, {currency: existing?.currency ?? null});
     if (!parsed.ok) return invalid(parsed.errors, headers);
 
     try {
@@ -45,6 +56,20 @@ export async function handleCampaignForm(args: {
         if (!campaignId) {
             const {id} = await createDraft(supabase, userId, parsed.values, coverUrl ?? null);
             return redirect(`/campaigns/${id}/edit?saved=1`, {headers});
+        }
+
+        if (existing?.status === "live") {
+            // The database does not let a client change what an admin approved, so a live
+            // campaign is edited by the server, which re-checks ownership and the account.
+            if ((await getOwnSuspension(supabase, userId)).suspended) {
+                return invalid({form: SUSPENDED_MESSAGE}, headers, 403);
+            }
+            const plan = liveEditPlan(existing, {...parsed.values, coverImageUrl: coverUrl}, getPublishingMode());
+            const ok = await updateLiveCampaign(
+                createServiceRoleClient(), userId, campaignId as string, parsed.values, coverUrl, plan.nextStatus,
+            );
+            if (!ok) return invalid({form: "This campaign cannot be edited."}, headers, 403);
+            return redirect(`/campaigns/${campaignId}/edit?saved=1`, {headers});
         }
 
         const updated = await updateCampaign(supabase, userId, campaignId, parsed.values, coverUrl);
