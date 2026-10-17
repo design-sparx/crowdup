@@ -153,7 +153,7 @@ export async function updateCampaign(
     id: string,
     values: CampaignValues,
     coverImageUrl: string | undefined,
-    {reopenRejected = false}: {reopenRejected?: boolean} = {},
+    {reopenRejected = false, expectedStatus}: {reopenRejected?: boolean; expectedStatus?: string} = {},
 ): Promise<boolean> {
     const patch: Record<string, unknown> = {
         title: values.title,
@@ -171,7 +171,10 @@ export async function updateCampaign(
     if (reopenRejected) patch.status = "draft";
 
     let query = client.from("campaign").update(patch).eq("id", id).eq("owner_id", userId);
+    // The edit was authorised against the status it was read with; if that changed since (for
+    // example an admin suspended it), nothing is written.
     if (reopenRejected) query = query.eq("status", "rejected");
+    else if (expectedStatus) query = query.eq("status", expectedStatus);
     const {data, error} = await query.select("id");
     if (error) fail(error);
     return (data ?? []).length > 0;

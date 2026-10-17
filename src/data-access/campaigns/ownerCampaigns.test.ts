@@ -72,6 +72,16 @@ describe("updateCampaign", () => {
         expect(patches).toHaveLength(1);
         expect(patches[0]).toMatchObject({status: "draft", title: "Clean water"});
     });
+    it("only applies if the campaign still has the status it was read with", async () => {
+        const filters: [string, unknown][] = [];
+        const b: Record<string, unknown> = {
+            eq: (col: string, val: unknown) => { filters.push([col, val]); return b; },
+            select: () => Promise.resolve({data: [{id: "c"}], error: null}),
+        };
+        const client = {from: () => ({update: () => b})} as unknown as SupabaseClient;
+        await updateCampaign(client, "u1", "c", values, undefined, {expectedStatus: "closed"});
+        expect(filters).toContainEqual(["status", "closed"]);
+    });
     it("does not touch the status of any other campaign", async () => {
         const {client, patches} = updateClient([{id: "c"}]);
         await updateCampaign(client, "u1", "c", values, undefined);
