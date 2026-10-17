@@ -1,5 +1,6 @@
-import {data, Outlet, type LoaderFunctionArgs} from "react-router";
+import {data, Outlet, useLoaderData, type LoaderFunctionArgs} from "react-router";
 import {requireUser} from "../data-access/auth/auth.server";
+import {SitePage} from "@/components/shell/site-page";
 
 export async function loader({request}: LoaderFunctionArgs) {
     const {user, headers} = await requireUser(request);
@@ -13,5 +14,10 @@ export async function loader({request}: LoaderFunctionArgs) {
 export {Error404Page as ErrorBoundary} from "../pages";
 
 export default function Layout() {
-    return <Outlet/>;
+    const {account} = useLoaderData<typeof loader>();
+    return (
+        <SitePage account={account}>
+            <Outlet/>
+        </SitePage>
+    );
 }
