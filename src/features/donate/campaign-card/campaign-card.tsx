@@ -1,21 +1,15 @@
 import {Link} from "react-router";
-import {IconHeartHandshake} from "@tabler/icons-react";
 import {Badge} from "@/components/ui/badge";
 import {Card, CardContent} from "@/components/ui/card";
 import {Progress} from "@/components/ui/progress";
+import {CampaignCover} from "@/features/donate/campaign-cover";
 import {formatMinorAmount} from "@/helpers/formatAmount";
 import type {Campaign} from "@/lib/campaigns/types";
 
 export function CampaignCard({campaign}: {campaign: Campaign}) {
     return (
         <Card className="relative h-full transition-shadow focus-within:ring-2 focus-within:ring-ring hover:shadow-lg">
-            {campaign.imageUrl ? (
-                <img src={campaign.imageUrl} alt="" loading="lazy" className="aspect-video w-full object-cover"/>
-            ) : (
-                <div className="flex aspect-video w-full items-center justify-center bg-muted text-muted-foreground">
-                    <IconHeartHandshake className="size-10" aria-hidden="true"/>
-                </div>
-            )}
+            <CampaignCover src={campaign.imageUrl}/>
             <CardContent className="flex flex-1 flex-col gap-3">
                 <Badge variant="secondary" className="w-fit">
                     {campaign.category}
