@@ -23,7 +23,8 @@ Defined once in SQL (`campaign_status_transition_allowed`, enforced by the `guar
 | --- | --- | --- |
 | draft | live | server (auto mode, Stripe ready) |
 | draft | pending_approval | server (approval mode, Stripe ready) |
-| pending_approval | live | admin, via `approve_campaign()` |
+| live | pending_approval | server (approval mode, public content edited) |
+| pending_approval | live | admin, via `approve_campaign()` (refused while the organiser is suspended or not onboarded) |
 | pending_approval | rejected | admin, via `reject_campaign()` (reason 3-1000 chars) |
 | rejected | draft | owner, automatically when they save an edit |
 | live | closed | owner, server (expiry) |
@@ -31,13 +32,16 @@ Defined once in SQL (`campaign_status_transition_allowed`, enforced by the `guar
 
 Resubmission: a rejected campaign shows the reason on the dashboard and edit page. Saving an edit reopens it as a draft; the organiser then presses Submit for approval (or the onboarding sync does it), which clears the old reason. Owners cannot edit while a campaign is `pending_approval`, so what is approved is what goes live. Only `live` accepts donations.
 
+Editing a live campaign: in approval mode, changing the title, summary, category, country, story or cover moves it back to `pending_approval` (offline until re-approved); goal and end date never trigger review. The database refuses client edits of a live campaign's public content, so the server applies them with the service role after checking ownership (`updateLiveCampaign`). In auto mode the edit applies and the campaign stays live.
+
 ## Where the rules are enforced
 
 The database does not know the mode. In both modes it guarantees that:
 
 - a client (owner) cannot reach `live` or `pending_approval` and cannot write `rejection_reason`;
 - `approve_campaign` / `reject_campaign` are `SECURITY DEFINER` with a pinned `search_path`, check `is_admin()` themselves and only act on `pending_approval`;
-- `pending_approval` is only entered from `draft` and `rejected` only from `pending_approval`, for every role.
+- `pending_approval` is only entered from `draft` or `live` (never by a client) and `rejected` only from `pending_approval`, for every role;
+- a client cannot change the public content of a live campaign.
 
 Known limit: the service role (server code) can still take a draft straight to `live` in approval mode if app code is wrong. Making the database mode-aware would need a settings table or GUC kept in sync with the env var; not done, to keep one source of truth. The admin loader and action also re-check admin status, and decisions use the admin's own session, never the service role.
 
