@@ -24,7 +24,8 @@ export default tseslint.config(
   },
   {
     // shadcn components export their variants (e.g. buttonVariants) next to the component.
-    files: ['src/components/ui/**/*.{ts,tsx}'],
-    rules: {'react-refresh/only-export-components': 'off'},
+    // The carousel and use-mobile hooks also set state inside effects, which the React compiler rule rejects.
+    files: ['src/components/ui/**/*.{ts,tsx}', 'src/hooks/**/*.{ts,tsx}'],
+    rules: {'react-refresh/only-export-components': 'off', 'react-hooks/set-state-in-effect': 'off'},
   },
 )
