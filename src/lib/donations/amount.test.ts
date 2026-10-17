@@ -42,6 +42,13 @@ describe("parseDonationAmount", () => {
         expect(parseDonationAmount("100001", "USD").ok).toBe(false);
         expect(parseDonationAmount("0", "USD").ok).toBe(false);
     });
+    it("never exceeds Stripe's 8-digit maximum, whatever the currency's decimals", () => {
+        expect(parseDonationAmount("100000", "KWD").ok).toBe(false);
+        expect(parseDonationAmount("99999.999", "KWD")).toEqual({ok: true, minor: 99_999_999});
+        expect(parseDonationAmount("100000", "JPY")).toEqual({ok: true, minor: 100_000});
+        const tooMuch = parseDonationAmount("100000", "BHD");
+        expect(!tooMuch.ok && tooMuch.error).toMatch(/maximum donation is/);
+    });
     it("explains a rejection", () => {
         const r = parseDonationAmount("0.5", "USD");
         expect(!r.ok && r.error).toMatch(/at least/i);
