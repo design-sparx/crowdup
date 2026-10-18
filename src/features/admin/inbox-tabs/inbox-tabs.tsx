@@ -2,7 +2,7 @@ import {Link} from "react-router";
 import {Badge} from "@/components/ui/badge";
 import {cn} from "@/lib/utils";
 
-export type InboxTab = "reports" | "approvals" | "payments";
+export type InboxTab = "reports" | "approvals" | "payments" | "campaigns" | "users";
 
 interface InboxTabsProps {
     counts: Record<InboxTab, number>;
@@ -13,6 +13,8 @@ const TABS: {id: InboxTab; label: string; href: string}[] = [
     {id: "reports", label: "Reports", href: "/admin/reports"},
     {id: "approvals", label: "Approvals", href: "/admin/approvals"},
     {id: "payments", label: "Payments", href: "/admin/payments"},
+    {id: "campaigns", label: "Campaigns", href: "/admin/campaigns"},
+    {id: "users", label: "Users", href: "/admin/users"},
 ];
 
 /** The admin inbox's tab bar. A count badge shows only when there is something waiting. */

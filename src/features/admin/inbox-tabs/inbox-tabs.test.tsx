@@ -11,6 +11,8 @@ describe("InboxTabs", () => {
         expect(within(nav).getByRole("link", {name: /Reports/})).toHaveAttribute("href", "/admin/reports");
         expect(within(nav).getByRole("link", {name: /Approvals/})).toHaveAttribute("href", "/admin/approvals");
         expect(within(nav).getByRole("link", {name: /Payments/})).toHaveAttribute("href", "/admin/payments");
+        expect(within(nav).getByRole("link", {name: /Campaigns/})).toHaveAttribute("href", "/admin/campaigns");
+        expect(within(nav).getByRole("link", {name: /Users/})).toHaveAttribute("href", "/admin/users");
     });
 
     it("shows a count badge on tabs that have open items", () => {
