@@ -1,7 +1,7 @@
-import {ComingSoonPage} from "../pages";
-import {data, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
+import {useActionData, useLoaderData, data, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
 import {decideCampaign, listPendingCampaigns} from "../data-access/campaigns/approval.server";
 import {getAdminContext} from "../data-access/reports/reports.server";
+import {ApprovalsTab} from "@/features/admin/approvals-tab";
 
 // Loaders run in parallel with the layout's, so this checks the role itself.
 export async function loader({request}: LoaderFunctionArgs) {
@@ -22,5 +22,13 @@ export async function action({request}: ActionFunctionArgs) {
 export {Error404Page as ErrorBoundary} from "../pages";
 
 export default function Page() {
-    return <ComingSoonPage title="Approvals"/>;
+    const {campaigns} = useLoaderData<typeof loader>();
+    const actionData = useActionData<typeof action>() as {error?: string; message?: string} | undefined;
+    return (
+        <div className="space-y-4">
+            {actionData?.error ? <p role="alert" className="text-sm text-destructive">{actionData.error}</p> : null}
+            {actionData?.message ? <p role="status" className="text-sm">{actionData.message}</p> : null}
+            <ApprovalsTab campaigns={campaigns}/>
+        </div>
+    );
 }

@@ -5,25 +5,23 @@ import {renderWithRouter} from "@/test/render-with-router";
 import {ReportsTab} from "./reports-tab";
 
 const groups = [
-    {campaignId: "c1", title: "Clean water for schools", slug: "clean-water", reports: [
-        {id: "r1", reason: "Looks like a scam", createdAt: "2026-03-05T10:00:00Z"},
-        {id: "r2", reason: "Misleading photo", createdAt: "2026-03-04T10:00:00Z"},
-    ]},
+    {campaignId: "c1", title: "Clean water for schools", slug: "clean-water", reportCount: 2,
+        reasons: ["Looks like a scam", "Misleading photo"], reportIds: ["r1", "r2"]},
 ];
 
 describe("ReportsTab", () => {
-    it("shows each reported campaign, its reports and a link to it", () => {
+    it("shows each reported campaign, its count, its reasons and a link to it", () => {
         renderWithRouter(<ReportsTab groups={groups}/>);
-        expect(screen.getByText("Clean water for schools")).toBeInTheDocument();
-        expect(screen.getByText("Looks like a scam")).toBeInTheDocument();
         expect(screen.getByRole("link", {name: "Clean water for schools"})).toHaveAttribute("href", "/campaigns/clean-water");
+        expect(screen.getByText("2 open")).toBeInTheDocument();
+        expect(screen.getByText("Looks like a scam")).toBeInTheDocument();
+        expect(screen.getByText("Misleading photo")).toBeInTheDocument();
     });
 
-    it("dismisses a campaign's reports with the reportId fields the server reads", () => {
+    it("dismisses the campaign's reports by posting every report id the server gave", () => {
         const {container} = renderWithRouter(<ReportsTab groups={groups}/>);
-        // Dismissal is per campaign: the form carries every open report id as a hidden reportId field.
-        const hidden = container.querySelectorAll('input[name="reportId"]');
-        expect(hidden).toHaveLength(2);
+        const ids = Array.from(container.querySelectorAll('input[name="reportId"]')).map((i) => (i as HTMLInputElement).value);
+        expect(ids).toEqual(["r1", "r2"]);
         expect(screen.getByRole("button", {name: "Dismiss reports"})).toHaveAttribute("name", "intent");
         expect(screen.getByRole("button", {name: "Dismiss reports"})).toHaveAttribute("value", "dismiss");
     });
