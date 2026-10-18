@@ -1,1 +1,1 @@
-export {PublishResult} from "./publish-result";
+export {PublishResult, type PublishOutcome} from "./publish-result";
