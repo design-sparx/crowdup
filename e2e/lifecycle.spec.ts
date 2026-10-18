@@ -24,10 +24,12 @@ test("an organiser posts an update, and it is stored as plain text", async ({pag
     await page.waitForLoadState("networkidle");
     await expect(page.getByRole("heading", {level: 1, name: "Clean water for Kibera schools"})).toBeVisible();
 
-    await page.getByLabel("Post an update").fill("<b>Thank you</b> all");
+    // Unique per run: the database keeps every update, so a fixed string would match old runs too.
+    const body = `<b>Thank you</b> all ${Date.now()}`;
+    await page.getByLabel("Post an update").fill(body);
     await page.getByRole("button", {name: "Post update"}).click();
     // The update is shown as text, not rendered as HTML.
-    await expect(page.getByText("<b>Thank you</b> all")).toBeVisible();
+    await expect(page.getByText(body, {exact: true})).toBeVisible();
 });
 
 test("an over-length update is rejected by the server with its message", async ({page}) => {
