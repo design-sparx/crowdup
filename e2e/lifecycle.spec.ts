@@ -45,6 +45,16 @@ test("an over-length update is rejected by the server with its message", async (
     expect(message.text).toContain("Updates can be at most 5000 characters.");
 });
 
+test("the manage page lists the campaign's donors, with anonymous donations labelled", async ({page}) => {
+    await signInAsAmara(page);
+    await page.goto(editUrl);
+    await page.waitForLoadState("networkidle");
+    const donors = page.getByRole("heading", {level: 2, name: "Donors"}).locator("xpath=following-sibling::*[1]");
+    // The seed has 3 public donations on this campaign, one of them anonymous.
+    await expect(donors.getByText("Anonymous").first()).toBeVisible();
+    await expect(donors.getByText(/Kofi Mensah/)).toBeVisible();
+});
+
 test("closing asks for confirmation and does not close until confirmed", async ({page}) => {
     await signInAsAmara(page);
     await page.goto(editUrl);
