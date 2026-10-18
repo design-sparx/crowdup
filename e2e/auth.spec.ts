@@ -62,3 +62,22 @@ test("the update password page sends signed-out visitors to login", async ({page
     await page.goto("/update-password");
     await expect(page).toHaveURL(/\/login\?next=%2Fupdate-password/);
 });
+
+test("the server rejects a signup posted without the consent box, even when the browser check is skipped", async ({page}) => {
+    await openLogin(page, "/signup");
+    const email = `e2e-noconsent-${Date.now()}@example.com`;
+    // Post the form straight to the server, leaving out `consent`, as a client that skips the browser would.
+    await page.evaluate(
+        async ({email, password}) => {
+            const body = new URLSearchParams({name: "No Consent", email, password, next: "/dashboard"});
+            await fetch("/signup", {method: "POST", body, redirect: "manual"});
+        },
+        {email, password},
+    );
+    // No account was created, so signing in with those details fails.
+    await openLogin(page, "/login");
+    await page.getByLabel("Email").fill(email);
+    await page.getByLabel("Password", {exact: true}).fill(password);
+    await page.getByRole("button", {name: "Sign in"}).click();
+    await expect(page.getByRole("alert")).toContainText("Invalid email or password.");
+});

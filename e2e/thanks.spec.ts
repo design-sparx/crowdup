@@ -25,3 +25,10 @@ test("an unknown campaign's thank-you page is a real 404", async ({page}) => {
     const response = await page.goto("/campaigns/no-such-campaign-xyz/thanks");
     expect(response?.status()).toBe(404);
 });
+test("the thank-you share links point at the campaign page, not the thank-you page", async ({page}) => {
+    await page.goto(`${SLUG}/thanks`);
+    await page.waitForLoadState("networkidle");
+    const whatsapp = page.getByRole("link", {name: "WhatsApp"});
+    await expect(whatsapp).toHaveAttribute("href", /community-kitchen-ealing/);
+    await expect(whatsapp).not.toHaveAttribute("href", /thanks/);
+});
