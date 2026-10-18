@@ -16,7 +16,7 @@ describe("PostUpdateForm", () => {
     it("shows a live character count against the 5000 limit", async () => {
         renderWithRouter(<PostUpdateForm/>);
         expect(screen.getByText("0 / 5000")).toBeInTheDocument();
-        await userEvent.type(screen.getByLabelText("Update"), "Hello");
+        await userEvent.type(screen.getByLabelText("Post an update"), "Hello");
         expect(screen.getByText("5 / 5000")).toBeInTheDocument();
     });
 

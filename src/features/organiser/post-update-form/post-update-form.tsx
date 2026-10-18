@@ -17,7 +17,7 @@ export function PostUpdateForm({error}: PostUpdateFormProps) {
     return (
         <Form method="post" className="space-y-3">
             <div className="space-y-2">
-                <Label htmlFor={id}>Update</Label>
+                <Label htmlFor={id}>Post an update</Label>
                 <Textarea
                     id={id}
                     name="body"
