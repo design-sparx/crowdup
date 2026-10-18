@@ -3,6 +3,8 @@ export interface LegalSection {
     body: string[];
 }
 
+import {slug} from "./slug";
+
 interface LegalDocumentProps {
     title: string;
     /** Shown under the title when given, e.g. the date the operator last changed the text. */
@@ -30,12 +32,4 @@ export function LegalDocument({title, lastUpdated, sections}: LegalDocumentProps
             ))}
         </article>
     );
-}
-
-/** A stable anchor id from a heading, so links such as #refunds work. */
-export function slug(heading: string): string {
-    return heading
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "");
 }
