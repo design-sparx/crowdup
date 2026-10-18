@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {useEditor, EditorContent, type Editor} from "@tiptap/react";
+import {useEditor, EditorContent, type Editor, type JSONContent} from "@tiptap/react";
 import {IconBold, IconItalic, IconList, IconH2, IconH3} from "@tabler/icons-react";
 import {Toggle} from "@/components/ui/toggle";
 import {storyExtensions} from "@/lib/campaigns/storyExtensions";
@@ -21,7 +21,8 @@ export function StoryEditor({name, defaultValue = EMPTY_STORY, error}: StoryEdit
     const [json, setJson] = useState<StoryDoc>(defaultValue);
     const editor = useEditor({
         extensions: storyExtensions,
-        content: defaultValue,
+        // StoryDoc is the server's sanitised shape (content: unknown[]); Tiptap wants JSONContent.
+        content: defaultValue as JSONContent,
         immediatelyRender: false,
         editorProps: {
             attributes: {
