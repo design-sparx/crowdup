@@ -35,3 +35,4 @@ supabase/.branches
 supabase/.temp
 
 .claude
+recordings/output/
