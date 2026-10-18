@@ -38,12 +38,12 @@ Delete every Mantine screen and rebuild the UI around three journeys (donor, org
 | 12 | Dashboard | Done | `ce36ef4`..`b63aa53` |
 | 13 | Manage campaign | Done | `1024888`..`89d31be`, fixes `947a393`, `c135525` |
 | 14 | Admin inbox | Done. Five tabs with counts; every action button disables while pending | `8d5f9dd`..`524a1ac` |
-| 15 | Content pages (how it works, terms, privacy, security) | Not started | |
+| 15 | Content pages (how it works, terms, privacy, security) | Done. Legal text is the operator template from `legal.ts`, with a template notice | `c12ed73`..`3b0b8e4`, fix `e22c6b7` |
 | 16 | Final cleanup, docs, full verification | Not started | |
 
-**Current health (as of `524a1ac`):** lint clean, 110 test files / 576 tests pass, build exits 0, e2e (auth, donations, thanks, donate, campaigns, smoke, create-campaign, dashboard, lifecycle, admin): 38 passed, 1 skipped (Stripe checkout, needs a Stripe test key).
+**Current health (as of `e22c6b7`):** lint clean, 113 test files / 586 tests pass, build exits 0, e2e (auth, donations, thanks, donate, campaigns, smoke, create-campaign, dashboard, lifecycle, admin): 39 passed, 1 skipped (Stripe checkout, needs a Stripe test key).
 
-Routes still showing the "being rebuilt" placeholder (`ComingSoonPage`): `/how-it-works`, `/terms`, `/privacy`, `/security` (Task 15). Every other route is rebuilt, including the admin inbox.
+No route shows the "being rebuilt" placeholder any more. The legal pages show a template notice until the operator reviews them.
 
 The admin specs are rewritten for the tabbed inbox (`e2e/admin.spec.ts`). The approve, reject, suspend and restore actions are covered by component tests, not end to end, since they change shared seed data.
 
