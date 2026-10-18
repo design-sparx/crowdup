@@ -7,7 +7,7 @@ export async function loader({request}: LoaderFunctionArgs) {
     const {user, headers} = await getUser(request);
     const next = safeRedirect(new URL(request.url).searchParams.get("next"));
     if (user) throw redirect(next, {headers});
-    return data({googleEnabled: isGoogleEnabled(request), next: safeRedirect(new URL(request.url).searchParams.get("next"))}, {headers});
+    return data({googleEnabled: isGoogleEnabled(request), next}, {headers});
 }
 
 export async function action({request}: ActionFunctionArgs) {
