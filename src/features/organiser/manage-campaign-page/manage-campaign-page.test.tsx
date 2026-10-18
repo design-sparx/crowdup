@@ -50,4 +50,15 @@ describe("ManageCampaignPage", () => {
         renderWithRouter(<ManageCampaignPage {...base} lifecycleError="This campaign cannot be closed."/>);
         expect(screen.getByRole("alert")).toHaveTextContent("This campaign cannot be closed.");
     });
+
+    it("says Draft saved only for a draft, not for a live campaign", () => {
+        renderWithRouter(<ManageCampaignPage {...base} status="draft" saved/>);
+        expect(screen.getByRole("status")).toHaveTextContent("Draft saved.");
+    });
+
+    it("says Changes saved for a live campaign, since the save went live", () => {
+        renderWithRouter(<ManageCampaignPage {...base} status="live" saved/>);
+        expect(screen.getByRole("status")).toHaveTextContent("Changes saved.");
+        expect(screen.queryByText("Draft saved.")).not.toBeInTheDocument();
+    });
 });

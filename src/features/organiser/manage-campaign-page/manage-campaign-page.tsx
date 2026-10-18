@@ -57,7 +57,7 @@ export function ManageCampaignPage(props: ManageCampaignPageProps) {
             {publish ? <PublishResult result={publish} title={title} shareUrl={publicUrl}/> : null}
             {saved ? (
                 <Alert role="status">
-                    <AlertDescription>Draft saved.</AlertDescription>
+                    <AlertDescription>{status === "draft" ? "Draft saved." : "Changes saved."}</AlertDescription>
                 </Alert>
             ) : null}
             {lifecycleNotice ? (
