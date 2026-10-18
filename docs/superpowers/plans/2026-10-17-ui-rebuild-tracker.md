@@ -1,6 +1,6 @@
 # UI rebuild: tracker (read this first in every new session)
 
-Last updated: 2026-10-17. Local `main` was at `da27587` when this was written. **Nothing is pushed.** The push remote is disabled on purpose.
+Last updated: 2026-10-19. The rebuild lives on local branch `feat/ui-rebuild` (based on `main` at `cd7dff4`). **Nothing is pushed.** The push remote is disabled on purpose.
 
 To resume in a new Claude session, say:
 
