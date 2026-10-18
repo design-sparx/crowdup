@@ -24,7 +24,6 @@ export function BasicsStep({errors, defaults}: BasicsStepProps) {
                     id={ids.title}
                     name="title"
                     defaultValue={defaults.title}
-                    required
                     minLength={3}
                     maxLength={140}
                     aria-invalid={errors.title ? true : undefined}
@@ -37,7 +36,6 @@ export function BasicsStep({errors, defaults}: BasicsStepProps) {
                     id={ids.category}
                     name="category"
                     defaultValue={defaults.category ?? ""}
-                    required
                     aria-invalid={errors.category ? true : undefined}
                 >
                     <NativeSelectOption value="" disabled>Choose a category</NativeSelectOption>
@@ -53,7 +51,6 @@ export function BasicsStep({errors, defaults}: BasicsStepProps) {
                     id={ids.country}
                     name="country"
                     defaultValue={defaults.country ?? ""}
-                    required
                     aria-invalid={errors.country ? true : undefined}
                 >
                     <NativeSelectOption value="" disabled>Choose a country</NativeSelectOption>

@@ -24,7 +24,6 @@ export function GoalStep({errors, defaults, currency}: GoalStepProps) {
                     name="goal"
                     inputMode="decimal"
                     defaultValue={defaults.goal}
-                    required
                     aria-invalid={errors.goal ? true : undefined}
                 />
                 {errors.goal ? <FieldError>{errors.goal}</FieldError> : null}

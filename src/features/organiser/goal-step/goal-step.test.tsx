@@ -27,3 +27,11 @@ describe("GoalStep", () => {
         expect(screen.getByText(/Enter a goal greater than zero/)).toBeInTheDocument();
     });
 });
+
+describe("GoalStep validation", () => {
+    it("does not block submit in the browser, so the server's message reaches the organiser", () => {
+        // A native `required` on a hidden step stops the submit with nothing visible. The server validates instead.
+        render(<GoalStep errors={{}} defaults={{}} currency={null}/>);
+        expect(screen.getByLabelText("Goal amount")).not.toBeRequired();
+    });
+});
