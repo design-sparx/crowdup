@@ -8,7 +8,7 @@ import {PreviewStep} from "@/features/organiser/preview-step";
 import {StepIndicator} from "@/features/organiser/step-indicator";
 import {StoryStep} from "@/features/organiser/story-step";
 import {firstStepWithError, WIZARD_STEPS} from "@/lib/campaigns/wizard";
-import type {StoryDoc} from "@/lib/campaigns/story";
+import type {StoryDoc} from "@/lib/campaigns/story-doc";
 
 interface CreateCampaignPageProps {
     /** Campaign currency from the organiser's Stripe account, or null until connected. */

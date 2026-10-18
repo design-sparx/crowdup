@@ -3,7 +3,7 @@ import {useEditor, EditorContent, type Editor, type JSONContent} from "@tiptap/r
 import {IconBold, IconItalic, IconList, IconH2, IconH3} from "@tabler/icons-react";
 import {Toggle} from "@/components/ui/toggle";
 import {storyExtensions} from "@/lib/campaigns/storyExtensions";
-import {EMPTY_STORY, type StoryDoc} from "@/lib/campaigns/story";
+import {EMPTY_STORY, type StoryDoc} from "@/lib/campaigns/story-doc";
 import {cn} from "@/lib/utils";
 
 interface StoryEditorProps {

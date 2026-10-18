@@ -1,6 +1,6 @@
 import {CoverUpload} from "@/features/organiser/cover-upload";
 import {StoryEditor} from "@/features/organiser/story-editor";
-import type {StoryDoc} from "@/lib/campaigns/story";
+import type {StoryDoc} from "@/lib/campaigns/story-doc";
 
 interface StoryStepProps {
     errors: Record<string, string | undefined>;
