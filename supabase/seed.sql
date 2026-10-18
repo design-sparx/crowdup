@@ -97,30 +97,29 @@ insert into public.campaign_update (campaign_id, author_id, body, created_at) va
 insert into public.donation (
   campaign_id, amount, fee_amount, currency, donor_name, donor_email, anonymous, message,
   stripe_checkout_session_id, stripe_payment_intent_id, stripe_event_id,
-  status, created_at, confirmed_at
+  status, created_at, confirmed_at, donor_user_id
 ) values
   ('10000000-0000-4000-8000-000000000001', 5000, 0, 'KES', 'Dana Donor', 'dana@crowdup.example', false,
    'Keep going!', 'cs_test_0001', 'pi_test_0001', 'evt_test_0001',
-   'confirmed', now() - interval '10 days', now() - interval '10 days'),
+   'confirmed', now() - interval '10 days', now() - interval '10 days', '00000000-0000-4000-8000-000000000005'),
   ('10000000-0000-4000-8000-000000000001', 25000, 0, 'KES', null, null, true,
    null, 'cs_test_0002', 'pi_test_0002', 'evt_test_0002',
-   'confirmed', now() - interval '8 days', now() - interval '8 days'),
+   'confirmed', now() - interval '8 days', now() - interval '8 days', null),
   ('10000000-0000-4000-8000-000000000001', 10000, 0, 'KES', 'Kofi Mensah', 'kofi@crowdup.example', false,
    'For the children.', 'cs_test_0003', 'pi_test_0003', 'evt_test_0003',
-   'confirmed', now() - interval '2 days', now() - interval '2 days'),
+   'confirmed', now() - interval '2 days', now() - interval '2 days', null),
   ('10000000-0000-4000-8000-000000000001', 7500, 0, 'KES', 'Pending Payer', 'pending@crowdup.example', false,
    null, 'cs_test_0004', 'pi_test_0004', null,
-   'pending', now() - interval '1 day', null),
+   'pending', now() - interval '1 day', null, null),
   ('10000000-0000-4000-8000-000000000001', 3000, 0, 'KES', 'Failed Card', 'failed@crowdup.example', false,
    null, 'cs_test_0005', 'pi_test_0005', 'evt_test_0005',
-   'failed', now() - interval '1 day', null),
+   'failed', now() - interval '1 day', null, null),
   ('10000000-0000-4000-8000-000000000004', 4000, 0, 'GBP', 'Dana Donor', 'dana@crowdup.example', false,
    'Happy to help.', 'cs_test_0006', 'pi_test_0006', 'evt_test_0006',
-   'confirmed', now() - interval '4 days', now() - interval '4 days'),
+   'confirmed', now() - interval '4 days', now() - interval '4 days', '00000000-0000-4000-8000-000000000005'),
   ('10000000-0000-4000-8000-000000000004', 1500, 0, 'GBP', null, null, true,
    null, 'cs_test_0007', 'pi_test_0007', 'evt_test_0007',
-   'confirmed', now() - interval '1 day', now() - interval '1 day');
-
+   'confirmed', now() - interval '1 day', now() - interval '1 day', null);
 insert into public.report (campaign_id, reporter_id, reason, status) values
   ('10000000-0000-4000-8000-000000000004', null,
    'The organiser asked for payments outside the platform.', 'open'),
