@@ -1,5 +1,5 @@
 import {Form, Link} from "react-router";
-import {Button} from "@/components/ui/button";
+import {SubmitButton} from "@/features/admin/submit-button";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 
 /** One campaign's open reports, as lib/reports `groupOpenReports` produces them. */
@@ -41,7 +41,7 @@ export function ReportsTab({groups}: ReportsTabProps) {
                             {group.reportIds.map((id) => (
                                 <input key={id} type="hidden" name="reportId" value={id}/>
                             ))}
-                            <Button type="submit" name="intent" value="dismiss" variant="outline" size="sm">Dismiss reports</Button>
+                            <SubmitButton name="intent" value="dismiss" variant="outline" size="sm">Dismiss reports</SubmitButton>
                         </Form>
                     </CardContent>
                 </Card>

@@ -1,7 +1,7 @@
 import {useId} from "react";
 import {Form, Link} from "react-router";
+import {SubmitButton} from "@/features/admin/submit-button";
 import {Badge} from "@/components/ui/badge";
-import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Label} from "@/components/ui/label";
 import {Textarea} from "@/components/ui/textarea";
@@ -50,7 +50,7 @@ function CampaignCard({campaign}: {campaign: AdminCampaign}) {
                             <p className="text-sm text-muted-foreground">Reason: {campaign.suspendedReason}</p>
                         ) : null}
                         <input type="hidden" name="campaignId" value={campaign.id}/>
-                        <Button type="submit" name="intent" value="restore" variant="outline" size="sm">Restore</Button>
+                        <SubmitButton name="intent" value="restore" variant="outline" size="sm">Restore</SubmitButton>
                     </Form>
                 ) : (
                     <Form method="post" className="space-y-3">
@@ -59,7 +59,7 @@ function CampaignCard({campaign}: {campaign: AdminCampaign}) {
                             <Label htmlFor={reasonId}>Reason for suspending</Label>
                             <Textarea id={reasonId} name="reason" rows={2}/>
                         </div>
-                        <Button type="submit" name="intent" value="suspend" variant="destructive" size="sm">Suspend</Button>
+                        <SubmitButton name="intent" value="suspend" variant="destructive" size="sm">Suspend</SubmitButton>
                     </Form>
                 )}
             </CardContent>

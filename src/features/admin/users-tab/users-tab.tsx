@@ -1,7 +1,7 @@
 import {useId} from "react";
 import {Form} from "react-router";
+import {SubmitButton} from "@/features/admin/submit-button";
 import {Badge} from "@/components/ui/badge";
-import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Label} from "@/components/ui/label";
 import {Textarea} from "@/components/ui/textarea";
@@ -52,7 +52,7 @@ function UserCard({user, isSelf}: {user: AdminUser; isSelf: boolean}) {
                     <Form method="post" className="space-y-3">
                         {user.suspendedReason ? <p className="text-sm text-muted-foreground">Reason: {user.suspendedReason}</p> : null}
                         <input type="hidden" name="userId" value={user.id}/>
-                        <Button type="submit" name="intent" value="unsuspend" variant="outline" size="sm">Unsuspend</Button>
+                        <SubmitButton name="intent" value="unsuspend" variant="outline" size="sm">Unsuspend</SubmitButton>
                     </Form>
                 ) : (
                     <Form method="post" className="space-y-3">
@@ -61,7 +61,7 @@ function UserCard({user, isSelf}: {user: AdminUser; isSelf: boolean}) {
                             <Label htmlFor={reasonId}>Reason for suspending</Label>
                             <Textarea id={reasonId} name="reason" rows={2}/>
                         </div>
-                        <Button type="submit" name="intent" value="suspend" variant="destructive" size="sm">Suspend</Button>
+                        <SubmitButton name="intent" value="suspend" variant="destructive" size="sm">Suspend</SubmitButton>
                     </Form>
                 )}
             </CardContent>

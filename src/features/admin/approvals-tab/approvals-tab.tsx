@@ -1,6 +1,6 @@
 import {useId} from "react";
 import {Form} from "react-router";
-import {Button} from "@/components/ui/button";
+import {SubmitButton} from "@/features/admin/submit-button";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Label} from "@/components/ui/label";
 import {Textarea} from "@/components/ui/textarea";
@@ -51,8 +51,8 @@ function ApprovalCard({campaign}: {campaign: PendingApproval}) {
                         <Textarea id={reasonId} name="reason" rows={2}/>
                     </div>
                     <div className="flex gap-2">
-                        <Button type="submit" name="intent" value="approve">Approve</Button>
-                        <Button type="submit" name="intent" value="reject" variant="outline">Reject</Button>
+                        <SubmitButton name="intent" value="approve">Approve</SubmitButton>
+                        <SubmitButton name="intent" value="reject" variant="outline">Reject</SubmitButton>
                     </div>
                 </Form>
             </CardContent>

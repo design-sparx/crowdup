@@ -1,5 +1,5 @@
 import {Form} from "react-router";
-import {Button} from "@/components/ui/button";
+import {SubmitButton} from "@/features/admin/submit-button";
 import {Card, CardContent} from "@/components/ui/card";
 import {formatDate} from "@/helpers/formatDate";
 import {formatMinor} from "@/lib/donations/amount";
@@ -44,7 +44,7 @@ export function PaymentsTab({payments}: PaymentsTabProps) {
                         </dl>
                         <Form method="post">
                             <input type="hidden" name="paymentId" value={p.id}/>
-                            <Button type="submit" name="intent" value="resolve" variant="outline" size="sm">Mark resolved</Button>
+                            <SubmitButton name="intent" value="resolve" variant="outline" size="sm">Mark resolved</SubmitButton>
                         </Form>
                     </CardContent>
                 </Card>
