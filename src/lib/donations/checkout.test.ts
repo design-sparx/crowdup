@@ -45,7 +45,7 @@ describe("buildCheckoutSessionParams", () => {
         const p = buildCheckoutSessionParams(input);
         expect(p.mode).toBe("payment");
         expect(p.line_items?.[0]).toMatchObject({quantity: 1, price_data: {currency: "kes", unit_amount: 5000}});
-        expect(p.success_url).toBe("https://crowdup.example/campaigns/clean-water?donation=success");
+        expect(p.success_url).toBe("https://crowdup.example/campaigns/clean-water/thanks");
         expect(p.cancel_url).toBe("https://crowdup.example/campaigns/clean-water?donation=cancelled");
     });
     it("sends no application fee when the fee is 0", () => {

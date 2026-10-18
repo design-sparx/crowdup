@@ -73,7 +73,7 @@ export function buildCheckoutSessionParams(i: CheckoutInput): Stripe.Checkout.Se
             metadata,
             ...(i.feeMinor > 0 ? {application_fee_amount: i.feeMinor} : {}),
         },
-        success_url: `${page}?donation=success`,
+        success_url: `${page}/thanks`,
         cancel_url: `${page}?donation=cancelled`,
     };
 }
