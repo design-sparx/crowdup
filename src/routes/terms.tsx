@@ -1,4 +1,4 @@
-import {ComingSoonPage} from "../pages";
+import {TermsPage} from "@/features/content/legal-pages";
 import {buildMeta} from "../helpers";
 
 export {Error404Page as ErrorBoundary} from "../pages";
@@ -11,5 +11,5 @@ export function meta() {
 }
 
 export default function Page() {
-    return <ComingSoonPage title="Terms of service"/>;
+    return <TermsPage/>;
 }

@@ -1,4 +1,4 @@
-import {ComingSoonPage} from "../pages";
+import {PrivacyPage} from "@/features/content/legal-pages";
 import {buildMeta} from "../helpers";
 
 export {Error404Page as ErrorBoundary} from "../pages";
@@ -11,5 +11,5 @@ export function meta() {
 }
 
 export default function Page() {
-    return <ComingSoonPage title="Privacy policy"/>;
+    return <PrivacyPage/>;
 }

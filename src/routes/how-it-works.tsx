@@ -1,5 +1,5 @@
-import {ComingSoonPage} from "../pages";
+import {HowItWorksPage} from "@/features/content/how-it-works-page";
 
 export default function Page() {
-    return <ComingSoonPage title="How it works"/>;
+    return <HowItWorksPage/>;
 }
