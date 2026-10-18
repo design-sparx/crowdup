@@ -39,9 +39,9 @@ Delete every Mantine screen and rebuild the UI around three journeys (donor, org
 | 13 | Manage campaign | Done | `1024888`..`89d31be`, fixes `947a393`, `c135525` |
 | 14 | Admin inbox | Done. Five tabs with counts; every action button disables while pending | `8d5f9dd`..`524a1ac` |
 | 15 | Content pages (how it works, terms, privacy, security) | Done. Legal text is the operator template from `legal.ts`, with a template notice | `c12ed73`..`3b0b8e4`, fix `e22c6b7` |
-| 16 | Final cleanup, docs, full verification | Not started | |
+| 16 | Final cleanup, docs, full verification | Done. Mantine and Lucide gone; placeholder deleted; docs updated; full verification passes; admin tabs fixed for phones | `8a2b16a`..`27fc94d`, fix `71f2078` |
 
-**Current health (as of `e22c6b7`):** lint clean, 113 test files / 586 tests pass, build exits 0, e2e (auth, donations, thanks, donate, campaigns, smoke, create-campaign, dashboard, lifecycle, admin): 39 passed, 1 skipped (Stripe checkout, needs a Stripe test key).
+**Current health (as of `27fc94d`):** lint clean, 113 test files / 587 tests pass, build exits 0, `pnpm test:db` 193 pgTAP tests pass, e2e (full suite) 43 passed, 1 skipped (Stripe checkout, needs a Stripe test key).
 
 No route shows the "being rebuilt" placeholder any more. The legal pages show a template notice until the operator reviews them.
 
@@ -72,6 +72,7 @@ Also note: `/signup` and `/login` are placeholders until Task 8, so any link to 
 - Old plan file paths are stale (see table above). Task 16 updates `AGENTS.md`'s Architecture section (still mentions Mantine, barrels, `src/pages`).
 - Untracked agent report files in `docs/superpowers/plans/` (`*-report.md`): delete or commit as you like.
 - Re-enable pushing only when you decide: `git remote set-url --push origin https://github.com/design-sparx/crowdup.git`.
+- Running `pnpm test:db` resets the local database and does not reload the demo passwords. Reapply `supabase/demo-seed.sql` before the sign-in e2e specs.
 
 ## Pre-merge checklist (do in Task 16)
 
