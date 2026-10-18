@@ -10,9 +10,9 @@ import type {Route} from "./+types/create-campaign";
 
 export async function loader({request}: Route.LoaderArgs) {
     const {user, supabase, headers} = await requireUserClient(request);
-    const {currency} = await readConnectSummary(supabase, user.id);
+    const {currency, status} = await readConnectSummary(supabase, user.id);
     const own = await getOwnSuspension(supabase, user.id);
-    return data({currency, moderationNotice: userSuspensionNotice(own.suspended, own.reason)}, {headers});
+    return data({currency, status, moderationNotice: userSuspensionNotice(own.suspended, own.reason)}, {headers});
 }
 
 export async function action({request}: Route.ActionArgs) {
@@ -27,11 +27,12 @@ export async function action({request}: Route.ActionArgs) {
 }
 
 export default function CreateCampaign() {
-    const {currency, moderationNotice} = useLoaderData<typeof loader>();
+    const {currency, status, moderationNotice} = useLoaderData<typeof loader>();
     const actionData = useActionData<typeof action>() as {errors?: Record<string, string | undefined>} | undefined;
     return (
         <CreateCampaignPage
             currency={currency}
+            stripeStatus={status}
             errors={actionData?.errors ?? {}}
             defaults={{}}
             storyHtml=""

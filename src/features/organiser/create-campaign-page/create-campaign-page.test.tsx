@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import {renderWithRouter} from "@/test/render-with-router";
 import {CreateCampaignPage} from "./create-campaign-page";
 
-const base = {currency: null, errors: {}, defaults: {}, storyHtml: "", notice: null};
+const base = {currency: null, stripeStatus: "connected" as const, errors: {}, defaults: {}, storyHtml: "", notice: null};
 
 describe("CreateCampaignPage", () => {
     it("starts on the basics step with one h1 and a save button", () => {
@@ -50,5 +50,15 @@ describe("CreateCampaignPage", () => {
         rerender(<RouterProvider router={second}/>);
         expect(await screen.findByText(/Enter a goal greater than zero/)).toBeVisible();
         expect(screen.getByLabelText("Goal amount")).toBeVisible();
+    });
+
+    it("asks the organiser to connect Stripe before the draft can be published", () => {
+        renderWithRouter(<CreateCampaignPage {...base} stripeStatus="not_started"/>);
+        expect(screen.getByRole("button", {name: "Connect Stripe"})).toBeInTheDocument();
+    });
+
+    it("shows no Stripe prompt once connected", () => {
+        renderWithRouter(<CreateCampaignPage {...base} stripeStatus="connected" currency="GBP"/>);
+        expect(screen.queryByRole("button", {name: "Connect Stripe"})).not.toBeInTheDocument();
     });
 });

@@ -7,12 +7,15 @@ import {GoalStep} from "@/features/organiser/goal-step";
 import {PreviewStep} from "@/features/organiser/preview-step";
 import {StepIndicator} from "@/features/organiser/step-indicator";
 import {StoryStep} from "@/features/organiser/story-step";
+import {StripeStatus} from "@/features/organiser/stripe-status";
 import {firstStepWithError, WIZARD_STEPS} from "@/lib/campaigns/wizard";
 import type {StoryDoc} from "@/lib/campaigns/story-doc";
 
 interface CreateCampaignPageProps {
     /** Campaign currency from the organiser's Stripe account, or null until connected. */
     currency: string | null;
+    /** Stripe onboarding state. A draft can be saved without Stripe, but publishing needs it connected. */
+    stripeStatus: "not_started" | "incomplete" | "connected";
     /** Field errors from the last save; the page opens on the step that holds the first one. */
     errors: Record<string, string | undefined>;
     defaults: {
@@ -28,7 +31,7 @@ interface CreateCampaignPageProps {
  * The guided new-campaign form. Every step is a panel inside ONE <Form>, so the final submit posts
  * every field once and the server stays the source of truth. Next and Back only move between panels.
  */
-export function CreateCampaignPage({currency, errors, defaults, storyHtml, notice}: CreateCampaignPageProps) {
+export function CreateCampaignPage({currency, stripeStatus, errors, defaults, storyHtml, notice}: CreateCampaignPageProps) {
     const firstError = firstStepWithError(errors);
     const [step, setStep] = useState(firstError ?? 0);
     // A failed save returns new errors to this already-mounted page. When the step holding the first
@@ -72,6 +75,7 @@ export function CreateCampaignPage({currency, errors, defaults, storyHtml, notic
                     <AlertDescription>{notice}</AlertDescription>
                 </Alert>
             ) : null}
+            {stripeStatus !== "connected" ? <StripeStatus status={stripeStatus} currency={currency}/> : null}
             <Form ref={formRef} method="post" encType="multipart/form-data" aria-label="Create a campaign" className="space-y-8">
                 <div hidden={step !== 0}>
                     <BasicsStep
