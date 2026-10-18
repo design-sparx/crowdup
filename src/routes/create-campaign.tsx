@@ -1,8 +1,8 @@
-import {data} from "react-router";
+import {data, useActionData, useLoaderData} from "react-router";
 import {getOwnSuspension} from "../data-access/moderation/moderation.server";
 import {userSuspensionNotice} from "../lib/moderation/moderation";
 import {renderStoryPreview} from "../lib/campaigns/preview";
-import {ComingSoonPage} from "../pages";
+import {CreateCampaignPage} from "@/features/organiser/create-campaign-page";
 import {requireUserClient} from "../data-access/auth/auth.server";
 import {readConnectSummary} from "../data-access/stripe/connect.server";
 import {handleCampaignForm} from "../data-access/campaigns/campaignFormAction.server";
@@ -27,7 +27,17 @@ export async function action({request}: Route.ActionArgs) {
 }
 
 export default function CreateCampaign() {
-    return <ComingSoonPage title="Create a campaign"/>;
+    const {currency, moderationNotice} = useLoaderData<typeof loader>();
+    const actionData = useActionData<typeof action>() as {errors?: Record<string, string | undefined>} | undefined;
+    return (
+        <CreateCampaignPage
+            currency={currency}
+            errors={actionData?.errors ?? {}}
+            defaults={{}}
+            storyHtml=""
+            notice={moderationNotice}
+        />
+    );
 }
 
 export {Error404Page as ErrorBoundary} from "../pages";
