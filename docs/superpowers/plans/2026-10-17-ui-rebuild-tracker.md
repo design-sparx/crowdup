@@ -29,21 +29,23 @@ Delete every Mantine screen and rebuild the UI around three journeys (donor, org
 | 3 | Shell, theme switch, error pages | Done | `854232d`..`e5923c1`, fixes `4d7a554` |
 | 4 | Home and browse | Done | `3b59f46`..`056e047`, fixes `7d65ecd`, `8b454ad`, `9794e74`, `4dc9f65` |
 | 5 | Campaign page with built-in donate panel | Done | `6a7e0d5`..`29441df`, fixes `6f4ad51`, `04543e0`, `da27587` |
-| 6 | Thank-you route and Stripe return URL | **Next** (researched, no handover yet; see below) | |
-| 7 | My donations | Not started | |
-| 8 | Sign-in screens (login, signup, forgot, reset) | Not started | |
-| 9 | Story editor and cover upload components | Not started | |
-| 10 | New campaign, guided steps | Not started | |
-| 11 | Connect Stripe and publish result | Not started | |
-| 12 | Dashboard | Not started | |
-| 13 | Manage campaign | Not started | |
+| 6 | Thank-you route and Stripe return URL | Done. Share link fixed (shares the campaign URL from `SITE_URL`) | `0537377`..`52dd044`, fixes `0166e7a`, `c77bca3` |
+| 7 | My donations | Done. Signed-in e2e passes (seed links Dana's donations to her account) | `1f2dd8e`..`9636eaf`, fix `c891811` |
+| 8 | Sign-in screens (login, signup, forgot, reset) | Done. Server rejects signups without consent | `3eed159`..`2072d8f`, fixes `f5dc7cb`, `6120d29` |
+| 9 | Story editor and cover upload components | Done (wired into the Task 10 form) | `55a0dd0`..`2e74f7e`, fixes `2172423`, `719d316` |
+| 10 | New campaign, guided steps | Done | `05a3e37`..`d1b46f5`, fixes `4031ed9`, `c1cc652` |
+| 11 | Connect Stripe and publish result | Done (components and Stripe prompt; publish result shows on the manage page) | `229f2f9`, `25e0264`, `e62d93b` |
+| 12 | Dashboard | Done | `ce36ef4`..`b63aa53` |
+| 13 | Manage campaign | Done | `1024888`..`89d31be`, fixes `947a393`, `c135525` |
 | 14 | Admin inbox | Not started | |
 | 15 | Content pages (how it works, terms, privacy, security) | Not started | |
 | 16 | Final cleanup, docs, full verification | Not started | |
 
-**Current health (as of `da27587`):** lint clean, 66 test files / 434 tests pass, build exits 0, e2e `campaigns` + `donate` + `reports` + `smoke`: 17 passed, 1 skipped (Stripe checkout).
+**Current health (as of `89d31be`):** lint clean, 103 test files / 553 tests pass, build exits 0, e2e (auth, donations, thanks, donate, campaigns, smoke, create-campaign, dashboard, lifecycle): 33 passed, 1 skipped (Stripe checkout, needs a Stripe test key).
 
-Routes still showing the "being rebuilt" placeholder (`ComingSoonPage`): `/login`, `/signup`, `/forgot-password`, `/update-password`, `/how-it-works`, `/terms`, `/privacy`, `/security`, `/dashboard`, `/dashboard/donations`, `/create-campaign`, `/campaigns/:id/edit`, all `/admin/*`. The old Playwright specs for those (`auth`, `dashboard`, `donations`, `create-campaign`, `lifecycle`, `approval`, `moderation`) **fail or skip until their screens are rebuilt**. That is expected.
+Routes still showing the "being rebuilt" placeholder (`ComingSoonPage`): all `/admin/*` routes (Task 14) and `/how-it-works`, `/terms`, `/privacy`, `/security` (Task 15). Every other route is rebuilt.
+
+The old Playwright specs for the admin routes (`approval`, `moderation`, `reports`) fail or skip until Task 14 rebuilds them.
 
 ## Task 6: what the next session must know
 
