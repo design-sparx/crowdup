@@ -4,8 +4,11 @@ import {cn} from "@/lib/utils";
 
 export type InboxTab = "reports" | "approvals" | "payments" | "campaigns" | "users";
 
+/** Only these tabs have something waiting to count; campaigns and users have no badge. */
+export type CountedTab = "reports" | "approvals" | "payments";
+
 interface InboxTabsProps {
-    counts: Record<InboxTab, number>;
+    counts: Record<CountedTab, number>;
     current: InboxTab;
 }
 
@@ -23,7 +26,7 @@ export function InboxTabs({counts, current}: InboxTabsProps) {
         <nav aria-label="Admin" className="flex gap-1 border-b">
             {TABS.map((tab) => {
                 const active = tab.id === current;
-                const count = counts[tab.id];
+                const count = tab.id in counts ? counts[tab.id as CountedTab] : 0;
                 return (
                     <Link
                         key={tab.id}
