@@ -21,3 +21,11 @@ test("the theme choice survives a reload", async ({page}) => {
     await page.reload();
     await expect(page.locator("html")).toHaveClass(/dark/);
 });
+
+test("each content page returns 200 with exactly one h1", async ({page}) => {
+    for (const path of ["/how-it-works", "/terms", "/privacy", "/security"]) {
+        const response = await page.goto(path);
+        expect(response?.status(), path).toBe(200);
+        await expect(page.locator("h1"), path).toHaveCount(1);
+    }
+});
