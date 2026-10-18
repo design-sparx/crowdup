@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {useEditor, EditorContent, type Editor} from "@tiptap/react";
-import {IconBold, IconItalic, IconList, IconH2, IconH3, IconLink} from "@tabler/icons-react";
+import {IconBold, IconItalic, IconList, IconH2, IconH3} from "@tabler/icons-react";
 import {Toggle} from "@/components/ui/toggle";
 import {storyExtensions} from "@/lib/campaigns/storyExtensions";
 import {EMPTY_STORY, type StoryDoc} from "@/lib/campaigns/story";
