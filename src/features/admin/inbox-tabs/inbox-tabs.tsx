@@ -23,7 +23,7 @@ const TABS: {id: InboxTab; label: string; href: string}[] = [
 /** The admin inbox's tab bar. A count badge shows only when there is something waiting. */
 export function InboxTabs({counts, current}: InboxTabsProps) {
     return (
-        <nav aria-label="Admin" className="flex gap-1 border-b">
+        <nav aria-label="Admin" className="flex gap-1 overflow-x-auto border-b">
             {TABS.map((tab) => {
                 const active = tab.id === current;
                 const count = tab.id in counts ? counts[tab.id as CountedTab] : 0;
@@ -33,7 +33,7 @@ export function InboxTabs({counts, current}: InboxTabsProps) {
                         to={tab.href}
                         aria-current={active ? "page" : undefined}
                         className={cn(
-                            "-mb-px flex items-center gap-2 border-b-2 px-3 py-2 text-sm",
+                            "-mb-px flex shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-3 py-2 text-sm",
                             active ? "border-primary font-semibold text-foreground" : "border-transparent text-muted-foreground hover:text-foreground",
                         )}
                     >

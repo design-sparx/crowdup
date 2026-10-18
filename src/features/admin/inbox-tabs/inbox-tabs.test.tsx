@@ -27,4 +27,13 @@ describe("InboxTabs", () => {
         expect(screen.getByRole("link", {name: /Approvals/})).toHaveAttribute("aria-current", "page");
         expect(screen.getByRole("link", {name: /Reports/})).not.toHaveAttribute("aria-current");
     });
+
+    it("keeps the tab row inside its own box on narrow screens, so it cannot widen the page", () => {
+        renderWithRouter(<InboxTabs counts={{reports: 0, approvals: 0, payments: 0}} current="reports"/>);
+        const nav = screen.getByRole("navigation", {name: "Admin"});
+        // Five tabs do not fit a phone; the row scrolls sideways inside itself instead of widening the page.
+        expect(nav.className).toMatch(/overflow-x-auto/);
+        // Each tab keeps its label on one line, so a tab never wraps into two rows.
+        expect(screen.getByRole("link", {name: /Reports/}).className).toMatch(/whitespace-nowrap/);
+    });
 });
