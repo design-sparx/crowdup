@@ -1,5 +1,5 @@
-import {ComingSoonPage} from "../pages";
-import {data, type ActionFunctionArgs} from "react-router";
+import {data, useActionData, type ActionFunctionArgs} from "react-router";
+import {ForgotPasswordPage} from "@/features/auth/forgot-password-page";
 import {requestPasswordReset} from "../data-access/auth/auth.server";
 
 export async function action({request}: ActionFunctionArgs) {
@@ -10,5 +10,6 @@ export async function action({request}: ActionFunctionArgs) {
 export {Error404Page as ErrorBoundary} from "../pages";
 
 export default function Page() {
-    return <ComingSoonPage title="Forgot password"/>;
+    const actionData = useActionData<typeof action>();
+    return <ForgotPasswordPage message={actionData?.message}/>;
 }
