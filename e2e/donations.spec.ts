@@ -1,20 +1,10 @@
 import {expect, test} from "@playwright/test";
 
-// NOT RUN: requires a running local Supabase with supabase/seed.sql applied, a password for
-// dana@crowdup.example, and donation rows with donor_user_id set for her.
-test.skip(true, "needs local Supabase with a password for dana@crowdup.example");
+// Signed-out visitors are redirected to login, with the page as `next`.
+// The signed-in test is added after the sign-in screens exist (Task 8); the seed does not yet
+// link donor rows to a user (donor_user_id is null), so a signed-in donor would see no rows.
 
-test("signed-out visitors are sent to login", async ({page}) => {
+test("signed-out visitors are sent to login with a safe next", async ({page}) => {
     await page.goto("/dashboard/donations");
-    await expect(page).toHaveURL(/\/login/);
-});
-
-test("donor sees only their own donations", async ({page}) => {
-    await page.goto("/login");
-    await page.getByLabel("Email").fill("dana@crowdup.example");
-    await page.getByRole("textbox", {name: "Password"}).fill(process.env.E2E_DONOR_PASSWORD ?? "");
-    await page.getByRole("button", {name: /log in|sign in/i}).click();
-    await page.goto("/dashboard/donations");
-    await expect(page.getByRole("heading", {name: "My donations"})).toBeVisible();
-    await expect(page.getByText("kofi@crowdup.example")).toHaveCount(0);
+    await expect(page).toHaveURL(/\/login\?next=%2Fdashboard%2Fdonations/);
 });
