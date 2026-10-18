@@ -31,6 +31,11 @@ interface CreateCampaignPageProps {
 export function CreateCampaignPage({currency, errors, defaults, storyHtml, notice}: CreateCampaignPageProps) {
     const firstError = firstStepWithError(errors);
     const [step, setStep] = useState(firstError ?? 0);
+    // A failed save returns new errors to this already-mounted page, so move to the step holding
+    // the first one each time the errors change, not only on the first render.
+    useEffect(() => {
+        if (firstError !== null) setStep(firstError);
+    }, [firstError]);
     const preview = useFetcher<{html: string}>();
     const isPreview = WIZARD_STEPS[step].id === "preview";
     const last = WIZARD_STEPS.length - 1;

@@ -37,4 +37,18 @@ describe("CreateCampaignPage", () => {
         renderWithRouter(<CreateCampaignPage {...base}/>);
         expect(screen.getByRole("form", {name: "Create a campaign"})).toBeInTheDocument();
     });
+
+    it("jumps to the step with the error when the errors change after a failed save", async () => {
+        const {createMemoryRouter, RouterProvider} = await import("react-router");
+        const {render} = await import("@testing-library/react");
+        const router = (ui: React.ReactElement) => createMemoryRouter([{path: "*", element: ui}], {initialEntries: ["/"]});
+        const first = router(<CreateCampaignPage {...base}/>);
+        const {rerender} = render(<RouterProvider router={first}/>);
+        expect(screen.getByRole("button", {name: "Next"})).toBeInTheDocument();
+        // A save comes back with a goal error while the page is already open on the basics step.
+        const second = router(<CreateCampaignPage {...base} errors={{goal: "Enter a goal greater than zero, with a valid number of decimals."}}/>);
+        rerender(<RouterProvider router={second}/>);
+        expect(await screen.findByText(/Enter a goal greater than zero/)).toBeVisible();
+        expect(screen.getByLabelText("Goal amount")).toBeVisible();
+    });
 });
