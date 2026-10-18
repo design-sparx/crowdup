@@ -28,7 +28,7 @@ What is built today (see [Known limitations](#known-limitations) for what is not
 ## Tech stack
 
 - [React Router 8](https://reactrouter.com/) framework mode (SSR), React 19, TypeScript 6, Vite 8
-- [Mantine 9](https://mantine.dev/), Tiptap editor, ApexCharts
+- [Tailwind CSS 4](https://tailwindcss.com/) with [shadcn/ui](https://ui.shadcn.com/) on [Base UI](https://base-ui.com/), Tiptap editor, Recharts
 - [Supabase](https://supabase.com/): Postgres with row-level security, Auth, Storage
 - [Stripe](https://stripe.com/) Connect
 - Netlify (SSR via `@netlify/vite-plugin-react-router`)
