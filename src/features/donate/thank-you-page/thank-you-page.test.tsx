@@ -4,7 +4,7 @@ import {screen} from "@testing-library/react";
 import {renderWithRouter} from "@/test/render-with-router";
 import {ThankYouPage} from "./thank-you-page";
 
-const base = {campaign: {title: "Clean water for schools", slug: "clean-water"}, signedIn: false};
+const base = {campaign: {title: "Clean water for schools", slug: "clean-water"}, signedIn: false, campaignUrl: "https://crowdup.example/campaigns/clean-water"};
 
 describe("ThankYouPage", () => {
     it("has one h1 that thanks the donor and names the campaign", () => {
@@ -38,5 +38,12 @@ describe("ThankYouPage", () => {
     it("shows the My donations link to signed-in visitors", () => {
         renderWithRouter(<ThankYouPage {...base} signedIn/>);
         expect(screen.getByRole("link", {name: "View my donations"})).toHaveAttribute("href", "/dashboard/donations");
+    });
+
+    it("shares the campaign page, not the thank-you page", () => {
+        renderWithRouter(<ThankYouPage {...base}/>);
+        const whatsapp = screen.getByRole("link", {name: "WhatsApp"});
+        expect(whatsapp).toHaveAttribute("href", expect.stringContaining(encodeURIComponent("https://crowdup.example/campaigns/clean-water")));
+        expect(whatsapp.getAttribute("href")).not.toContain("thanks");
     });
 });

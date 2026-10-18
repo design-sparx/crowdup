@@ -6,13 +6,15 @@ import {ShareButtons} from "@/features/donate/share-buttons";
 interface ThankYouPageProps {
     campaign: {title: string; slug: string};
     signedIn: boolean;
+    /** Absolute URL of the campaign page, built on the server from SITE_URL. Shares link here, not to this page. */
+    campaignUrl: string;
 }
 
 /**
  * Where Stripe sends donors after paying. It deliberately shows no amount and makes no claim that a
  * donation exists: the webhook records it, maybe after this page loads, and anyone can open this URL.
  */
-export function ThankYouPage({campaign, signedIn}: ThankYouPageProps) {
+export function ThankYouPage({campaign, signedIn, campaignUrl}: ThankYouPageProps) {
     return (
         <div className="mx-auto max-w-xl px-4 py-16 text-center">
             <div className="mx-auto mb-6 flex size-14 items-center justify-center rounded-full bg-muted text-primary">
@@ -22,7 +24,7 @@ export function ThankYouPage({campaign, signedIn}: ThankYouPageProps) {
             <p className="mt-3 text-muted-foreground">
                 Thanks for supporting {campaign.title}. Sharing it helps it reach more people.
             </p>
-            <ShareButtons title={campaign.title} className="mt-6 justify-center"/>
+            <ShareButtons title={campaign.title} url={campaignUrl} className="mt-6 justify-center"/>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
                 <Link to={`/campaigns/${encodeURIComponent(campaign.slug)}`} className={buttonVariants()}>
                     Back to the campaign
