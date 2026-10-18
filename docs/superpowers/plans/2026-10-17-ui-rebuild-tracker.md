@@ -37,15 +37,15 @@ Delete every Mantine screen and rebuild the UI around three journeys (donor, org
 | 11 | Connect Stripe and publish result | Done (components and Stripe prompt; publish result shows on the manage page) | `229f2f9`, `25e0264`, `e62d93b` |
 | 12 | Dashboard | Done | `ce36ef4`..`b63aa53` |
 | 13 | Manage campaign | Done | `1024888`..`89d31be`, fixes `947a393`, `c135525` |
-| 14 | Admin inbox | Not started | |
+| 14 | Admin inbox | Done. Five tabs with counts; every action button disables while pending | `8d5f9dd`..`524a1ac` |
 | 15 | Content pages (how it works, terms, privacy, security) | Not started | |
 | 16 | Final cleanup, docs, full verification | Not started | |
 
-**Current health (as of `89d31be`):** lint clean, 103 test files / 553 tests pass, build exits 0, e2e (auth, donations, thanks, donate, campaigns, smoke, create-campaign, dashboard, lifecycle): 33 passed, 1 skipped (Stripe checkout, needs a Stripe test key).
+**Current health (as of `524a1ac`):** lint clean, 110 test files / 576 tests pass, build exits 0, e2e (auth, donations, thanks, donate, campaigns, smoke, create-campaign, dashboard, lifecycle, admin): 38 passed, 1 skipped (Stripe checkout, needs a Stripe test key).
 
-Routes still showing the "being rebuilt" placeholder (`ComingSoonPage`): all `/admin/*` routes (Task 14) and `/how-it-works`, `/terms`, `/privacy`, `/security` (Task 15). Every other route is rebuilt.
+Routes still showing the "being rebuilt" placeholder (`ComingSoonPage`): `/how-it-works`, `/terms`, `/privacy`, `/security` (Task 15). Every other route is rebuilt, including the admin inbox.
 
-The old Playwright specs for the admin routes (`approval`, `moderation`, `reports`) fail or skip until Task 14 rebuilds them.
+The admin specs are rewritten for the tabbed inbox (`e2e/admin.spec.ts`). The approve, reject, suspend and restore actions are covered by component tests, not end to end, since they change shared seed data.
 
 ## Task 6: what the next session must know
 
