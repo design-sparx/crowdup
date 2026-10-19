@@ -1,5 +1,5 @@
 import {data} from "react-router";
-import {MyDonationsPage} from "../pages";
+import {MyDonationsPage} from "@/features/donate/my-donations-page";
 import {requireUserClient} from "../data-access/auth/auth.server";
 import {listMyDonations} from "../data-access/donations/history";
 import type {Route} from "./+types/my-donations";

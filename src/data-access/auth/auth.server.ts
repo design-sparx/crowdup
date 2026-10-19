@@ -1,6 +1,7 @@
 import {redirect} from "react-router";
 import {createSupabaseServerClient, siteOrigin} from "./supabase.server";
 import {safeRedirect} from "./safeRedirect";
+import {consentAccepted} from "./signup-consent";
 
 import type {AuthActionResult} from "./index";
 
@@ -51,6 +52,9 @@ export async function signUpWithPassword(request: Request, form: FormData) {
     const name = field(form, "name");
     if (!email || password.length < 8) {
         return {result: {error: "Enter an email and a password of at least 8 characters."} as AuthActionResult, headers};
+    }
+    if (!consentAccepted(form)) {
+        return {result: {error: "Tick the box to agree to the Terms and Privacy Policy."} as AuthActionResult, headers};
     }
     const {data, error} = await supabase.auth.signUp({
         email,

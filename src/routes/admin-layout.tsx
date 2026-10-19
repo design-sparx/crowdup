@@ -1,4 +1,5 @@
-import {data, type LoaderFunctionArgs} from "react-router";
+import {data, Outlet, useLocation, useLoaderData, type LoaderFunctionArgs} from "react-router";
+import {InboxTabs, type InboxTab} from "@/features/admin/inbox-tabs";
 import {countPendingCampaigns} from "../data-access/campaigns/approval.server";
 import {countOpenUnmatched} from "../data-access/payments/unmatched.server";
 import {getAdminContext, listOpenReportGroups} from "../data-access/reports/reports.server";
@@ -18,5 +19,30 @@ export async function loader({request}: LoaderFunctionArgs) {
     return data({openCount, pendingCount, unmatchedCount}, {headers: admin.headers});
 }
 
-export {AdminLayout as default} from "../layout";
 export {Error404Page as ErrorBoundary} from "../pages";
+
+const TAB_BY_PATH: Record<string, InboxTab> = {
+    "/admin/reports": "reports",
+    "/admin/approvals": "approvals",
+    "/admin/payments": "payments",
+    "/admin/campaigns": "campaigns",
+    "/admin/users": "users",
+};
+
+export default function Layout() {
+    const {openCount, pendingCount, unmatchedCount} = useLoaderData<typeof loader>();
+    const {pathname} = useLocation();
+    const current = TAB_BY_PATH[pathname] ?? "reports";
+    return (
+        <div className="mx-auto max-w-5xl space-y-6 px-4 py-8">
+            <header>
+                <h1 className="text-3xl font-semibold">Admin</h1>
+            </header>
+            <InboxTabs
+                counts={{reports: openCount, approvals: pendingCount, payments: unmatchedCount}}
+                current={current}
+            />
+            <Outlet/>
+        </div>
+    );
+}

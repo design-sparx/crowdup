@@ -102,6 +102,8 @@ export async function listCampaigns(
     const {data, error, count} = await query
         .order("published_at", {ascending: false})
         .range(from, from + pageSize - 1);
+    // PostgREST rejects an offset past the last row (416); show an empty page, not a 500.
+    if (error?.code === "PGRST103") return {items: [], total: 0};
     if (error) fail(error);
 
     const rows = (data ?? []) as CampaignRow[];

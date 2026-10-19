@@ -1,5 +1,6 @@
-import {data, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
+import {useActionData, useLoaderData, data, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
 import {dismissReports, getAdminContext, listOpenReportGroups} from "../data-access/reports/reports.server";
+import {ReportsTab} from "@/features/admin/reports-tab";
 
 export async function loader({request}: LoaderFunctionArgs) {
     const admin = await getAdminContext(request);
@@ -23,5 +24,15 @@ export async function action({request}: ActionFunctionArgs) {
     });
 }
 
-export {AdminReportsPage as default} from "../pages";
 export {Error404Page as ErrorBoundary} from "../pages";
+
+export default function Page() {
+    const {groups} = useLoaderData<typeof loader>();
+    const actionData = useActionData<typeof action>() as {error?: string} | undefined;
+    return (
+        <div className="space-y-4">
+            {actionData?.error ? <p role="alert" className="text-sm text-destructive">{actionData.error}</p> : null}
+            <ReportsTab groups={groups}/>
+        </div>
+    );
+}

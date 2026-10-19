@@ -1,9 +1,8 @@
 import {generateHTML} from "@tiptap/html/server";
 import {storyExtensions} from "./storyExtensions";
 
-export type StoryDoc = {type: "doc"; content: unknown[]};
-
-export const EMPTY_STORY: StoryDoc = {type: "doc", content: []};
+export {EMPTY_STORY, type StoryDoc} from "./story-doc";
+import {EMPTY_STORY, type StoryDoc} from "./story-doc";
 
 /** Serialised size cap for a stored story. */
 export const MAX_STORY_BYTES = 200_000;

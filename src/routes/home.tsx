@@ -1,7 +1,7 @@
 import {buildMeta} from "../helpers";
-import {HomePage} from "../pages";
 import {listCampaigns} from "../lib/campaigns/repository";
 import {createPublicClient} from "../lib/supabase/server-public";
+import {HomePage} from "@/features/donate/home-page";
 import type {Route} from "./+types/home";
 
 export async function loader() {

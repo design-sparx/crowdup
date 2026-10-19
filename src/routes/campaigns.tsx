@@ -1,9 +1,9 @@
 import {buildMeta} from "../helpers";
-import {CampaignsPage} from "../pages";
 import {DEFAULT_PAGE_SIZE, listCampaigns, listCategories} from "../lib/campaigns/repository";
 import {parseCampaignSearch} from "../lib/campaigns/params";
 import {createPublicClient} from "../lib/supabase/server-public";
 import type {Route} from "./+types/campaigns";
+import {BrowsePage} from "@/features/donate/browse-page";
 
 export async function loader({request}: Route.LoaderArgs) {
     const search = parseCampaignSearch(new URL(request.url).searchParams);
@@ -24,5 +24,5 @@ export function meta() {
 }
 
 export default function Campaigns({loaderData}: Route.ComponentProps) {
-    return <CampaignsPage {...loaderData}/>;
+    return <BrowsePage {...loaderData}/>;
 }

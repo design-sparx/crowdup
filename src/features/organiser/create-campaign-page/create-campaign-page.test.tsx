@@ -1,0 +1,64 @@
+// @vitest-environment jsdom
+import {describe, expect, it} from "vitest";
+import {screen} from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import {renderWithRouter} from "@/test/render-with-router";
+import {CreateCampaignPage} from "./create-campaign-page";
+
+const base = {currency: null, stripeStatus: "connected" as const, errors: {}, defaults: {}, storyHtml: "", notice: null};
+
+describe("CreateCampaignPage", () => {
+    it("starts on the basics step with one h1 and a save button", () => {
+        renderWithRouter(<CreateCampaignPage {...base}/>);
+        expect(screen.getByRole("heading", {level: 1, name: "Create a campaign"})).toBeInTheDocument();
+        expect(screen.getByLabelText("Title")).toBeInTheDocument();
+        // Every step stays in the form so Save posts all fields; only the inactive panels are hidden.
+        expect(screen.getByLabelText("Goal amount").closest("[hidden]")).not.toBeNull();
+        expect(screen.getByRole("button", {name: "Next"})).toBeInTheDocument();
+    });
+
+    it("moves through the steps with Next and back with Back", async () => {
+        renderWithRouter(<CreateCampaignPage {...base}/>);
+        await userEvent.click(screen.getByRole("button", {name: "Next"}));
+        expect(screen.getByRole("textbox", {name: "Story"})).toBeInTheDocument();
+        await userEvent.click(screen.getByRole("button", {name: "Next"}));
+        expect(screen.getByLabelText("Goal amount")).toBeInTheDocument();
+        await userEvent.click(screen.getByRole("button", {name: "Back"}));
+        expect(screen.getByRole("textbox", {name: "Story"})).toBeInTheDocument();
+    });
+
+    it("opens on the step that holds the first server error", () => {
+        renderWithRouter(<CreateCampaignPage {...base} errors={{goal: "Enter a goal greater than zero, with a valid number of decimals."}}/>);
+        expect(screen.getByLabelText("Goal amount")).toBeInTheDocument();
+        expect(screen.getByText(/Enter a goal greater than zero/)).toBeInTheDocument();
+    });
+
+    it("keeps every step in the one form so the final submit posts all fields once", () => {
+        renderWithRouter(<CreateCampaignPage {...base}/>);
+        expect(screen.getByRole("form", {name: "Create a campaign"})).toBeInTheDocument();
+    });
+
+    it("jumps to the step with the error when the errors change after a failed save", async () => {
+        const {createMemoryRouter, RouterProvider} = await import("react-router");
+        const {render} = await import("@testing-library/react");
+        const router = (ui: React.ReactElement) => createMemoryRouter([{path: "*", element: ui}], {initialEntries: ["/"]});
+        const first = router(<CreateCampaignPage {...base}/>);
+        const {rerender} = render(<RouterProvider router={first}/>);
+        expect(screen.getByRole("button", {name: "Next"})).toBeInTheDocument();
+        // A save comes back with a goal error while the page is already open on the basics step.
+        const second = router(<CreateCampaignPage {...base} errors={{goal: "Enter a goal greater than zero, with a valid number of decimals."}}/>);
+        rerender(<RouterProvider router={second}/>);
+        expect(await screen.findByText(/Enter a goal greater than zero/)).toBeVisible();
+        expect(screen.getByLabelText("Goal amount")).toBeVisible();
+    });
+
+    it("asks the organiser to connect Stripe before the draft can be published", () => {
+        renderWithRouter(<CreateCampaignPage {...base} stripeStatus="not_started"/>);
+        expect(screen.getByRole("button", {name: "Connect Stripe"})).toBeInTheDocument();
+    });
+
+    it("shows no Stripe prompt once connected", () => {
+        renderWithRouter(<CreateCampaignPage {...base} stripeStatus="connected" currency="GBP"/>);
+        expect(screen.queryByRole("button", {name: "Connect Stripe"})).not.toBeInTheDocument();
+    });
+});

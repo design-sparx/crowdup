@@ -1,5 +1,5 @@
 import {buildMeta} from "../helpers";
-import {CampaignDetailsPage, DetailError404Page} from "../pages";
+import {DetailError404Page} from "../pages";
 import {getCampaignBySlug, listRecentDonors, listUpdates} from "../lib/campaigns/repository";
 import {canAcceptDonations, effectiveStatus} from "../lib/campaigns/lifecycle";
 import {renderStoryHtml} from "../lib/campaigns/story";
@@ -8,6 +8,7 @@ import {data, redirect} from "react-router";
 import {startDonation} from "../data-access/donations/checkout.server";
 import {submitReport} from "../data-access/reports/reports.server";
 import type {Route} from "./+types/campaign-details";
+import {CampaignDetailsPage} from "@/features/donate/campaign-details-page";
 
 export async function action({request, params}: Route.ActionArgs) {
     const form = await request.formData();
@@ -60,15 +61,17 @@ export function meta({loaderData}: Route.MetaArgs) {
 }
 
 export default function CampaignDetails({loaderData}: Route.ComponentProps) {
-    return <CampaignDetailsPage
+    return (
+        <CampaignDetailsPage
             campaign={loaderData.campaign}
             storyHtml={loaderData.storyHtml}
             updates={loaderData.updates}
+            donors={loaderData.donors}
             ended={loaderData.status === "ended"}
             acceptingDonations={loaderData.acceptingDonations}
-            donors={loaderData.donors}
             donationReturn={loaderData.donationReturn}
-        />;
+        />
+    );
 }
 
 export {DetailError404Page as ErrorBoundary};

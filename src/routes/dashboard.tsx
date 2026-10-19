@@ -1,13 +1,11 @@
 import {data} from "react-router";
-import {Alert} from "@mantine/core";
 import {getOwnSuspension} from "../data-access/moderation/moderation.server";
 import {userSuspensionNotice} from "../lib/moderation/moderation";
-import {DashboardPage} from "../pages";
-import {StripeStatusPanel} from "../components";
 import {requireUserClient} from "../data-access/auth/auth.server";
 import {getDashboardData} from "../data-access/campaigns/dashboard";
 import {getPublishingMode, readConnectSummary} from "../data-access/stripe/connect.server";
 import type {Route} from "./+types/dashboard";
+import {DashboardPage} from "@/features/organiser/dashboard-page";
 
 export async function loader({request}: Route.LoaderArgs) {
     const {user, supabase, headers} = await requireUserClient(request);
@@ -26,22 +24,18 @@ export async function loader({request}: Route.LoaderArgs) {
 }
 
 export default function Dashboard({loaderData}: Route.ComponentProps) {
-    const {connect, mode, notice, moderationNotice, ...rest} = loaderData;
+    const {campaigns, donations, name, now, connect, mode, notice, moderationNotice} = loaderData;
     return (
         <DashboardPage
-            {...rest}
-            stripePanel={
-                <>
-                    {moderationNotice && <Alert color="red" title="Account suspended">{moderationNotice}</Alert>}
-                    <StripeStatusPanel
-                        status={connect.status}
-                        currency={connect.currency}
-                        mode={mode}
-                        campaigns={rest.campaigns}
-                        notice={notice}
-                    />
-                </>
-            }
+            name={name}
+            campaigns={campaigns}
+            donations={donations}
+            stripeStatus={connect.status}
+            currency={connect.currency}
+            moderationNotice={moderationNotice}
+            notice={notice}
+            mode={mode}
+            now={now}
         />
     );
 }

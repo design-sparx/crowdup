@@ -101,6 +101,16 @@ describe("listCampaigns", () => {
         const {client} = fakeClient({data: null, error: {message: "boom"}});
         await expect(listCampaigns(client, {page: 1})).rejects.toThrow("boom");
     });
+
+    // PostgREST answers 416 / PGRST103 when the offset is past the last row; a visitor typing
+    // ?page=99 must get an empty page, not a server error.
+    it("returns an empty list when the page is past the last result", async () => {
+        const {client} = fakeClient({
+            data: null,
+            error: {message: "Requested range not satisfiable", code: "PGRST103"} as {message: string},
+        });
+        await expect(listCampaigns(client, {page: 99})).resolves.toEqual({items: [], total: 0});
+    });
 });
 
 describe("getCampaignBySlug", () => {

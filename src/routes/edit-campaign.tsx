@@ -1,7 +1,10 @@
-import {data} from "react-router";
-import {Alert, Container} from "@mantine/core";
-import {CampaignLifecyclePanel} from "../components";
-import {CreateCampaignPage} from "../pages";
+import {data, useActionData, useLoaderData} from "react-router";
+import {ManageCampaignPage} from "@/features/organiser/manage-campaign-page";
+import type {PublishOutcome} from "@/features/organiser/publish-result";
+import {campaignPageUrl} from "../lib/campaigns/campaign-url";
+import {readConnectSummary} from "../data-access/stripe/connect.server";
+import {goalToInput} from "../lib/campaigns/goal";
+import {listRecentDonors} from "../lib/campaigns/repository";
 import {requireUserClient} from "../data-access/auth/auth.server";
 import {
     closeCampaign,
@@ -13,7 +16,6 @@ import {handleCampaignForm} from "../data-access/campaigns/campaignFormAction.se
 import {getOwnSuspension} from "../data-access/moderation/moderation.server";
 import {campaignSuspensionNotice, userSuspensionNotice} from "../lib/moderation/moderation";
 import {listUpdates} from "../lib/campaigns/repository";
-import {goalToInput} from "../lib/campaigns/goal";
 import {parseUpdateBody} from "../lib/campaigns/updates";
 import type {Route} from "./+types/edit-campaign";
 
@@ -29,7 +31,10 @@ export async function loader({request, params}: Route.LoaderArgs) {
     const notice =
         campaignSuspensionNotice(campaign.status, campaign.suspendedReason) ??
         userSuspensionNotice(own.suspended, own.reason);
-    return data({campaign, saved, publish, updates, moderationNotice: notice}, {headers});
+    const connect = await readConnectSummary(supabase, user.id);
+    const donors = await listRecentDonors(supabase, campaign.id);
+    const publicUrl = campaignPageUrl(campaign.slug, process.env.SITE_URL, request.url, process.env.NODE_ENV === "production");
+    return data({campaign, saved, publish, updates, moderationNotice: notice, connect, publicUrl, donors}, {headers});
 }
 
 export async function action({request, params}: Route.ActionArgs) {
@@ -59,47 +64,42 @@ export async function action({request, params}: Route.ActionArgs) {
     return handleCampaignForm({request, supabase, userId: user.id, headers, campaignId: params.id});
 }
 
-export default function EditCampaign({loaderData, actionData}: Route.ComponentProps) {
-    const {campaign, saved, publish, updates, moderationNotice} = loaderData;
-    const result = actionData as
-        | {errors?: Record<string, string>; lifecycleNotice?: string; lifecycleError?: string}
+const PUBLISH_OUTCOMES: readonly PublishOutcome[] = ["live", "awaiting_approval", "not_connected", "bad_goal"];
+
+export default function EditCampaign() {
+    const {campaign, saved, publish, updates, moderationNotice, connect, publicUrl, donors} = useLoaderData<typeof loader>();
+    const actionData = useActionData<typeof action>() as
+        | {errors?: Record<string, string | undefined>; lifecycleNotice?: string; lifecycleError?: string}
         | undefined;
-    // The loader revalidates after each action, so the status shown is already current.
+    // Only the four known outcomes reach the page, so an unexpected ?publish= value is ignored.
+    const outcome = PUBLISH_OUTCOMES.find((o) => o === publish) ?? null;
     return (
-        <>
-            {moderationNotice && (
-                <Container size="md" mt={36}>
-                    <Alert color="red" title="Moderation notice">{moderationNotice}</Alert>
-                </Container>
-            )}
-            <CreateCampaignPage
-                mode="edit"
-                status={campaign.status}
-                rejectionReason={campaign.rejectionReason}
-                saved={saved}
-                publish={publish}
-                errors={result?.errors}
-                values={{
-                    title: campaign.title,
-                    category: campaign.category,
-                    country: campaign.country,
-                    description: campaign.description,
-                    goal: goalToInput(campaign.goalAmount, campaign.currency),
-                    currency: campaign.currency,
-                    endDate: campaign.endDate ? campaign.endDate.slice(0, 10) : "",
-                    story: campaign.story,
-                    coverImageUrl: campaign.coverImageUrl,
-                }}
-            />
-            {!["draft", "pending_approval", "rejected"].includes(campaign.status) && (
-                <CampaignLifecyclePanel
-                    status={campaign.status}
-                    updates={updates}
-                    notice={result?.lifecycleNotice}
-                    error={result?.lifecycleError}
-                />
-            )}
-        </>
+        <ManageCampaignPage
+            campaignId={campaign.id}
+            title={campaign.title}
+            status={campaign.status}
+            updates={updates}
+            donors={donors}
+            publish={outcome}
+            saved={saved}
+            moderationNotice={moderationNotice}
+            lifecycleNotice={actionData?.lifecycleNotice ?? null}
+            lifecycleError={actionData?.lifecycleError ?? null}
+            formErrors={actionData?.errors ?? {}}
+            currency={campaign.currency}
+            stripeStatus={connect.status}
+            defaults={{
+                title: campaign.title,
+                category: campaign.category,
+                country: campaign.country,
+                description: campaign.description,
+                goal: goalToInput(campaign.goalAmount, campaign.currency),
+                endDate: campaign.endDate ? campaign.endDate.slice(0, 10) : undefined,
+                coverUrl: campaign.coverImageUrl ?? undefined,
+            }}
+            storyHtml=""
+            publicUrl={publicUrl}
+        />
     );
 }
 
