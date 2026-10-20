@@ -36,3 +36,6 @@ supabase/.temp
 
 .claude
 recordings/output/
+
+.scratch/
+docs/superpowers/plans/
