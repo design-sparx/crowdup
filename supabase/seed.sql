@@ -1,7 +1,8 @@
 -- Sample data for local development and the public demo. Runs after the migrations on
 -- `supabase db reset`. Everything here is fake: emails use the reserved .example domain,
--- and Stripe identifiers use test-mode prefixes. Users are created in auth.users, and the
--- profile trigger creates their profile rows.
+-- and Stripe identifiers use test-mode prefixes. Users are created in auth.users (with
+-- identities and a shared dev password, see below), and the profile trigger creates their
+-- profile rows.
 
 -- Fixed ids so the permission tests and manual testing can refer to the same people.
 -- Users and roles:
@@ -22,6 +23,29 @@ insert into auth.users (
    'sam@crowdup.example', '{"provider":"email","providers":["email"]}', '{"full_name":"Sam Spammer"}', now(), now()),
   ('00000000-0000-4000-8000-000000000005', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
    'dana@crowdup.example', '{"provider":"email","providers":["email"]}', '{"full_name":"Dana Donor"}', now(), now());
+
+create extension if not exists pgcrypto with schema extensions;
+
+-- Password for every seeded user, so they can log in locally without signing up.
+-- LOCAL DEVELOPMENT ONLY; documented in README.md. To use a different one, edit the
+-- literal below or run the same UPDATE with your own crypt() after the reset — psql
+-- variables are not an option because `supabase db reset` executes this file as a
+-- batch of plain SQL statements, not through psql.
+update auth.users
+set encrypted_password = extensions.crypt('crowdup-local-dev', extensions.gen_salt('bf')),
+    email_confirmed_at = now(),
+    confirmation_token = '', recovery_token = '', email_change = '',
+    email_change_token_new = '', email_change_token_current = '', reauthentication_token = '',
+    phone_change = '', phone_change_token = ''
+where email like '%@crowdup.example';
+
+insert into auth.identities (id, user_id, provider_id, provider, identity_data, last_sign_in_at, created_at, updated_at)
+select gen_random_uuid(), u.id, u.id::text, 'email',
+       jsonb_build_object('sub', u.id::text, 'email', u.email, 'email_verified', true),
+       now(), now(), now()
+from auth.users u
+where u.email like '%@crowdup.example'
+on conflict do nothing;
 
 update public.profile set role = 'admin' where id = '00000000-0000-4000-8000-000000000001';
 
