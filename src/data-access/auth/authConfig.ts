@@ -2,6 +2,7 @@ export type AuthConfig = {
     supabaseUrl: string;
     supabaseAnonKey: string;
     googleEnabled: boolean;
+    signupEnabled: boolean;
     siteUrl: string | null;
 };
 
@@ -21,6 +22,7 @@ export function parseAuthConfig(env: Env): AuthConfig {
         supabaseUrl,
         supabaseAnonKey,
         googleEnabled: ["true", "1"].includes((env.AUTH_GOOGLE_ENABLED ?? "").trim().toLowerCase()),
+        signupEnabled: ["true", "1"].includes((env.AUTH_SIGNUP_ENABLED ?? "").trim().toLowerCase()),
         siteUrl: env.SITE_URL?.trim().replace(/\/+$/, "") || null,
     };
 }

@@ -22,7 +22,8 @@ export default defineConfig({
     webServer: {
         command: "pnpm exec react-router-serve ./build/server/index.js",
         url: `http://localhost:${PORT}`,
-        env: {PORT: String(PORT)},
+        // The e2e suite exercises the signup flow; the production default is off.
+        env: {PORT: String(PORT), AUTH_SIGNUP_ENABLED: "true"},
         reuseExistingServer: !process.env.CI,
         timeout: 60_000,
     },

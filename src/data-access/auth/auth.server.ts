@@ -45,8 +45,15 @@ export function isGoogleEnabled(request: Request): boolean {
     return createSupabaseServerClient(request).config.googleEnabled;
 }
 
+export function isSignupEnabled(request: Request): boolean {
+    return createSupabaseServerClient(request).config.signupEnabled;
+}
+
 export async function signUpWithPassword(request: Request, form: FormData) {
     const {supabase, headers, config} = createSupabaseServerClient(request);
+    if (!config.signupEnabled) {
+        return {result: {error: "This site does not accept new registrations."} as AuthActionResult, headers};
+    }
     const email = field(form, "email");
     const password = String(form.get("password") ?? "");
     const name = field(form, "name");
@@ -128,15 +135,37 @@ export async function signOut(request: Request) {
     throw redirect("/", {headers});
 }
 
-/** Exchanges the `code` from OAuth / email links for a session cookie. */
+/**
+ * True when an identity was created moments ago — i.e. by the sign-in that just happened,
+ * so the OAuth callback created a brand-new account rather than loading an existing one.
+ */
+export function isNewIdentity(created_at: string | undefined, nowMs: number = Date.now()): boolean {
+    if (!created_at) return false;
+    const createdAtMs = Date.parse(created_at);
+    if (Number.isNaN(createdAtMs)) return false;
+    return nowMs - createdAtMs < 5 * 60 * 1000;
+}
+
+/**
+ * Exchanges the `code` from OAuth / email links for a session cookie.
+ * When signup is disabled, a code that created a new account is rejected: this instance
+ * only lets already-provisioned people in (seed data or the operator's SQL).
+ */
 export async function exchangeCode(request: Request) {
     const url = new URL(request.url);
-    const {supabase, headers} = createSupabaseServerClient(request);
+    const {supabase, headers, config} = createSupabaseServerClient(request);
     const code = url.searchParams.get("code");
     const next = safeRedirect(url.searchParams.get("next"));
     if (code) {
-        const {error} = await supabase.auth.exchangeCodeForSession(code);
-        if (!error) throw redirect(next, {headers});
+        const {data, error} = await supabase.auth.exchangeCodeForSession(code);
+        if (!error) {
+            const createdAccount = data.user?.identities?.some(identity => isNewIdentity(identity.created_at));
+            if (createdAccount && !config.signupEnabled) {
+                await supabase.auth.signOut();
+                throw redirect("/login?error=signup-disabled", {headers});
+            }
+            throw redirect(next, {headers});
+        }
     }
     throw redirect("/login?error=callback", {headers});
 }
