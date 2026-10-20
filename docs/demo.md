@@ -33,7 +33,7 @@ Check `.env.example` for any other required variable. `netlify.toml` is unchange
 
 1. Create a new Supabase project (demo only). Note the project ref.
 2. Apply migrations: `supabase link --project-ref <ref>` then `supabase db push`.
-3. Auth > Providers > Email: turn **Confirm email** off (hosted demo project only). `supabase/config.toml` is untouched. Add the demo origin to Auth > URL Configuration.
+3. Auth > Providers > Email: turn **Confirm email** off (hosted demo project only; it only matters if you also set `AUTH_SIGNUP_ENABLED=true` for the demo — by default the demo has no signup and visitors use the seeded accounts below). `supabase/config.toml` is untouched. Add the demo origin to Auth > URL Configuration.
 4. Create a Netlify site from this repo and set the environment above (Stripe values after steps 5 and 6, then redeploy).
 5. Stripe test mode: enable Connect, copy the `sk_test_` key.
 6. Add a Connect webhook (test mode) pointing at `<demo origin>/api/stripe/webhook`; copy its `whsec_` secret. See `docs/stripe.md` for events.
