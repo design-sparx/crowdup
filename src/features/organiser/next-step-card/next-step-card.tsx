@@ -2,6 +2,7 @@ import {Form, Link} from "react-router";
 import {IconArrowRight} from "@tabler/icons-react";
 import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {StripeConnectButton} from "@/features/organiser/stripe-connect-button";
 import type {NextStep} from "@/lib/dashboard/next-step";
 
 interface NextStepCardProps {
@@ -19,9 +20,7 @@ export function NextStepCard({step}: NextStepCardProps) {
                     <CardDescription>Donations are paid out to your bank through Stripe. It takes a few minutes.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Form method="post" action="/stripe/connect">
-                        <Button type="submit">Connect Stripe</Button>
-                    </Form>
+                    <StripeConnectButton/>
                 </CardContent>
             </Card>
         );

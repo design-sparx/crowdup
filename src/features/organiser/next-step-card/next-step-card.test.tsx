@@ -2,13 +2,14 @@
 import {describe, expect, it} from "vitest";
 import {screen} from "@testing-library/react";
 import {renderWithRouter} from "@/test/render-with-router";
+import {CONNECT_STRIPE_ACTION} from "@/lib/stripe/connectAction";
 import {NextStepCard} from "./next-step-card";
 
 describe("NextStepCard", () => {
     it("offers Connect Stripe as a form that posts to the connect action", () => {
         const {container} = renderWithRouter(<NextStepCard step={{kind: "connect_stripe"}}/>);
         expect(screen.getByRole("button", {name: "Connect Stripe"})).toBeInTheDocument();
-        expect(container.querySelector('form[action="/stripe/connect"]')).not.toBeNull();
+        expect(container.querySelector(`form[action="${CONNECT_STRIPE_ACTION}"]`)).not.toBeNull();
     });
 
     it("links a draft to its publish action", () => {

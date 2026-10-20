@@ -5,7 +5,7 @@ CrowdUp uses Stripe Connect with **Standard** accounts. Each organiser connects 
 ## Configure (test mode first)
 
 1. Create a Stripe account and stay in **test mode** (the dashboard toggle).
-2. Enable Connect: Dashboard > Connect > Get started (platform, Standard accounts).
+2. Enable Connect: Dashboard > Connect > Get started (platform, Standard accounts). Until this is done, `POST /stripe/connect` fails with `invalid_request_error: You can only create new accounts if you've signed up for Connect`, and the dashboard shows that message next to the button. You can also do it without the dashboard: Stripe CLI `stripe tools search enable_connect`, or the Stripe MCP `EnableConnect` tool.
 3. Copy the test secret key (`sk_test_...`) into `STRIPE_SECRET_KEY`.
 4. Set `SITE_URL` to the public origin of the app (for example `http://localhost:5173`). Stripe's return and refresh links are built only from `SITE_URL`, never from request headers. It is required in production.
 5. Set `SUPABASE_SERVICE_ROLE_KEY` (`supabase status` locally). It is server-only.

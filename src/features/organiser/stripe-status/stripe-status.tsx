@@ -1,6 +1,5 @@
-import {Form} from "react-router";
 import {IconCircleCheck} from "@tabler/icons-react";
-import {Button} from "@/components/ui/button";
+import {StripeConnectButton} from "@/features/organiser/stripe-connect-button";
 
 export type StripeOnboardingStatus = "not_started" | "incomplete" | "connected";
 
@@ -35,9 +34,7 @@ export function StripeStatus({status, currency}: StripeStatusProps) {
                     secure site, and it only takes a few minutes.
                 </p>
             </div>
-            <Form method="post" action="/stripe/connect">
-                <Button type="submit">{unfinished ? "Finish Stripe setup" : "Connect Stripe"}</Button>
-            </Form>
+            <StripeConnectButton label={unfinished ? "Finish Stripe setup" : "Connect Stripe"}/>
         </div>
     );
 }

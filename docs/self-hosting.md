@@ -24,7 +24,7 @@ Create an OAuth client in Google Cloud, add Supabase's callback URL (`https://<r
 
 Full detail in [stripe.md](stripe.md). Summary:
 
-1. Start in **test mode**. Enable Connect (Standard accounts) in the dashboard.
+1. Start in **test mode**. Enable Connect (Standard accounts) in the dashboard. Without this, creating a connected account fails with `You can only create new accounts if you've signed up for Connect` (the dashboard shows the message next to the button).
 2. Copy the secret key into `STRIPE_SECRET_KEY` (`sk_test_...`; switch to `sk_live_...` only when ready for real money).
 3. After the site has a URL, create a **Connect** webhook (Events from connected accounts) at `<SITE_URL>/api/stripe/webhook` with events `account.updated`, `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Put its signing secret in `STRIPE_WEBHOOK_SECRET`.
 4. Test and live mode have separate keys, webhooks and connected accounts. Going live means repeating steps 2 and 3 with live values and redeploying.
@@ -50,6 +50,7 @@ All variables are read on the server through `process.env` (loaders, actions, `s
 | `SITE_URL` | Yes in production | request origin outside production; in production it **throws** when Stripe or Checkout URLs are built | `authConfig.ts`, `connect.server.ts`, `checkout.server.ts` | Public origin (trailing slash stripped). Builds Stripe return/refresh and Checkout success/cancel URLs and auth redirects. |
 | `STRIPE_SECRET_KEY` | Yes for payments | none (throws when used) | `src/data-access/stripe/stripe.server.ts`, `src/lib/demo/demo.ts` | Stripe secret key. |
 | `STRIPE_WEBHOOK_SECRET` | Yes for webhooks | none (webhook is rejected) | `src/data-access/stripe/webhook.server.ts` | Signing secret of the Connect webhook endpoint. |
+| `STRIPE_SUPPRESS_NOTICES` | No | unset | read by the `stripe` SDK | `true` hides Stripe's advisory notices (for example "We recommend building your integration using Accounts v2"). Useful in test/sandbox, never needed for live keys. |
 | `CLIENT_IP_HEADER` | No | Netlify's header on Netlify, else none | `src/lib/reports/reports.ts` | Request header holding the real client IP for the guest report rate limit. See Security notes. |
 | `PLATFORM_FEE_PERCENT` | No | `0` (no application fee sent) | `src/lib/donations/fee.ts` | Percentage of each donation, 0 to 30, up to 2 decimals. An invalid value makes checkout fail rather than guess. |
 | `PUBLISHING_MODE` | No | `auto` | `src/data-access/stripe/connect.server.ts`, `src/lib/stripe/publishing.ts` | `auto` or `approval`. Anything else is an error. See [moderation.md](moderation.md). |
