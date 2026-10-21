@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.1.0](https://github.com/design-sparx/crowdup/compare/v1.0.0...v1.1.0) (2026-10-21)
+
+
+### Features
+
+* **auth:** gate signup behind AUTH_SIGNUP_ENABLED, default off ([7dc8930](https://github.com/design-sparx/crowdup/commit/7dc8930c5c20b991be453a66de99fed63fbc9e30))
+* **auth:** warn when Supabase still allows signups but the app has them off ([db9ca87](https://github.com/design-sparx/crowdup/commit/db9ca87fe2a90e44931dc78be13db5c48508e5be))
+* **demo:** block actions that would spoil the shared demo ([6ad5e04](https://github.com/design-sparx/crowdup/commit/6ad5e04ae5cc42d02c114ea8e995dcd554baede4))
+* implement Stripe onboarding flow with error handling and UI components ([1c2c758](https://github.com/design-sparx/crowdup/commit/1c2c7586bb32b85967cd254d9cd26d93abd92600))
+* **seed:** give seeded users identities and a local dev password ([fbedf25](https://github.com/design-sparx/crowdup/commit/fbedf25b0cbd469450a3d5d1de054e505e5327b1))
+
+
+### Bug Fixes
+
+* **a11y:** dark link contrast, 44px touch targets, per-page titles ([72f26b9](https://github.com/design-sparx/crowdup/commit/72f26b97263b88ddca4d52a73d1f322319529145))
+* **a11y:** give every page its own document title ([2122429](https://github.com/design-sparx/crowdup/commit/212242922f515a139ba7a24832c45741549c8235))
+* **a11y:** give phone touch targets a 44px minimum ([704fd5f](https://github.com/design-sparx/crowdup/commit/704fd5fdcd731b6010621ffc34a0c7b11e2a0d8c))
+* **a11y:** make home text links readable in dark mode ([12e10c1](https://github.com/design-sparx/crowdup/commit/12e10c1c59ae78dd1824db3bfc61b3987104759c))
+* **demo:** harden signup gate and protect the shared demo ([e4dae8a](https://github.com/design-sparx/crowdup/commit/e4dae8abe1ce0fecbf2fde09877c7e5fbe340328))
+
 ## 1.0.0 (2026-10-19)
 
 
