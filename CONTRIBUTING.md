@@ -39,7 +39,7 @@ pnpm build
 pnpm test:e2e
 ```
 
-Playwright starts the built app itself (`react-router-serve`, port 4173) and reuses a running server outside CI. To use a Chromium you already have, set `PLAYWRIGHT_CHROMIUM_PATH` to its executable. CI runs the same steps in the `End-to-end` workflow. Vitest ignores `e2e/`.
+Playwright starts the built app itself (`react-router-serve`, port 4173) and reuses a running server outside CI. To use a Chromium you already have, set `PLAYWRIGHT_CHROMIUM_PATH` to its executable. These specs are not run in CI; run them locally when you change a flow they cover. Vitest ignores `e2e/`.
 
 For a map of the codebase (routing, barrels, where shared UI lives), read [AGENTS.md](AGENTS.md).
 
