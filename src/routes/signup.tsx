@@ -1,3 +1,4 @@
+import {buildMeta} from "../helpers";
 import {data, redirect, useActionData, useLoaderData, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
 import {SignupPage} from "@/features/auth/signup-page";
 import {getUser, isGoogleEnabled, isSignupEnabled, signUpWithPassword, startGoogleSignIn} from "../data-access/auth/auth.server";
@@ -32,4 +33,8 @@ export default function Page() {
             message={actionData?.message}
         />
     );
+}
+
+export function meta() {
+    return buildMeta({title: "Sign up", description: "Create a CrowdUp account."});
 }

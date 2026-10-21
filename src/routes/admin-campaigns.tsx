@@ -1,3 +1,4 @@
+import {buildMeta} from "../helpers";
 import {useActionData, useLoaderData, data, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
 import {getAdminContext} from "../data-access/reports/reports.server";
 import {listAdminCampaigns, restoreCampaign, suspendCampaign} from "../data-access/moderation/moderation.server";
@@ -48,4 +49,8 @@ export default function Page() {
             <CampaignsTab campaigns={campaigns}/>
         </div>
     );
+}
+
+export function meta() {
+    return buildMeta({title: "Admin: campaigns", description: "Manage all campaigns."});
 }

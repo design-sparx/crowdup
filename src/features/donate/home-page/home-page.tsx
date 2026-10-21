@@ -35,7 +35,7 @@ export function HomePage({campaigns}: {campaigns: Campaign[]}) {
                 <section className="mx-auto max-w-6xl space-y-6 px-4 py-14">
                     <div className="flex items-end justify-between gap-4">
                         <h2 className="text-2xl font-semibold">Featured campaigns</h2>
-                        <Link to="/campaigns" className={buttonVariants({variant: "link"})}>
+                        <Link to="/campaigns" className={buttonVariants({variant: "link", className: "h-11 dark:text-chart-1 md:h-9"})}>
                             See all
                         </Link>
                     </div>
@@ -57,7 +57,7 @@ export function HomePage({campaigns}: {campaigns: Campaign[]}) {
                             </li>
                         ))}
                     </ol>
-                    <Link to="/how-it-works" className={buttonVariants({variant: "link", className: "px-0"})}>
+                    <Link to="/how-it-works" className={buttonVariants({variant: "link", className: "h-11 px-0 dark:text-chart-1 md:h-9"})}>
                         Learn more
                     </Link>
                 </div>

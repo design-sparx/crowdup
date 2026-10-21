@@ -10,11 +10,12 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {initials, type Account} from "@/lib/account";
+import {cn} from "@/lib/utils";
 
 export function UserMenu({account}: {account: Account | null}) {
     if (!account) {
         return (
-            <Link to="/login" className={buttonVariants({variant: "outline", size: "sm"})}>
+            <Link to="/login" className={cn(buttonVariants({variant: "outline", size: "sm"}), "h-11 md:h-8")}>
                 Log in
             </Link>
         );

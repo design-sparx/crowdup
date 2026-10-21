@@ -5,6 +5,10 @@ import {renderWithRouter} from "@/test/render-with-router";
 import {LoginPage} from "./login-page";
 
 describe("LoginPage", () => {
+    it("gives the forgot-password link a 44px touch target", () => {
+        renderWithRouter(<LoginPage next="/dashboard" googleEnabled={false} signupEnabled error={undefined}/>);
+        expect(screen.getByRole("link", {name: "Forgot password?"})).toHaveClass("min-h-11");
+    });
     it("has the email and password fields, a sign-in button and sign-up and forgot links", () => {
         renderWithRouter(<LoginPage next="/dashboard" googleEnabled={false} signupEnabled error={undefined}/>);
         expect(screen.getByRole("heading", {level: 1, name: "Log in"})).toBeInTheDocument();

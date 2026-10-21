@@ -6,6 +6,10 @@ import {renderWithRouter} from "@/test/render-with-router";
 import {MobileNav} from "./mobile-nav";
 
 describe("MobileNav", () => {
+    it("has a 44px touch target on phones", () => {
+        renderWithRouter(<MobileNav/>);
+        expect(screen.getByRole("button", {name: "Open menu"})).toHaveClass("size-11");
+    });
     it("keeps the links hidden until the menu is opened", async () => {
         renderWithRouter(<MobileNav/>);
         expect(screen.queryByRole("link", {name: "Browse"})).not.toBeInTheDocument();

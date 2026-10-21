@@ -5,7 +5,7 @@ import {action, loader} from "./signup";
 // The signup guards throw before anything touches Supabase, so a bare Request is enough —
 // only the config parser needs values. Config is cached per module registry (one per test
 // file), so set the environment here, at module scope, before the first call.
-process.env.SUPABASE_URL = "http://localhost:54321";
+process.env.SUPABASE_URL = "http://localhost:56321";
 process.env.SUPABASE_ANON_KEY = "anon";
 delete process.env.AUTH_SIGNUP_ENABLED;
 

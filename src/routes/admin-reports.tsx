@@ -1,3 +1,4 @@
+import {buildMeta} from "../helpers";
 import {useActionData, useLoaderData, data, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
 import {dismissReports, getAdminContext, listOpenReportGroups} from "../data-access/reports/reports.server";
 import {ReportsTab} from "@/features/admin/reports-tab";
@@ -35,4 +36,8 @@ export default function Page() {
             <ReportsTab groups={groups}/>
         </div>
     );
+}
+
+export function meta() {
+    return buildMeta({title: "Admin: reports", description: "Review reported campaigns."});
 }

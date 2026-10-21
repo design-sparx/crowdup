@@ -10,6 +10,10 @@ afterEach(() => {
 });
 
 describe("ThemeToggle", () => {
+    it("has a 44px touch target on phones", () => {
+        render(<ThemeToggle/>);
+        expect(screen.getByRole("button", {name: "Toggle theme"})).toHaveClass("size-11");
+    });
     it("switches to dark, remembers it, and switches back", async () => {
         render(<ThemeToggle/>);
         const button = screen.getByRole("button", {name: "Toggle theme"});

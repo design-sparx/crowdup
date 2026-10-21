@@ -1,3 +1,4 @@
+import {buildMeta} from "../helpers";
 import {useActionData, useLoaderData, data, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
 import {getAdminContext} from "../data-access/reports/reports.server";
 import {listOpenUnmatched, resolveUnmatched} from "../data-access/payments/unmatched.server";
@@ -34,4 +35,8 @@ export default function Page() {
             <PaymentsTab payments={payments}/>
         </div>
     );
+}
+
+export function meta() {
+    return buildMeta({title: "Admin: payments", description: "Review payment activity."});
 }

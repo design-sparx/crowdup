@@ -7,7 +7,7 @@ import {NAV_LINKS} from "@/components/shell/nav-links";
 export function MobileNav() {
     return (
         <Sheet>
-            <SheetTrigger render={<Button variant="ghost" size="icon" aria-label="Open menu"/>}>
+            <SheetTrigger render={<Button variant="ghost" size="icon" className="size-11 md:size-9" aria-label="Open menu"/>}>
                 <IconMenu2/>
             </SheetTrigger>
             <SheetContent side="left">

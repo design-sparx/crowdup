@@ -1,7 +1,7 @@
 import {describe, expect, it} from "vitest";
 import {parseAuthConfig} from "./authConfig";
 
-const base = {SUPABASE_URL: "http://localhost:54321", SUPABASE_ANON_KEY: "anon"};
+const base = {SUPABASE_URL: "http://localhost:56321", SUPABASE_ANON_KEY: "anon"};
 
 describe("parseAuthConfig", () => {
     it("hides Google unless explicitly enabled", () => {

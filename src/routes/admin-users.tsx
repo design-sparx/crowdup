@@ -1,3 +1,4 @@
+import {buildMeta} from "../helpers";
 import {useActionData, useLoaderData, data, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
 import {getAdminContext} from "../data-access/reports/reports.server";
 import {listAdminUsers, suspendUser, unsuspendUser} from "../data-access/moderation/moderation.server";
@@ -48,4 +49,8 @@ export default function Page() {
             <UsersTab users={users} selfId={selfId}/>
         </div>
     );
+}
+
+export function meta() {
+    return buildMeta({title: "Admin: users", description: "Manage users and suspensions."});
 }
