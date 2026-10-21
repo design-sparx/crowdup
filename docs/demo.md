@@ -1,14 +1,24 @@
 # Public demo instance
 
-A demo runs on its own hosted Supabase project, in Stripe test mode, with seeded data that resets daily. Nothing here has been run against real services yet: every step below is an operator task.
+A demo runs on its own hosted Supabase project, in Stripe test mode, with seeded data that resets hourly. Nothing here has been run against real services yet: every step below is an operator task.
 
 ## What the code does
 
 - `DEMO_MODE=true` shows a site-wide banner (demo, Stripe test mode, test card 4242 4242 4242 4242, data resets on a schedule). Off by default; never rendered when off.
 - The banner only claims test mode if `STRIPE_SECRET_KEY` starts with `sk_test_` (or `rk_test_`). With `DEMO_MODE=true` and a live, missing or unrecognised key it shows a red warning instead and logs a server error. Use a test key.
 - `supabase/demo-seed.sql` gives `admin@`, `amara@` (organiser) and `dana@` `crowdup.example` the password `demo-password-123`. These are public credentials, for the demo only. The file is not in `supabase/config.toml`, so `supabase db reset` and self-hosters never get it.
-- `.github/workflows/demo-reset.yml` (daily 03:00 UTC and manual) runs `scripts/demo-reset.mjs`, which wipes campaigns, donations, reports, moderation rows and auth users, then reapplies `seed.sql` and `demo-seed.sql` in one transaction (a failed seed rolls back).
+- `.github/workflows/demo-reset.yml` (hourly and manual) runs `scripts/demo-reset.mjs`, which wipes campaigns, donations, reports, moderation rows and auth users, then reapplies `seed.sql` and `demo-seed.sql` in one transaction (a failed seed rolls back).
 - Stripe test data is not reset. Seeded `acct_test_*` ids are fake. Real Connect test accounts created by visitors stay in your Stripe test dashboard; clear them there if needed.
+
+## What visitors cannot do
+
+The seeded accounts and campaigns are shared, so with `DEMO_MODE=true` the server refuses ("This action is disabled in the public demo") the actions that would spoil the demo for the next visitor. Rules live in `src/lib/demo/guard.ts`:
+
+- Changing or resetting a password (this would lock everyone out of the shared logins).
+- Suspending or restoring users.
+- Editing, closing, posting updates to, suspending, restoring, approving or rejecting the seeded campaigns (ids `10000000-0000-4000-8000-0000000000NN`).
+
+Allowed: creating campaigns, Stripe test onboarding, donating, and moderating campaigns visitors create. The hourly reset removes anything left behind.
 
 ## Reset safety
 
@@ -33,7 +43,7 @@ Check `.env.example` for any other required variable. `netlify.toml` is unchange
 
 1. Create a new Supabase project (demo only). Note the project ref.
 2. Apply migrations: `supabase link --project-ref <ref>` then `supabase db push`.
-3. Auth > Providers > Email: turn **Confirm email** off (hosted demo project only; it only matters if you also set `AUTH_SIGNUP_ENABLED=true` for the demo — by default the demo has no signup and visitors use the seeded accounts below). `supabase/config.toml` is untouched. Add the demo origin to Auth > URL Configuration.
+3. Auth > Sign In / Providers: turn off **Allow new users to sign up** (the demo uses seeded accounts only; the admin inbox warns if this is left on). Auth > Providers > Email: turn **Confirm email** off (hosted demo project only; it only matters if you also set `AUTH_SIGNUP_ENABLED=true` for the demo — by default the demo has no signup and visitors use the seeded accounts below). `supabase/config.toml` is untouched. Add the demo origin to Auth > URL Configuration.
 4. Create a Netlify site from this repo and set the environment above (Stripe values after steps 5 and 6, then redeploy).
 5. Stripe test mode: enable Connect, copy the `sk_test_` key.
 6. Add a Connect webhook (test mode) pointing at `<demo origin>/api/stripe/webhook`; copy its `whsec_` secret. See `docs/stripe.md` for events.

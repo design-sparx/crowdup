@@ -14,7 +14,8 @@ You will need: a Supabase project, a Stripe account in a country that supports C
 4. Auth > URL Configuration: set **Site URL** to your `SITE_URL` and add `<SITE_URL>` and `<SITE_URL>/auth/callback` to **Redirect URLs**. A mismatch breaks email links and OAuth.
 5. Auth > Providers > Email: keep **Confirm email** on for production. (`supabase/config.toml` turns it off for local development only.) It only matters while `AUTH_SIGNUP_ENABLED` is on; provisioned accounts are confirmed by the seed snippet below.
 6. **Custom SMTP** is only needed if you turn on `AUTH_SIGNUP_ENABLED` (confirmation emails) or want self-service password-reset emails. Supabase's built-in mail sender is intended for testing, is heavily rate limited and only delivers to project team members; without your own SMTP (Auth > SMTP Settings) those emails will not reach ordinary users. CrowdUp itself sends no emails; these are all Supabase Auth emails. With signup off and resets handled by you, you can skip SMTP entirely.
-7. Create the first users — see below. Signup is **disabled by default**: there is no public registration path, and Google sign-in only admits emails you have already provisioned. Leave it that way unless you want anyone to be able to register.
+7. Auth > Sign In / Providers: turn off **Allow new users to sign up**. `AUTH_SIGNUP_ENABLED=false` only hides CrowdUp's own pages; Supabase Auth still accepts `POST /auth/v1/signup` from anyone holding your project URL and anon key unless this switch is off. Creating users from the dashboard or SQL keeps working with it off. The admin inbox shows a red warning, and the server logs an error, when the two disagree. If you set `AUTH_SIGNUP_ENABLED=true`, turn the Supabase switch back on.
+8. Create the first users — see below. Signup is **disabled by default**: there is no public registration path, and Google sign-in only admits emails you have already provisioned. Leave it that way unless you want anyone to be able to register.
 
 ### Create the first users
 
@@ -88,7 +89,7 @@ All variables are read on the server through `process.env` (loaders, actions, `s
 | `PLATFORM_FEE_PERCENT` | No | `0` (no application fee sent) | `src/lib/donations/fee.ts` | Percentage of each donation, 0 to 30, up to 2 decimals. An invalid value makes checkout fail rather than guess. |
 | `PUBLISHING_MODE` | No | `auto` | `src/data-access/stripe/connect.server.ts`, `src/lib/stripe/publishing.ts` | `auto` or `approval`. Anything else is an error. See [moderation.md](moderation.md). |
 | `AUTH_GOOGLE_ENABLED` | No | `false` | `authConfig.ts` | `true` or `1` shows Google sign-in. The provider must also be enabled in Supabase. |
-| `AUTH_SIGNUP_ENABLED` | No | `false` | `authConfig.ts` | `true` or `1` enables `/signup` and allows Google sign-in to create new accounts. Leave off and provision users as described in [Create the first users](#create-the-first-users). |
+| `AUTH_SIGNUP_ENABLED` | No | `false` | `authConfig.ts` | `true` or `1` enables `/signup` and allows Google sign-in to create new accounts. Also set Supabase's **Allow new users to sign up** to match; the admin inbox warns on a mismatch. Leave off and provision users as described in [Create the first users](#create-the-first-users). |
 | `DEMO_MODE` | No | `false` | `src/lib/demo/demo.ts`, `src/root.tsx` | Shows the demo banner. Leave off for real instances. See [demo.md](demo.md). |
 | `NODE_ENV` | Set by the runtime | `production` in built apps | `connect.server.ts`, `checkout.server.ts` | Only used to require `SITE_URL` in production. Do not set it by hand. |
 
