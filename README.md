@@ -91,7 +91,7 @@ See the [docs index](docs/README.md).
 ## Known limitations
 
 - **Stripe Connect is not available in every country.** Organisers and the platform account must be in a [Stripe-supported country](https://stripe.com/global); Kenya is not a general Connect country at the time of writing. Check Stripe's current list before choosing this stack.
-- **Nothing has been run against real services.** The database tests (`pnpm test:db`), the Playwright specs and the Stripe and Supabase flows were written without being executed against a database or Stripe; they first run when the CI workflows do. Treat your first deployment as a test.
+- **Nothing has been run against real services.** The database tests (`pnpm test:db`), the Playwright specs (which no longer run in CI) and the Stripe and Supabase flows were written without being executed against a database or Stripe. Treat your first deployment as a test.
 - **No application emails in v1.** Only Supabase Auth emails (confirmation, password reset) are sent. There are no donation receipts or organiser notifications. Custom SMTP is only needed if you enable signup (`AUTH_SIGNUP_ENABLED`) or want self-service password resets ([guide](docs/self-hosting.md#1-supabase-project)).
 - **One currency per campaign**, taken from the organiser's Stripe account when the campaign goes live and fixed afterwards. No multi-currency campaigns or conversion.
 - **Report rate limit is in memory:** per server instance and reset on restart; on serverless it is a speed bump ([docs/reports.md](docs/reports.md)).
