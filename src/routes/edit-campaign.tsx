@@ -1,3 +1,4 @@
+import {buildMeta} from "../helpers";
 import {data, useActionData, useLoaderData} from "react-router";
 import {ManageCampaignPage} from "@/features/organiser/manage-campaign-page";
 import type {PublishOutcome} from "@/features/organiser/publish-result";
@@ -109,3 +110,7 @@ export default function EditCampaign() {
 }
 
 export {Error404Page as ErrorBoundary} from "../pages";
+
+export function meta() {
+    return buildMeta({title: "Edit campaign", description: "Update your campaign."});
+}

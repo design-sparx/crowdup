@@ -1,3 +1,4 @@
+import {buildMeta} from "../helpers";
 import {data, useActionData, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
 import {UpdatePasswordPage} from "@/features/auth/update-password-page";
 import {DEMO_DISABLED_MESSAGE, demoBlocksPasswordChange} from "../lib/demo/guard";
@@ -22,4 +23,8 @@ export {Error404Page as ErrorBoundary} from "../pages";
 export default function Page() {
     const actionData = useActionData<typeof action>();
     return <UpdatePasswordPage error={actionData?.error}/>;
+}
+
+export function meta() {
+    return buildMeta({title: "Choose a new password", description: "Set a new password for your CrowdUp account."});
 }

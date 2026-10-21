@@ -1,3 +1,4 @@
+import {buildMeta} from "../helpers";
 import {data, useActionData, useLoaderData} from "react-router";
 import {getOwnSuspension} from "../data-access/moderation/moderation.server";
 import {userSuspensionNotice} from "../lib/moderation/moderation";
@@ -42,3 +43,7 @@ export default function CreateCampaign() {
 }
 
 export {Error404Page as ErrorBoundary} from "../pages";
+
+export function meta() {
+    return buildMeta({title: "Create a campaign", description: "Start a fundraiser on CrowdUp."});
+}

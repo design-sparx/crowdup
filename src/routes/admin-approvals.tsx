@@ -1,3 +1,4 @@
+import {buildMeta} from "../helpers";
 import {useActionData, useLoaderData, data, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
 import {decideCampaign, listPendingCampaigns} from "../data-access/campaigns/approval.server";
 import {getAdminContext} from "../data-access/reports/reports.server";
@@ -37,4 +38,8 @@ export default function Page() {
             <ApprovalsTab campaigns={campaigns}/>
         </div>
     );
+}
+
+export function meta() {
+    return buildMeta({title: "Admin: approvals", description: "Approve campaigns awaiting review."});
 }

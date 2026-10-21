@@ -1,3 +1,4 @@
+import {buildMeta} from "../helpers";
 import {data, useActionData, type ActionFunctionArgs} from "react-router";
 import {ForgotPasswordPage} from "@/features/auth/forgot-password-page";
 import {demoBlocksPasswordChange} from "../lib/demo/guard";
@@ -17,4 +18,8 @@ export {Error404Page as ErrorBoundary} from "../pages";
 export default function Page() {
     const actionData = useActionData<typeof action>();
     return <ForgotPasswordPage message={actionData?.message}/>;
+}
+
+export function meta() {
+    return buildMeta({title: "Reset your password", description: "Request a link to reset your CrowdUp password."});
 }

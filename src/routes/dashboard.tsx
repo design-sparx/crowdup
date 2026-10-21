@@ -1,3 +1,4 @@
+import {buildMeta} from "../helpers";
 import {data} from "react-router";
 import {getOwnSuspension} from "../data-access/moderation/moderation.server";
 import {userSuspensionNotice} from "../lib/moderation/moderation";
@@ -41,3 +42,7 @@ export default function Dashboard({loaderData}: Route.ComponentProps) {
 }
 
 export {Error404Page as ErrorBoundary} from "../pages";
+
+export function meta() {
+    return buildMeta({title: "Dashboard", description: "Manage your campaigns and payouts."});
+}
