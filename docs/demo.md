@@ -61,4 +61,4 @@ Check `.env.example` for any other required variable. `netlify.toml` is unchange
 | Data resets on a schedule | Workflow and guarded script built, unverified (needs step 7). |
 | Demo URL in README and repo description | Needs operator (step 9); README has a TODO marker. |
 
-Optional local use of the demo accounts for the dashboard e2e spec: after `supabase db reset`, run `psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -f supabase/demo-seed.sql`, then `E2E_ORGANISER_PASSWORD=demo-password-123 pnpm test:e2e`. Not run here.
+Optional local use of the demo accounts for the dashboard e2e spec: after `supabase db reset`, run `psql postgresql://postgres:postgres@127.0.0.1:56322/postgres -f supabase/demo-seed.sql`, then `E2E_ORGANISER_PASSWORD=demo-password-123 pnpm test:e2e`. Not run here.

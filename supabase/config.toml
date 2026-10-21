@@ -2,16 +2,31 @@
 # with `supabase db reset`, and run the permission tests with `pnpm test:db`.
 project_id = "crowdup"
 
+# Ports are shifted to 56320-56329 so the local stack does not clash with other containers
+# on the Supabase CLI defaults (54320-54329). Update .env.example and docs/demo.md if you change them.
 [api]
 enabled = true
-port = 54321
+port = 56321
 schemas = ["public", "graphql_public"]
 extra_search_path = ["public", "extensions"]
 max_rows = 1000
 
 [db]
-port = 54322
+port = 56322
+shadow_port = 56320
 major_version = 17
+
+[db.pooler]
+port = 56329
+
+[studio]
+port = 56323
+
+[inbucket]
+port = 56324
+
+[analytics]
+port = 56327
 
 [db.seed]
 enabled = true

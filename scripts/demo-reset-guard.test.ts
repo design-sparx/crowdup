@@ -12,7 +12,7 @@ describe("projectRefFromDatabaseUrl", () => {
         expect(projectRefFromDatabaseUrl(POOLER)).toBe(REF);
     });
     it("returns null for local, foreign or malformed URLs", () => {
-        expect(projectRefFromDatabaseUrl("postgresql://postgres:postgres@127.0.0.1:54322/postgres")).toBeNull();
+        expect(projectRefFromDatabaseUrl("postgresql://postgres:postgres@127.0.0.1:56322/postgres")).toBeNull();
         expect(projectRefFromDatabaseUrl("postgresql://u:p@db.example.com/postgres")).toBeNull();
         expect(projectRefFromDatabaseUrl("not a url")).toBeNull();
     });
@@ -32,6 +32,6 @@ describe("checkResetGuard", () => {
         expect(checkResetGuard({DEMO_RESET_CONFIRM_PROJECT_REF: REF}).ok).toBe(false);
     });
     it("refuses local and non-Supabase databases even with a confirmation", () => {
-        expect(checkResetGuard({DEMO_DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1:54322/postgres", DEMO_RESET_CONFIRM_PROJECT_REF: "127.0.0.1"}).ok).toBe(false);
+        expect(checkResetGuard({DEMO_DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1:56322/postgres", DEMO_RESET_CONFIRM_PROJECT_REF: "127.0.0.1"}).ok).toBe(false);
     });
 });
