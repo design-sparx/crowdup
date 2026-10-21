@@ -17,6 +17,7 @@ import {getOwnSuspension} from "../data-access/moderation/moderation.server";
 import {campaignSuspensionNotice, userSuspensionNotice} from "../lib/moderation/moderation";
 import {listUpdates} from "../lib/campaigns/repository";
 import {parseUpdateBody} from "../lib/campaigns/updates";
+import {DEMO_DISABLED_MESSAGE, demoBlocksCampaign} from "../lib/demo/guard";
 import type {Route} from "./+types/edit-campaign";
 
 export async function loader({request, params}: Route.LoaderArgs) {
@@ -41,6 +42,10 @@ export async function action({request, params}: Route.ActionArgs) {
     const {user, supabase, headers} = await requireUserClient(request);
     const form = await request.clone().formData();
     const intent = form.get("intent");
+
+    if (demoBlocksCampaign(process.env, params.id)) {
+        return data({lifecycleError: DEMO_DISABLED_MESSAGE, errors: {form: DEMO_DISABLED_MESSAGE}}, {status: 403, headers});
+    }
 
     if (intent === "close" || intent === "post-update") {
         try {

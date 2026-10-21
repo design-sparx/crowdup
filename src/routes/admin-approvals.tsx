@@ -1,6 +1,7 @@
 import {useActionData, useLoaderData, data, type ActionFunctionArgs, type LoaderFunctionArgs} from "react-router";
 import {decideCampaign, listPendingCampaigns} from "../data-access/campaigns/approval.server";
 import {getAdminContext} from "../data-access/reports/reports.server";
+import {DEMO_DISABLED_MESSAGE, demoBlocksCampaign} from "../lib/demo/guard";
 import {ApprovalsTab} from "@/features/admin/approvals-tab";
 
 // Loaders run in parallel with the layout's, so this checks the role itself.
@@ -14,7 +15,12 @@ export async function loader({request}: LoaderFunctionArgs) {
 export async function action({request}: ActionFunctionArgs) {
     const admin = await getAdminContext(request);
     if (!admin) throw new Response("Not found", {status: 404});
-    const result = await decideCampaign(admin.supabase, await request.formData());
+    const form = await request.formData();
+    const campaignId = form.get("campaignId");
+    if (typeof campaignId === "string" && demoBlocksCampaign(process.env, campaignId)) {
+        return data({error: DEMO_DISABLED_MESSAGE}, {status: 403, headers: admin.headers});
+    }
+    const result = await decideCampaign(admin.supabase, form);
     if (!result.ok) return data({error: result.error}, {status: result.status, headers: admin.headers});
     return data({ok: true, message: result.message}, {headers: admin.headers});
 }
