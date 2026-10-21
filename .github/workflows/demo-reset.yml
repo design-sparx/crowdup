@@ -1,13 +1,13 @@
 name: Reset demo database
 
-# Resets the PUBLIC DEMO database to supabase/seed.sql + supabase/demo-seed.sql.
+# Resets the PUBLIC DEMO database (hourly) to supabase/seed.sql + supabase/demo-seed.sql.
 # Safe by design: scripts/demo-reset.mjs refuses to run unless the project ref inside
 # DEMO_DATABASE_URL equals DEMO_RESET_CONFIRM_PROJECT_REF. See docs/demo.md.
 # Forks and instances without these secrets skip the job.
 
 on:
   schedule:
-    - cron: "0 3 * * *"
+    - cron: "7 * * * *"
   workflow_dispatch:
 
 permissions:

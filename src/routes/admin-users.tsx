@@ -2,6 +2,7 @@ import {useActionData, useLoaderData, data, type ActionFunctionArgs, type Loader
 import {getAdminContext} from "../data-access/reports/reports.server";
 import {listAdminUsers, suspendUser, unsuspendUser} from "../data-access/moderation/moderation.server";
 import {parseModerationReason} from "../lib/moderation/moderation";
+import {DEMO_DISABLED_MESSAGE, demoBlocksUserModeration} from "../lib/demo/guard";
 import {UsersTab} from "@/features/admin/users-tab";
 
 export async function loader({request}: LoaderFunctionArgs) {
@@ -17,6 +18,10 @@ export async function action({request}: ActionFunctionArgs) {
     const id = form.get("userId");
     const intent = form.get("intent");
     if (typeof id !== "string" || !id) return data({error: "Missing user."}, {status: 400, headers: admin.headers});
+
+    if (demoBlocksUserModeration(process.env)) {
+        return data({error: DEMO_DISABLED_MESSAGE}, {status: 403, headers: admin.headers});
+    }
 
     let result;
     if (intent === "suspend") {

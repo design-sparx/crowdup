@@ -17,7 +17,7 @@ What is built today (see [Known limitations](#known-limitations) for what is not
 - **Campaigns:** create, edit and publish campaigns with a rich-text story, cover image, goal, end date and category. Browse and filter on the public site. Owners can post plain-text updates and close campaigns.
 - **Donations only:** no rewards, perks or equity. Donors can give as guests or signed in, anonymously if they wish. Signed-in donors get a donation history.
 - **Stripe Connect (Standard), direct charges:** each organiser connects their own Stripe account and donations are charged on it. The platform never holds funds. An optional platform fee (`PLATFORM_FEE_PERCENT`, default 0) can be taken. See [docs/stripe.md](docs/stripe.md).
-- **Auth:** email and password with password reset, optional Google sign-in, via Supabase Auth.
+- **Auth:** email and password with password reset, optional Google sign-in, via Supabase Auth. Self-service signup is disabled by default — operators provision users (see [docs/self-hosting.md](docs/self-hosting.md#create-the-first-users)).
 - **Admin area:** `/admin` for reports, campaign and user suspension (with reasons and an audit trail) and the approval queue. See [docs/moderation.md](docs/moderation.md) and [docs/reports.md](docs/reports.md).
 - **Approval mode:** `PUBLISHING_MODE=approval` holds new campaigns for an administrator to approve or reject. The default `auto` publishes once the organiser has finished Stripe onboarding.
 - **Abuse reporting:** anyone can report a live campaign, with rate limiting.
@@ -62,7 +62,7 @@ cp .env.example .env  # fill SUPABASE_ANON_KEY and SUPABASE_SERVICE_ROLE_KEY fro
 pnpm dev              # http://localhost:5173
 ```
 
-The seed creates sample campaigns and users (`admin@`, `amara@`, `liam@`, `sam@`, `dana@` at `crowdup.example`) but sets no passwords, so sign up with your own account. To make it an admin, run `update public.profile set role = 'admin' where id = '<your user id>';` in Studio or `psql`. Donations need Stripe test keys: see [docs/stripe.md](docs/stripe.md). Every environment variable is listed in [docs/self-hosting.md](docs/self-hosting.md#environment-variables).
+The seed creates sample campaigns and users (`admin@`, `amara@`, `liam@`, `sam@`, `dana@` at `crowdup.example`), all with the local dev password **`crowdup-local-dev`** — sign in as `admin@crowdup.example` to start. (`admin@` is already an admin; set your own password after first login.) Self-service signup is off by default; to open registration set `AUTH_SIGNUP_ENABLED=true`, and to add users on a real instance see [docs/self-hosting.md](docs/self-hosting.md#create-the-first-users). Donations need Stripe test keys: see [docs/stripe.md](docs/stripe.md). Every environment variable is listed in [docs/self-hosting.md](docs/self-hosting.md#environment-variables).
 
 ## Scripts
 
@@ -92,7 +92,7 @@ See the [docs index](docs/README.md).
 
 - **Stripe Connect is not available in every country.** Organisers and the platform account must be in a [Stripe-supported country](https://stripe.com/global); Kenya is not a general Connect country at the time of writing. Check Stripe's current list before choosing this stack.
 - **Nothing has been run against real services.** The database tests (`pnpm test:db`), the Playwright specs and the Stripe and Supabase flows were written without being executed against a database or Stripe; they first run when the CI workflows do. Treat your first deployment as a test.
-- **No application emails in v1.** Only Supabase Auth emails (confirmation, password reset) are sent. There are no donation receipts or organiser notifications. Production needs custom SMTP ([guide](docs/self-hosting.md#1-supabase-project)).
+- **No application emails in v1.** Only Supabase Auth emails (confirmation, password reset) are sent. There are no donation receipts or organiser notifications. Custom SMTP is only needed if you enable signup (`AUTH_SIGNUP_ENABLED`) or want self-service password resets ([guide](docs/self-hosting.md#1-supabase-project)).
 - **One currency per campaign**, taken from the organiser's Stripe account when the campaign goes live and fixed afterwards. No multi-currency campaigns or conversion.
 - **Report rate limit is in memory:** per server instance and reset on restart; on serverless it is a speed bump ([docs/reports.md](docs/reports.md)).
 - **The database is not publishing-mode aware:** in `approval` mode, server code running with the service role could still publish a draft directly if app code were wrong ([docs/moderation.md](docs/moderation.md)).

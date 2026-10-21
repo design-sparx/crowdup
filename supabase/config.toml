@@ -21,6 +21,8 @@ sql_paths = ["./seed.sql"]
 enabled = true
 site_url = "http://localhost:5173"
 additional_redirect_urls = ["http://localhost:5173", "http://localhost:5173/auth/callback"]
+# Kept on for local development and the e2e signup specs. On a hosted project, turn off
+# "Allow new users to sign up" (Auth > Sign In / Providers) unless AUTH_SIGNUP_ENABLED=true.
 enable_signup = true
 
 [auth.email]
