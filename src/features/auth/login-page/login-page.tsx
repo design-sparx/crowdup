@@ -55,7 +55,7 @@ export function LoginPage({next, googleEnabled, signupEnabled, error, message}: 
                 {googleEnabled ? <GoogleButton/> : null}
             </Form>
             <p className="mt-4 text-sm">
-                <Link to="/forgot-password" className="underline underline-offset-4">Forgot password?</Link>
+                <Link to="/forgot-password" className="inline-flex min-h-11 items-center underline underline-offset-4">Forgot password?</Link>
             </p>
         </AuthLayout>
     );

@@ -8,6 +8,7 @@ describe("UserMenu", () => {
     it("shows a Log in link when signed out", () => {
         renderWithRouter(<UserMenu account={null}/>);
         expect(screen.getByRole("link", {name: "Log in"})).toHaveAttribute("href", "/login");
+        expect(screen.getByRole("link", {name: "Log in"})).toHaveClass("h-11");
     });
     it("shows the account button with initials when signed in", () => {
         renderWithRouter(<UserMenu account={{name: "Jane Doe", avatar: null}}/>);
