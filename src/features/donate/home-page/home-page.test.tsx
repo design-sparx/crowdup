@@ -14,6 +14,14 @@ function campaign(n: number): Campaign {
 }
 
 describe("HomePage", () => {
+    it("keeps the text links readable in dark mode and tappable on phones", () => {
+        renderWithRouter(<HomePage campaigns={[campaign(1)]}/>);
+        for (const name of ["See all", "Learn more"]) {
+            const link = screen.getByRole("link", {name});
+            expect(link).toHaveClass("dark:text-chart-1");
+            expect(link).toHaveClass("h-11");
+        }
+    });
     it("has one h1 and the two main calls to action", () => {
         renderWithRouter(<HomePage campaigns={[]}/>);
         expect(screen.getByRole("heading", {level: 1})).toHaveTextContent("Raise money for what matters");
